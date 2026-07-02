@@ -214,7 +214,7 @@ class InscricaoController extends Controller
                 $info_adicional = '';
                 $user = \Auth::user();
                 if ($inscricao->selecao->tem_taxa && !SolicitacaoIsencaoTaxa::where('extras->cpf', $cpf ?? null)->where('selecao_id', $inscricao->selecao->id)->whereIn('estado', ['Isenção de Taxa Aprovada', 'Isenção de Taxa Aprovada Após Recurso'])->exists())
-                    if (Parametro::first()->boleto_momento_envio == 'Envio da Inscrição')
+                    if ((Parametro::first()->boleto_momento_envio == 'Envio da Inscrição/Matrícula') && $inscricao->boletoFoiGerado)
                         $info_adicional = ' e seu boleto foi enviado, não deixe de pagá-lo';
 
                 $request->session()->flash('alert-success', 'Sua inscrição foi enviada' . $info_adicional);

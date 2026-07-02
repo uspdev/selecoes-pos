@@ -50,6 +50,9 @@ class BoletoService
                 // recupera o arquivo PDF do boleto (PDF no formato binário codificado para Base64)
                 $obter = $boleto->obter($id);
 
+                // marca que o boleto foi gerado
+                $objeto->boletoFoiGerado = true;
+
                 // grava o boleto como um dos arquivos da inscrição, para o candidato poder acessar no site
                 $arquivo_caminho = './arquivos/' . $objeto->created_at->year . '/' . uniqid() . Str::random(27) . '.pdf';
                 $arquivo_conteudo = base64_decode($obter['value']);
@@ -78,9 +81,11 @@ class BoletoService
                     config('app.debug') && Log::info('$boleto->situacao(' . $id . '): ' . json_encode($boleto->situacao($id)));
                 }
 
+                Log::info('Fim do gerarBoleto: ' . var_export($objeto->boletoFoiGerado, true));
                 // retorna o conteúdo do PDF
                 return ['nome_original' => $arquivo->nome_original, 'conteudo' => $obter['value']];
             } else {
+                Log::info('Fim do gerarBoleto: ' . var_export($objeto->boletoFoiGerado, true));
                 Log::info('Erro ao gerar boleto... $gerar[\'value\']: ' . $gerar['value']);
                 return ['nome_original' => '', 'conteudo' => ''];
             }

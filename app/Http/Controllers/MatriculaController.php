@@ -223,7 +223,7 @@ class MatriculaController extends Controller
                         $info_adicional = '';
                         $user = \Auth::user();
                         if ($matricula->selecao->tem_taxa && !SolicitacaoIsencaoTaxa::where('extras->cpf', $cpf ?? null)->where('selecao_id', $matricula->selecao->id)->whereIn('estado', ['Isenção de Taxa Aprovada', 'Isenção de Taxa Aprovada Após Recurso'])->exists())
-                            if (Parametro::first()->boleto_momento_envio == 'Envio da Inscrição/Matrícula')
+                            if ((Parametro::first()->boleto_momento_envio == 'Envio da Inscrição/Matrícula') && $matricula->boletoFoiGerado)
                                 $info_adicional = ($matricula->selecao->categoria->nome !== 'Aluno Especial' ? ' e seu boleto foi enviado, não deixe de pagá-lo' : ((count($disciplinas_id) == 1) ? ' e seu boleto foi enviado, não deixe de pagá-lo' : ' e seus boletos foram enviados, não deixe de pagá-los'));
 
                         $request->session()->flash('alert-success', 'Sua matrícula foi enviada' . $info_adicional);

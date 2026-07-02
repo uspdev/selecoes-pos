@@ -216,6 +216,8 @@ class Matricula extends Model
         return $todos_requeridos_presentes();
     }
 
+    public bool $boletoFoiGerado = false;    // não persistido em banco, vive apenas enquanto durar esta instância do objeto em memória (tipicamente: MatriculaController, save(), MatriculaOserver, BoletoService, e volta para MatriculaController, e então a instância do objeto é destruída)
+
     /**
      * Mostra as pessoas que têm vínculo com a matrícula
      *
