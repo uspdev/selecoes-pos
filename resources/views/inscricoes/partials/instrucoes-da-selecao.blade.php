@@ -9,15 +9,23 @@
   @if ($inscricao->selecao->tem_taxa)
     Há taxa de inscrição para esta seleção.
     @if (!empty($inscricao->created_at))    {{-- se existe o created_at, é porque já passou pelo "Prosseguir", e portanto conseguimos determinar se a solicitação de isenção de taxa foi aprovada ou não --}}
-      Você {{ $solicitacaoisencaotaxa_aprovada ? '' : 'não ' }}está isento(a) de pagar a taxa.
+      @canany(['perfiladmin', 'perfilgerente', 'perfildocente'])
+        O(a) candidato(a)
+      @else
+        Você
+      @endcanany
+      {{ $solicitacaoisencaotaxa_aprovada ? '' : 'não ' }}está isento(a) de pagar a taxa.
     @endif
   @else
     Não há taxa de inscrição para esta seleção.
   @endif
-  <br />
-  Após informar seus dados, clique em "Prosseguir", envie todos os documentos exigidos e clique no botão "Enviar Inscrição".
-  Sem isso, ela não será avaliada!<br />
-  Caso queira renomear ou apagar um documento, passe o mouse sobre o nome dele (no celular, toque no nome dele) e clique/toque nos botões que aparecerão.<br />
+  @canany(['perfiladmin', 'perfilgerente', 'perfildocente'])
+  @else
+    <br />
+    Após informar seus dados, clique em "Prosseguir", envie todos os documentos exigidos e clique no botão "Enviar Inscrição".
+    Sem isso, ela não será avaliada!<br />
+    Caso queira renomear ou apagar um documento, passe o mouse sobre o nome dele (no celular, toque no nome dele) e clique/toque nos botões que aparecerão.<br />
+  @endcanany
   <button type="button" class="close" data-toggle="collapse" data-target="#instrucoes">
     <span aria-hidden="true">&times;</span>
   </button>
