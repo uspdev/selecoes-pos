@@ -216,6 +216,8 @@ class Inscricao extends Model
         return $todos_requeridos_presentes();
     }
 
+    public bool $boletoFoiGerado = false;    // não persistido em banco, vive apenas enquanto durar esta instância do objeto em memória (tipicamente: InscricaoController, save(), InscricaoOserver, BoletoService, e volta para InscricaoController, e então a instância do objeto é destruída)
+
     /**
      * Mostra as pessoas que têm vínculo com a inscrição
      *
