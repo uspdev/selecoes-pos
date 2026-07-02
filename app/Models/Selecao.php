@@ -580,8 +580,8 @@ class Selecao extends Model
         'ingresso_ano',
         'nome',
         'descricao',
-        'fluxo_continuo',
         'tem_taxa',
+        'fluxo_continuo',
         'solicitacoesisencaotaxa_datahora_inicio',
         'solicitacoesisencaotaxa_datahora_fim',
         'inscricoesmatriculas_datahora_inicio',
@@ -631,13 +631,13 @@ class Selecao extends Model
             'label' => 'Descrição',
         ],
         [
-            'name' => 'fluxo_continuo',
-            'label' => 'Fluxo Contínuo (solicitações de isenção de taxa e inscrições/matrículas ocorrem no mesmo período)',    // a view altera este label dinamicamente
+            'name' => 'tem_taxa',
+            'label' => 'Taxa de Inscrição/Matrícula para a Seleção',    // a view altera este label dinamicamente
             'type' => 'checkbox',
         ],
         [
-            'name' => 'tem_taxa',
-            'label' => 'Taxa de Inscrição/Matrícula para a Seleção',    // a view altera este label dinamicamente
+            'name' => 'fluxo_continuo',
+            'label' => 'Fluxo Contínuo (solicitações de isenção de taxa e inscrições/matrículas ocorrem no mesmo período)',    // a view altera este label dinamicamente
             'type' => 'checkbox',
         ],
         [

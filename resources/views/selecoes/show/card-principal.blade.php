@@ -74,15 +74,17 @@
 
       $('#programa_id').trigger('change');
 
+      updateCampoFluxoContinuo();
       updateCamposSolicitacoesIsencaoTaxaDataHora();
       updateCamposBoleto();
 
-      $('#fluxo_continuo').on('click', function () {
+      $('#tem_taxa').on('click', function () {
+        updateCampoFluxoContinuo();
         updateCamposSolicitacoesIsencaoTaxaDataHora();
         updateCamposBoleto();
       });
 
-      $('#tem_taxa').on('click', function () {
+      $('#fluxo_continuo').on('click', function () {
         updateCamposSolicitacoesIsencaoTaxaDataHora();
         updateCamposBoleto();
       });
@@ -101,6 +103,14 @@
           event.preventDefault();
       });
     });
+
+    function updateCampoFluxoContinuo() {
+      if (!$('#tem_taxa').prop('checked')) {
+        $('#fluxo_continuo').prop('checked', false);
+        $('#fluxo_continuo').parents('div').eq(1).hide();
+      } else
+        $('#fluxo_continuo').parents('div').eq(1).show();
+    }
 
     function updateCamposSolicitacoesIsencaoTaxaDataHora() {
       if (!$('#tem_taxa').prop('checked') || $('#fluxo_continuo').prop('checked')) {
