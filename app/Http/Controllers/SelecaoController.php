@@ -17,6 +17,7 @@ use App\Models\Selecao;
 use App\Models\SolicitacaoIsencaoTaxa;
 use App\Models\TipoArquivo;
 use App\Models\User;
+use App\Utils\ClasseUtils;
 use App\Utils\JSONForms;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
@@ -746,7 +747,7 @@ class SelecaoController extends Controller
             $arr[] = $i;
         }
 
-        $writer = SimpleExcelWriter::streamDownload('solicitacoesisencaotaxa_' . $ano . '_selecao' . $selecao->id . '.xlsx')
+        $writer = SimpleExcelWriter::streamDownload(ClasseUtils::obterClasseNomeAbreviada('Selecao') . $selecao->id . '_' . ClasseUtils::obterClasseNomeAbreviadaPlural('SolicitacaoIsencaoTaxa') . '_' . $ano . '.xlsx')
             ->addRows($arr);
     }
 
@@ -796,7 +797,7 @@ class SelecaoController extends Controller
             $arr[] = $i;
         }
 
-        $writer = SimpleExcelWriter::streamDownload('inscricoes_' . $ano . '_selecao' . $selecao->id . '.xlsx')
+        $writer = SimpleExcelWriter::streamDownload(ClasseUtils::obterClasseNomeAbreviada('Selecao') . $selecao->id . '_' . ClasseUtils::obterClasseNomeAbreviadaPlural('Inscricao') . '_' . $ano . '.xlsx')
             ->addRows($arr);
     }
 
@@ -846,7 +847,7 @@ class SelecaoController extends Controller
             $arr[] = $i;
         }
 
-        $writer = SimpleExcelWriter::streamDownload('matriculas_' . $ano . '_selecao' . $selecao->id . '.xlsx')
+        $writer = SimpleExcelWriter::streamDownload(ClasseUtils::obterClasseNomeAbreviada('Selecao') . $selecao->id . '_' . ClasseUtils::obterClasseNomeAbreviadaPlural('Matricula') . '_' . $ano . '.xlsx')
             ->addRows($arr);
     }
 
