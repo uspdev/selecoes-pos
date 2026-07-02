@@ -7,7 +7,10 @@
   @endif
   As matrículas para {{ $objetivo }} vão de {{ formatarDataHora($matricula->selecao->inscricoesmatriculas_datahora_inicio) }} até {{ formatarDataHora($matricula->selecao->inscricoesmatriculas_datahora_fim) }}.<br />
   @if ($matricula->selecao->tem_taxa)
-    Você {{ $solicitacaoisencaotaxa_aprovada ? '' : 'não ' }}está isento de pagar a taxa de matrícula para esta seleção.
+    Há taxa de matrícula para esta seleção.
+    @if (!empty($matricula->created_at))    {{-- se existe o created_at, é porque já passou pelo "Prosseguir", e portanto conseguimos determinar se a solicitação de isenção de taxa foi aprovada ou não --}}
+      Você {{ $solicitacaoisencaotaxa_aprovada ? '' : 'não ' }}está isento(a) de pagar a taxa.
+    @endif
   @else
     Não há taxa de matrícula para esta seleção.
   @endif
