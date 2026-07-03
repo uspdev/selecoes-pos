@@ -15,6 +15,17 @@
         <span class="badge badge-pill badge-primary datatable-counter">-</span>
       </div>
       @include('partials.datatable-filter-box', ['otable' => 'oTable'])
+      @canany(['perfiladmin', 'perfilgerente', 'perfildocente'])
+        <div class="d-flex align-items-center ml-2" style="gap: 10px;">
+          <input type="checkbox" name="somente_da_ultima_selecao" id="somente_da_ultima_selecao" checked="checked" style="width: auto; margin: 0;">
+          <label for="somente_da_ultima_selecao" style="margin: 0;">
+            Somente da Última Seleção
+            @if (auth()->user()?->can('perfiladmin') || in_array(auth()->user()?->funcao_maxima, ['Serviço de Pós-Graduação', 'Coordenadores da Pós-Graduação']))
+              de cada Programa e de Aluno Especial
+            @endif
+          </label>
+        </div>
+      @endif
     </div>
   </div>
 
@@ -33,7 +44,7 @@
       </thead>
       <tbody>
         @foreach ($objetos as $inscricao)
-          <tr>
+          <tr data-is-latest-selecoes="{{ $inscricao->is_latest_selecoes ? '1' : '0' }}">
             <td>
               <a href="inscricoes/edit/{{ $inscricao->id }}">{{ $inscricao->id }}</a>
             </td>
@@ -121,6 +132,17 @@
           language: {
             url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json'
           }
+      });
+
+      $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        if (!$('#somente_da_ultima_selecao').is(':checked'))
+            return true;
+        return ($(oTable.row(dataIndex).node()).attr('data-is-latest-selecoes') === '1');
+      });
+
+      $('#somente_da_ultima_selecao').on('change', function() {
+          oTable.draw();
+          $('.datatable-counter').html(oTable.page.info().recordsDisplay);
       });
 
       // recuperando o storage local

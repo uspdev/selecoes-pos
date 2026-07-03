@@ -285,6 +285,24 @@ class User extends Authenticatable
     }
 
     /**
+     * Acessor para funcao_maxima
+     * Utilizado somente para quem é gerente ou docente
+     */
+    public function getFuncaoMaximaAttribute()
+    {
+        $funcoesUsuario = DB::table('user_programa')->where('user_id', $this->id)->pluck('funcao')->filter()->toArray();    // não dá pra partir de $this->, pelo fato de programa_id ser null na tabela relacional
+        if (empty($funcoesUsuario))
+            return null;
+
+        $funcoesOrdenadas = ['Coordenadores da Pós-Graduação', 'Serviço de Pós-Graduação', 'Coordenadores do Programa', 'Secretários(as) do Programa', 'Docentes do Programa'];
+        foreach ($funcoesOrdenadas as $funcao)
+            if (in_array($funcao, $funcoesUsuario))
+                return $funcao;    // retorna a primeira função do usuário que aparece na lista de funções ordenadas, ou seja, a função mais alta
+
+        return array_values($funcoesUsuario)[0];
+    }
+
+    /**
      * Relacionamento n:n com solicitação de isenção de taxa:
      */
     public function solicitacoesisencaotaxa()

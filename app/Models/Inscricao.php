@@ -179,7 +179,14 @@ class Inscricao extends Model
                 $inscricoes = Auth::user()->inscricoes()->with('selecao')->wherePivotIn('papel', ['Autor'])->get();
         }
 
-        return $inscricoes->filter(fn($inscricao) => !$inscricao->selecao->isMatricula());
+        $inscricoes = $inscricoes->filter(fn($inscricao) => !$inscricao->selecao->isMatricula());
+
+        $ultimasSelecoesIds = Selecao::obterUltimasSelecoesIds('Inscricao');
+        $inscricoes->each(function ($inscricao) use ($ultimasSelecoesIds) {
+            $inscricao->is_latest_selecoes = in_array($inscricao->selecao_id, $ultimasSelecoesIds);
+        });
+
+        return $inscricoes;
     }
 
     public static function listarInscricoesPorSelecao(Selecao $selecao, int $ano)
