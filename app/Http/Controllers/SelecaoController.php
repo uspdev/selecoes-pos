@@ -377,7 +377,7 @@ class SelecaoController extends Controller
         if (is_array($new) && !empty($new)) {                           // veio do adicionar campo novo
             $new['label'] = removeSpecialChars($new['label']);
             $new['value'] = substr(removeAccents(Str::of($new['label'])->lower()->replace([' ', '-'], '_')), 0, 32);
-            $new['order'] = JSONForms::getLastIndex($template->$field->value ?? [], 'order') + 1;
+            $new['order'] = JSONForms::getLastIndex(array_values((array) $template->$field->value) ?? [], 'order') + 1;
             $value[] = $new;
         }
         $template->$field->value = $value;
