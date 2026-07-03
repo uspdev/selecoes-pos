@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Jobs\AlertaCandidatosIncompletude;
 use App\Observers\SelecaoObserver;
+use App\Utils\ClasseUtils;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -1022,6 +1023,19 @@ class Selecao extends Model
             Estrutura::obterUnidade(config('senhaunica.codigoUnidade'))['nomund'] ?? 'Unidade',
             $this->attributes['template']
         );
+    }
+
+    /**
+     * Retorna os ids das últimas seleções de cada programa, mais o id da última seleção de aluno especial
+     */
+    public static function obterUltimasSelecoesIds($classe_nome)
+    {
+        $classe_nome_plural = ClasseUtils::obterClasseNomePlural($classe_nome);
+        $classe_nome_plural_para_datas = (in_array($classe_nome_plural, ['inscricoes', 'matriculas']) ? 'inscricoesmatriculas' : $classe_nome_plural);
+
+        $ultimasPorPrograma = self::query()->select(DB::raw('MAX(id) AS id'))->whereNotNull('programa_id')->whereNotNull($classe_nome_plural_para_datas . '_datahora_inicio')->where($classe_nome_plural_para_datas . '_datahora_inicio', '<=', now())->groupBy('programa_id');
+        $ultimaAlunoEspecial = self::query()->select('id')->whereRelation('categoria', 'nome', '=', 'Aluno Especial')->whereNotNull($classe_nome_plural_para_datas . '_datahora_inicio')->where($classe_nome_plural_para_datas . '_datahora_inicio', '<=', now())->orderBy('id', 'desc')->limit(1);
+        return array_merge($ultimasPorPrograma->pluck('id')->toArray(), $ultimaAlunoEspecial->pluck('id')->toArray());
     }
 
     public function isMatricula()

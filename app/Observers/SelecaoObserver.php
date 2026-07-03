@@ -16,7 +16,7 @@ class SelecaoObserver
      */
     public function created(Selecao $selecao)
     {
-        $this->atualizaNome($selecao);
+        $this->atualizaCampos($selecao);
     }
 
     /**
@@ -38,7 +38,7 @@ class SelecaoObserver
      */
     public function updated(Selecao $selecao)
     {
-        $this->atualizaNome($selecao);
+        $this->atualizaCampos($selecao);
 
         if ($selecao->isDirty('estado'))                                           // se a alteração na seleção foi no estado
             if (($selecao->getOriginal('estado') == 'Em Elaboração') &&            // se o estado anterior era Em Elaboração
@@ -94,19 +94,30 @@ class SelecaoObserver
      * @param  \App\Models\Selecao  $selecao
      * @return void
      */
-    private function atualizaNome(Selecao $selecao)
+    private function atualizaCampos(Selecao $selecao)
     {
-        $selecao_nome_novo = (($selecao->categoria->nome === 'Aluno Especial') ? 'Aluno Especial' : $selecao->programa->sigla . ' para ingresso');
+        $dados_a_atualizar = [];
 
+        // marca para atualizar o nome
+        $selecao_nome_novo = (($selecao->categoria->nome === 'Aluno Especial') ? 'Aluno Especial' : $selecao->programa->sigla . ' para ingresso');
         if ($selecao->categoria->nome === 'Aluno Especial')
             $selecao_nome_novo .= ' ';
         else
             $selecao_nome_novo .= (($selecao->ingresso_semestre == 0) ? ' em ' : ' no ');
-
         $selecao_nome_novo .= (($selecao->ingresso_semestre == 0) ? $selecao->ingresso_ano : $selecao->ingresso_semestre . 'º semestre de ' . $selecao->ingresso_ano);
-
-        // verifica se o nome realmente precisa ser alterado para evitar operações desnecessárias
         if ($selecao->nome !== $selecao_nome_novo)
-            $selecao->updateQuietly(['nome' => $selecao_nome_novo]);
+            $dados_a_atualizar['nome'] = $selecao_nome_novo;
+
+        // marca para atualizar as datas de início e fim de solicitações de isenção de taxa
+        if ($selecao->fluxo_continuo) {
+            if ($selecao->solicitacoesisencaotaxa_datahora_inicio !== $selecao->inscricoesmatriculas_datahora_inicio)
+                $dados_a_atualizar['solicitacoesisencaotaxa_datahora_inicio'] = $selecao->inscricoesmatriculas_datahora_inicio;
+            if ($selecao->solicitacoesisencaotaxa_datahora_fim !== $selecao->inscricoesmatriculas_datahora_fim)
+                $dados_a_atualizar['solicitacoesisencaotaxa_datahora_fim'] = $selecao->inscricoesmatriculas_datahora_fim;
+        }
+
+        // efetua as atualizações propriamente ditas
+        if (!empty($dados_a_atualizar))
+            $selecao->updateQuietly($dados_a_atualizar);
     }
 }
