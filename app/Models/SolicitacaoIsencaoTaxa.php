@@ -146,8 +146,7 @@ class SolicitacaoIsencaoTaxa extends Model
     {
         switch (session('perfil')) {
             case 'admin':
-                $solicitacoesisencaotaxa = self::all();
-                break;
+                return self::all();
 
             case 'gerente':
                 if (DB::table('user_programa')    // não dá pra partir de $this->, pelo fato de programa_id ser null na tabela relacional
@@ -155,29 +154,20 @@ class SolicitacaoIsencaoTaxa extends Model
                         ->whereNull('programa_id')
                         ->whereIn('funcao', ['Serviço de Pós-Graduação', 'Coordenadores da Pós-Graduação'])
                         ->exists())
-                    $solicitacoesisencaotaxa = self::all();
+                    return self::all();
                 else
-                    $solicitacoesisencaotaxa = self::with('selecao')->whereHas('selecao', function ($query) {
+                    return self::with('selecao')->whereHas('selecao', function ($query) {
                         $query->whereIn('programa_id', Auth::user()->listarProgramasGerenciados()->pluck('id'));
                     })->get();
-                break;
 
             case 'docente':
-                $solicitacoesisencaotaxa = self::with('selecao')->whereHas('selecao', function ($query) {
+                return self::with('selecao')->whereHas('selecao', function ($query) {
                     $query->whereIn('programa_id', Auth::user()->listarProgramasGerenciadosFuncao('Docentes do Programa')->pluck('id'));
                 })->get();
-                break;
 
             default:
-                $solicitacoesisencaotaxa = Auth::user()->solicitacoesisencaotaxa()->wherePivotIn('papel', ['Autor'])->get();
+                return Auth::user()->solicitacoesisencaotaxa()->wherePivotIn('papel', ['Autor'])->get();
         }
-
-        $ultimasSelecoesIds = Selecao::obterUltimasSelecoesIds('SolicitacaoIsencaoTaxa');
-        $solicitacoesisencaotaxa->each(function ($solicitacaoisencaotaxa) use ($ultimasSelecoesIds) {
-            $solicitacaoisencaotaxa->is_latest_selecoes = in_array($solicitacaoisencaotaxa->selecao_id, $ultimasSelecoesIds);
-        });
-
-        return $solicitacoesisencaotaxa;
     }
 
     public static function listarSolicitacoesIsencaoTaxaPorSelecao(Selecao $selecao, int $ano)
