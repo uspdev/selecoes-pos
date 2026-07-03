@@ -14,9 +14,9 @@ class ArquivoPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User                                            $user
-     * @param  \App\Models\Selecao ou SolicitacaoIsencaoTaxa ou Inscricao  $objeto
-     * @param  string                                                      $classe_nome
+     * @param  \App\Models\User                                                         $user
+     * @param  \App\Models\Selecao ou SolicitacaoIsencaoTaxa ou Inscricao ou Matricula  $objeto
+     * @param  string                                                                   $classe_nome
      * @return mixed
      */
     public function viewAny(User $user, object $objeto, string $classe_nome)
@@ -62,6 +62,10 @@ class ArquivoPolicy
             foreach ($arquivo->inscricoes as $inscricao)
                 if ($user->gerenciaPrograma($inscricao->selecao->programa_id))
                     return true;
+
+            foreach ($arquivo->matriculas as $matricula)
+                if ($user->gerenciaPrograma($matricula->selecao->programa_id))
+                    return true;
         } elseif (Gate::allows('perfildocente')) {
             foreach ($arquivo->solicitacoesisencaotaxa as $solicitacaoisencaotaxa)
                 if ($user->gerenciaProgramaFuncao('Docentes do Programa', $solicitacaoisencaotaxa->selecao->programa_id))
@@ -69,6 +73,10 @@ class ArquivoPolicy
 
             foreach ($arquivo->inscricoes as $inscricao)
                 if ($user->gerenciaProgramaFuncao('Docentes do Programa', $inscricao->selecao->programa_id))
+                    return true;
+
+            foreach ($arquivo->matriculas as $matricula)
+                if ($user->gerenciaProgramaFuncao('Docentes do Programa', $matricula->selecao->programa_id))
                     return true;
         } elseif (Gate::allows('perfilusuario')) {
             foreach ($arquivo->solicitacoesisencaotaxa as $solicitacaoisencaotaxa) {
@@ -82,15 +90,21 @@ class ArquivoPolicy
                 if ($autor_inscricao && ($autor_inscricao->id == $user->id))
                     return true;                                   // permite que usuários baixem arquivos de suas inscrições
             }
+
+            foreach ($arquivo->matriculas as $matricula) {
+                $autor_matricula = $matricula->pessoas('Autor');
+                if ($autor_matricula && ($autor_matricula->id == $user->id))
+                    return true;                                   // permite que usuários baixem arquivos de suas matrículas
+            }
         }
     }
 
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User                                            $user
-     * @param  \App\Models\Selecao ou SolicitacaoIsencaoTaxa ou Inscricao  $objeto
-     * @param  string                                                      $classe_nome
+     * @param  \App\Models\User                                                         $user
+     * @param  \App\Models\Selecao ou SolicitacaoIsencaoTaxa ou Inscricao ou Matricula  $objeto
+     * @param  string                                                                   $classe_nome
      * @return mixed
      */
     public function create(User $user, object $objeto, string $classe_nome)
@@ -108,22 +122,27 @@ class ArquivoPolicy
             $selecao = $objeto->selecao;
             $selecao->atualizarStatus();
             if ((($classe_nome == 'SolicitacaoIsencaoTaxa') && !in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Solicitações de Isenção de Taxa'])) ||
-                (($classe_nome == 'Inscricao'             ) && !in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas'          ])))
+                (($classe_nome == 'Inscricao'             ) && !in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas'          ])) ||
+                (($classe_nome == 'Matricula'             ) && !in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas'          ])))
                 return false;
 
             $autor_inscricao = $objeto->pessoas('Autor');
             if ($autor_inscricao && ($autor_inscricao->id == $user->id))
                 return true;                                       // permite que usuários subam arquivos em suas solicitações de isenção de taxa e inscrições
+
+            $autor_matricula = $objeto->pessoas('Autor');
+            if ($autor_matricula && ($autor_matricula->id == $user->id))
+                return true;                                       // permite que usuários subam arquivos em suas matrículas
         }
     }
 
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User                                            $user
-     * @param  \App\Models\Arquivo                                         $arquivo
-     * @param  \App\Models\Selecao ou SolicitacaoIsencaoTaxa ou Inscricao  $objeto
-     * @param  string                                                      $classe_nome
+     * @param  \App\Models\User                                                         $user
+     * @param  \App\Models\Arquivo                                                      $arquivo
+     * @param  \App\Models\Selecao ou SolicitacaoIsencaoTaxa ou Inscricao ou Matricula  $objeto
+     * @param  string                                                                   $classe_nome
      * @return mixed
      */
     public function update(User $user, Arquivo $arquivo, object $objeto, string $classe_nome)
@@ -134,10 +153,10 @@ class ArquivoPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User                                            $user
-     * @param  \App\Models\Arquivo                                         $arquivo
-     * @param  \App\Models\Selecao ou SolicitacaoIsencaoTaxa ou Inscricao  $objeto
-     * @param  string                                                      $classe_nome
+     * @param  \App\Models\User                                                         $user
+     * @param  \App\Models\Arquivo                                                      $arquivo
+     * @param  \App\Models\Selecao ou SolicitacaoIsencaoTaxa ou Inscricao ou Matricula  $objeto
+     * @param  string                                                                   $classe_nome
      * @return mixed
      */
     public function delete(User $user, Arquivo $arquivo, object $objeto, string $classe_nome)
@@ -155,7 +174,8 @@ class ArquivoPolicy
             $selecao = $objeto->selecao;
             $selecao->atualizarStatus();
             if ((($classe_nome == 'SolicitacaoIsencaoTaxa') && !in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Solicitações de Isenção de Taxa'])) ||
-                (($classe_nome == 'Inscricao'             ) && !in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas'          ])))
+                (($classe_nome == 'Inscricao'             ) && !in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas'          ])) ||
+                (($classe_nome == 'Matricula'             ) && !in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas'          ])))
                 return false;
 
             $autor_arquivo_id = $arquivo->user_id;
@@ -164,9 +184,13 @@ class ArquivoPolicy
             if ($autor_solicitacaoisencaotaxa && ($autor_solicitacaoisencaotaxa->id == $user->id))
                 return true;                                       // permite que usuários renomeiem/apaguem arquivos em suas solicitações de isenção de taxa
 
-                $autor_inscricao = $objeto->pessoas('Autor');
+            $autor_inscricao = $objeto->pessoas('Autor');
             if (($autor_arquivo_id == $user->id) && $autor_inscricao && ($autor_inscricao->id == $user->id))
                 return true;                                       // permite que usuários renomeiem/apaguem arquivos em suas inscrições
+
+            $autor_matricula = $objeto->pessoas('Autor');
+            if (($autor_arquivo_id == $user->id) && $autor_matricula && ($autor_matricula->id == $user->id))
+                return true;                                       // permite que usuários renomeiem/apaguem arquivos em suas matrículas
         }
     }
 
