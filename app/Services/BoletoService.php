@@ -81,11 +81,9 @@ class BoletoService
                     config('app.debug') && Log::info('$boleto->situacao(' . $id . '): ' . json_encode($boleto->situacao($id)));
                 }
 
-                Log::info('Fim do gerarBoleto: ' . var_export($objeto->boletoFoiGerado, true));
                 // retorna o conteúdo do PDF
                 return ['nome_original' => $arquivo->nome_original, 'conteudo' => $obter['value']];
             } else {
-                Log::info('Fim do gerarBoleto: ' . var_export($objeto->boletoFoiGerado, true));
                 Log::info('Erro ao gerar boleto... $gerar[\'value\']: ' . $gerar['value']);
                 return ['nome_original' => '', 'conteudo' => ''];
             }
