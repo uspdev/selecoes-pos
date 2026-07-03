@@ -19,15 +19,15 @@
             @csrf
             {{ html()->hidden('id') }}
             <div id="template-new" class="form-group row mt-2">
-              <div class="col-2"><strong>Campo</strong></div>
-              <input class="form-control col-9" name="campo" id="id_campo1">
+              <div class="col-3"><strong>Campo</strong></div>
+              <input class="form-control col-8" name="campo" id="id_campo1">
             </div>
             @foreach ($selecao->getTemplateFields() as $field)
               <div class="form-group row mt-2">
-                <div class="col-2"><strong>{{ ucfirst($field) }}</strong></div>
+                <div class="col-3"><strong>{{ ucfirst($field) }}</strong></div>
                 @switch($field)
                   @case('type')
-                    <select class="form-control col-9" name="new[{{ $field }}]">
+                    <select class="form-control col-8" name="new[{{ $field }}]">
                       <option value='text'>Texto</option>
                       <option value='select'>Caixa de Seleção</option>
                       <option value='date'>Data</option>
@@ -38,20 +38,20 @@
                     </select>
                     @break
                   @case('validate')
-                    <select class="form-control col-9" name="new[{{ $field }}]">
+                    <select class="form-control col-8" name="new[{{ $field }}]">
                       <option value=''>Sem validação</option>
                       <option value='required'>Obrigatório</option>
                       <option value='required|integer'>Obrigatório - Somente números</option>
                     </select>
                     @break
                   @case('can')
-                    <select class="form-control col-9" name="new[{{ $field }}]">
+                    <select class="form-control col-8" name="new[{{ $field }}]">
                       <option value=''>Exibido para todos</option>
                       <option value='gerente'>Somente Gerentes</option>
                     </select>
                     @break
                   @default
-                    <input class="form-control col-9" name="new[{{ $field }}]">
+                    <input class="form-control col-8" name="new[{{ $field }}]">
                 @endswitch
               </div>
             @endforeach
