@@ -9,6 +9,26 @@ use App\Models\Selecao;
 class SelecaoObserver
 {
     /**
+     * Handle the Selecao "creating" event.
+     *
+     * @param  \App\Models\Selecao  $selecao
+     * @return void
+     */
+    public function creating(Selecao $selecao)
+    {
+        if ($selecao->categoria->nome != 'Aluno Especial')
+            $queryUltimaSelecao = Selecao::where('programa_id', $selecao->programa_id);
+        else
+            $queryUltimaSelecao = Selecao::whereHas('categoria', function ($query) {
+                $query->where('nome', 'Aluno Especial');
+            });
+        $ultimaSelecao = $queryUltimaSelecao->orderBy('id', 'desc')->first();
+
+        if ($ultimaSelecao)
+            $selecao->template = $ultimaSelecao->template;    // se não houver seleção anterior desse programa/aluno especial, utiliza o template original (definido no modelo da seleção), senão utiliza dessa última seleção
+    }
+
+    /**
      * Handle the Selecao "created" event.
      *
      * @param  \App\Models\Selecao  $selecao

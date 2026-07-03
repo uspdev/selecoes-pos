@@ -993,7 +993,6 @@ class Selecao extends Model
         return Matricula::contarMatriculasPorMes($ano, $this);
     }
 
-    // função para generalizar o nome da unidade, baseando-se no valor do .env
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
