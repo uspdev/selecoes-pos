@@ -134,7 +134,7 @@ class JSONForms
                         if (($key == 'nome') && ($classe_nome == 'Inscricao') && ($selecao->categoria->nome !== 'Aluno Especial')) {
                             $html_string_linhapesquisa .=
                                           '<div class="col-sm-3">' . PHP_EOL .
-                                            '<label class="col-form-label va-middle" for="extras[linha_pesquisa]">Linha de <span style="white-space: nowrap;">Pesquisa/Tema <small class="text-required">(*)</small></span></label>' . PHP_EOL .
+                                            '<label class="col-form-label va-middle" for="extras[linha_pesquisa]">Linha de <span style="white-space: nowrap;">Pesquisa/Tema&nbsp;<small class="text-required">(*)</small></span></label>' . PHP_EOL .
                                           '</div>' . PHP_EOL .
                                           '<div class="col-sm-9">' . PHP_EOL .
                                             '<select class="form-control w-100" name="extras[linha_pesquisa]" id="extras[linha_pesquisa]" required>' . PHP_EOL .
@@ -150,7 +150,7 @@ class JSONForms
                         if (($key == 'nome') && ($classe_nome == 'SolicitacaoIsencaoTaxa')) {
                             $html_string_motivoisencaotaxa .=
                                           '<div class="col-sm-3">' . PHP_EOL .
-                                            '<label class="col-form-label va-middle" for="extras[motivo_isencao_taxa]">Motivo <small class="text-required">(*)</small></label>' . PHP_EOL .
+                                            '<label class="col-form-label va-middle" for="extras[motivo_isencao_taxa]">Motivo&nbsp;<small class="text-required">(*)</small></label>' . PHP_EOL .
                                           '</div>' . PHP_EOL .
                                           '<div class="col-sm-9">' . PHP_EOL .
                                             '<select class="form-control w-100" name="extras[motivo_isencao_taxa]" id="extras[motivo_isencao_taxa]" required>' . PHP_EOL .

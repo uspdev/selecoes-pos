@@ -1,6 +1,6 @@
 <div class="form-group row">
   @php
-    $col['label'] .= collect($rules[$col['name']] ?? [])->first(fn($rule) => str_contains($rule, 'required')) ? ' <small class="text-required">(*)</small>' : '';
+    $col['label'] .= collect($rules[$col['name']] ?? [])->first(fn($rule) => str_contains($rule, 'required')) ? '&nbsp;<small class="text-required">(*)</small>' : '';
     $selectedValue = (string) old($col['name'], $modo == 'edit' ? $objeto->{$col['name']} : '');
   @endphp
   {{ html()->label($col['label'] ?? $col['name'])->class('col-form-label col-sm-3') }}

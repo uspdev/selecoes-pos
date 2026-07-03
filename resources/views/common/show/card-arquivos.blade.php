@@ -44,7 +44,7 @@
         @if (($tipoarquivo['nome'] !== 'Boleto(s) de Pagamento - Disciplinas Removidas') || ($objeto->arquivos->where('pivot.tipo', $tipoarquivo['nome'])->count() > 0))    {{-- desconsidera o tipo de documento de boletos para disciplinas removidas quando não há nenhum boleto para disciplina removida --}}
           @if (!($solicitacaoisencaotaxa_aprovada ?? false) || !str_starts_with($tipoarquivo['nome'], 'Boleto(s) de Pagamento'))    {{-- desconsidera os tipos de documento de boletos caso haja solicitação de isenção de taxa aprovada --}}
             <div class="arquivos-lista">
-              {{ $tipoarquivo['nome'] }} {!! ($tipoarquivo->isObrigatorio($objeto->extras) ? '<small class="text-required">(*)</small>' : '') !!}
+              {{ $tipoarquivo['nome'] }}&nbsp;{!! ($tipoarquivo->isObrigatorio($objeto->extras) ? '<small class="text-required">(*)</small>' : '') !!}
               @php
                 $editavel = (isset($tipoarquivo['editavel']) && $tipoarquivo['editavel']);
                 if (session('perfil') == 'usuario')

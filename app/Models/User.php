@@ -285,7 +285,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Acessor para funcao_maxima
+     * Accessor getter para funcao_maxima
      * Utilizado somente para quem é gerente ou docente
      */
     public function getFuncaoMaximaAttribute()

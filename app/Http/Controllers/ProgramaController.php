@@ -64,8 +64,6 @@ class ProgramaController extends Controller
         if ($validator->fails())
             return back()->withErrors($validator)->withInput();
 
-        $request->merge(['matricula' => $request->has('matricula')]);    // acerta o valor do campo "matricula" (pois, se o usuário deixou false, o campo não vem no $request e, se o usuário deixou true, ele vem mas com valor null)
-
         // transaction para não ter problema de inconsistência do DB
         DB::transaction(function () use ($request) {
             $programa = Programa::create($request->all());
@@ -92,8 +90,6 @@ class ProgramaController extends Controller
         $validator = Validator::make($request->all(), ProgramaRequest::rules, ProgramaRequest::messages);
         if ($validator->fails())
             return back()->withErrors($validator)->withInput();
-
-        $request->merge(['matricula' => $request->has('matricula')]);    // acerta o valor do campo "matricula" (pois, se o usuário deixou false, o campo não vem no $request e, se o usuário deixou true, ele vem mas com valor null)
 
         $programa = Programa::find((int) $id);
         $programa->fill($request->all());

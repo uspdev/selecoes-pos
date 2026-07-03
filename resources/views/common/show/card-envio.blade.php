@@ -31,7 +31,7 @@
         <div class="form-group row">
           <div class="col-sm-12 d-flex align-items-center" style="gap: 10px;">
             <input class="form-control" style="width: auto; margin: 0;" name="declaro" id="declaro" type="checkbox" required {{ $objeto_aprovada ? 'checked disabled' : '' }}>
-            <label style="margin: 0;" for="declaro">Declaro que as informações prestadas são verdadeiras e assumo inteira responsabilidade pelas mesmas. <small class="text-required">(*)</small></label>
+            <label style="margin: 0;" for="declaro">Declaro que as informações prestadas são verdadeiras e assumo inteira responsabilidade pelas mesmas.&nbsp;<small class="text-required">(*)</small></label>
           </div>
           <br />
         </div>

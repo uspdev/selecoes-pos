@@ -10,7 +10,7 @@
                     <th>Programa</th>
                     <th>Fonte do Recurso</th>
                     <th>Centro Gerencial</th>
-                    <th>Endereço no Site da Unidade para Acompanhamento do Processo pelos Candidatos</th>
+                    <th>Endereço no Site da Unidade para Acompanhamento do Processo pelos Candidatos a Aluno Especial</th>
                     <th>E-mail da Pós-Graduação</th>
                     <th>E-mail da Informática</th>
                     <th>E-mail da Equipe de Gerenciamento do Site da Unidade</th>

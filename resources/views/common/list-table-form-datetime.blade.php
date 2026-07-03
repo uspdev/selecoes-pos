@@ -1,6 +1,6 @@
 <div class="form-group row">
   @php
-    $col['label'] .= collect($rules[str_replace('datahora_', 'data_', $col['name'])] ?? [])->first(fn($rule) => str_contains($rule, 'required')) ? ' <small class="text-required">(*)</small>' : '';
+    $col['label'] .= collect($rules[str_replace('datahora_', 'data_', $col['name'])] ?? [])->first(fn($rule) => str_contains($rule, 'required')) ? '&nbsp;<small class="text-required">(*)</small>' : '';
   @endphp
   {{ html()->label($col['label'] ?? str_replace('datahora_', 'data_', $col['name']), str_replace('datahora_', 'data_', $col['name']))->class('col-form-label col-sm-3') }}
   <div class="col-sm-4 d-flex align-items-center">

@@ -17,7 +17,7 @@ class Programa extends Model
         'descricao',
         'email_secretaria',
         'link_acompanhamento',
-        'matricula',
+        'processos',
     ];
 
     // uso no crud generico
@@ -40,12 +40,13 @@ class Programa extends Model
         ],
         [
             'name' => 'link_acompanhamento',
-            'label' => 'Endereço no site da unidade para acompanhamento do processo pelos candidatos',
+            'label' => 'Endereço no Site da Unidade para Acompanhamento do Processo pelos Candidatos',
         ],
         [
-            'name' => 'matricula',
-            'label' => 'Usar matrícula ao invés de inscrição',
-            'type' => 'checkbox',
+            'name' => 'processos',
+            'label' => 'Processo(s) Utilizado(s)',
+            'type' => 'select',
+            'data' => ['Inscrição' => 'Inscrição', 'Matrícula' => 'Matrícula'],
         ],
     ];
 
@@ -94,6 +95,22 @@ class Programa extends Model
                 'users' => DB::table('user_programa')->join('users', 'user_programa.user_id', '=', 'users.id')->where('user_programa.funcao', 'Coordenadores da Pós-Graduação')->orderBy('user_programa.id')->get(),    // não dá pra partir de Programa::, pelo fato de programa_id ser null na tabela relacional
             ],
         ];
+    }
+
+    /**
+     * Accessor getter para inscricao
+     */
+    public function getInscricaoAttribute()
+    {
+        return str_contains($this->processos, 'Inscrição');
+    }
+
+    /**
+     * Accessor getter para matricula
+     */
+    public function getMatriculaAttribute()
+    {
+        return str_contains($this->processos, 'Matrícula');
     }
 
     /**

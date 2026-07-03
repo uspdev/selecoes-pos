@@ -24,7 +24,7 @@
           <div class="card-body">
             <div class="list_table_div_form">
               <div class="form-group row">
-                <label class="col-form-label col-sm-3" for="data_limite">Limpar dados anteriores a (inclusive) <small class="text-required">(*)</small></label>
+                <label class="col-form-label col-sm-3" for="data_limite">Limpar dados anteriores a (inclusive)&nbsp;<small class="text-required">(*)</small></label>
                 <div class="col-sm-9">
                   <input class="form-control datepicker hasDatePicker" type="text" name="data_limite" id="data_limite" value style="width: 106px;">
                 </div>

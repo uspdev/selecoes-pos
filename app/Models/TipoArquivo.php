@@ -99,7 +99,8 @@ class TipoArquivo extends Model
     }
 
     /**
-     * ACCESSOR: intercepta quando lê do banco para a tela
+     * Accessor getter para Obrigatorio
+     * intercepta quando lê do banco para a tela
      * se for 1 e o campo de condição estiver preenchido, devolve 'Condicional' para o <select> marcar certo
      */
     public function getObrigatorioAttribute($value)

@@ -45,7 +45,7 @@ class Parametro extends Model
         ],
         [
             'name' => 'link_acompanhamento_especiais',
-            'label' => 'Endereço no Site da Unidade para Acompanhamento do Processo pelos Candidatos',
+            'label' => 'Endereço no Site da Unidade para Acompanhamento do Processo pelos Candidatos a Aluno Especial',
         ],
         [
             'name' => 'max_disciplinas_aluno_especial',

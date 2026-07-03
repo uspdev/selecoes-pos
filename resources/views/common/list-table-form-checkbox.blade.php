@@ -1,6 +1,6 @@
 <div class="form-group row">
   @php
-    $col['label'] .= collect($rules[$col['name']] ?? [])->first(fn($rule) => str_contains($rule, 'required')) ? ' <small class="text-required">(*)</small>' : '';
+    $col['label'] .= collect($rules[$col['name']] ?? [])->first(fn($rule) => str_contains($rule, 'required')) ? '&nbsp;<small class="text-required">(*)</small>' : '';
   @endphp
   <div class="col-sm-12 d-flex align-items-center" style="gap: 10px;">
     @php

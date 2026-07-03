@@ -753,7 +753,7 @@ class Selecao extends Model
     }
 
     /**
-     * Accessor getter para $config
+     * Accessor getter para config
      */
     public function getConfigAttribute(string $value)
     {
@@ -765,7 +765,7 @@ class Selecao extends Model
     }
 
     /**
-     * Accessor setter para $config
+     * Accessor setter para config
      */
     public function setConfigAttribute(string|array $value)
     {
@@ -784,7 +784,7 @@ class Selecao extends Model
     }
 
     /**
-     * Accessor para $template
+     * Accessor getter para template
      */
     public function getTemplateAttribute(string $value)
     {

@@ -1,6 +1,6 @@
 <div class="form-group row">
   @php
-    $col['label'] .= collect($rules[$col['name']] ?? [])->first(fn($rule) => str_contains($rule, 'required')) ? ' <small class="text-required">(*)</small>' : '';
+    $col['label'] .= collect($rules[$col['name']] ?? [])->first(fn($rule) => str_contains($rule, 'required')) ? '&nbsp;<small class="text-required">(*)</small>' : '';
     $colSize = collect($col['data'])->every(fn($value) => strlen((string) $value) <= 12) ? 3 : 9;
   @endphp
   {{ html()->label($col['label'] ?? $col['name'])->for($col['name'])->class('col-form-label col-sm-3') }}
