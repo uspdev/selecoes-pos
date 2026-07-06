@@ -67,12 +67,11 @@ class LimpaDados implements ShouldQueue
 
             // apaga todas as seleções gravadas no banco de dados até essa data
             foreach (Selecao::where('created_at', '<=', $data_limite)->get() as $selecao) {
-                $selecao->arquivos()->detach();
-                $selecao->disciplinas()->detach();
-                $selecao->linhaspesquisa()->detach();
-                $selecao->motivosisencaotaxa()->detach();
                 $selecao->niveislinhaspesquisa()->detach();
+                $selecao->disciplinas()->detach();
+                $selecao->motivosisencaotaxa()->detach();
                 $selecao->tiposarquivo()->detach();
+                $selecao->arquivos()->detach();
                 $selecao->delete();
             }
 

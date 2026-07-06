@@ -79,14 +79,6 @@ class LinhaPesquisa extends Model
     }
 
     /**
-     * relacionamento com seleções
-     */
-    public function selecoes()
-    {
-        return $this->belongsToMany('App\Models\Selecao', 'selecao_linhapesquisa', 'linhapesquisa_id', 'selecao_id')->withTimestamps();
-    }
-
-    /**
      * relacionamento com orientadores
      */
     public function orientadores()
@@ -108,5 +100,23 @@ class LinhaPesquisa extends Model
     public function niveis()
     {
         return $this->belongsToMany('App\Models\Nivel', 'nivel_linhapesquisa', 'linhapesquisa_id', 'nivel_id')->withTimestamps();
+    }
+
+    /**
+     * relacionamento com combinações de níveis com linhas de pesquisa/temas
+     */
+    public function niveislinhaspesquisa()
+    {
+        return $this->hasMany('App\Models\NivelLinhaPesquisa', 'linhapesquisa_id');
+    }
+
+    /**
+     * Accessor getter para selecoes
+     */
+    public function getSelecoesAttribute()
+    {
+        return $this->niveislinhaspesquisa->flatMap(function ($nivelLinhaPesquisa) {
+            return $nivelLinhaPesquisa->selecoes;
+        })->unique('id')->values();
     }
 }
