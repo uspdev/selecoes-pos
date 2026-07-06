@@ -39,7 +39,7 @@
               @include('tiposarquivo.partials.btn-delete')
             @endcan
           @endif
-          @if ($tipoarquivo->classe_nome == 'Seleções')
+          @if ($tipoarquivo->classe_nome !== 'Seleções')
             @include('tiposarquivo.partials.detalhes')
           @endif
         </div>

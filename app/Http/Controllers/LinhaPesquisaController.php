@@ -141,7 +141,7 @@ class LinhaPesquisaController extends Controller
         $linhapesquisa = LinhaPesquisa::find((int) $id);
         Gate::authorize('linhaspesquisa.delete', $linhapesquisa);
 
-        if ($linhapesquisa->selecoes()->exists())
+        if ($linhapesquisa->selecoes->isNotEmpty())
             $request->session()->flash('alert-danger', 'Há seleções para esta linha de pesquisa/tema!');
         else {
             // transaction para não ter problema de inconsistência do DB

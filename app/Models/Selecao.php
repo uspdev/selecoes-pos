@@ -1078,14 +1078,6 @@ class Selecao extends Model
     }
 
     /**
-     * relacionamento com linhas de pesquisa/temas
-     */
-    public function linhaspesquisa()
-    {
-        return $this->belongsToMany('App\Models\LinhaPesquisa', 'selecao_linhapesquisa', 'selecao_id', 'linhapesquisa_id')->withTimestamps();
-    }
-
-    /**
      * relacionamento com disciplinas
      */
     public function disciplinas()
@@ -1131,5 +1123,13 @@ class Selecao extends Model
     public function niveislinhaspesquisa()
     {
         return $this->belongsToMany('App\Models\NivelLinhaPesquisa', 'selecao_nivellinhapesquisa', 'selecao_id', 'nivellinhapesquisa_id')->withTimestamps();
+    }
+
+    /**
+     * Accessor getter para linhaspesquisa
+     */
+    public function getLinhaspesquisaAttribute()
+    {
+        return $this->niveislinhaspesquisa->pluck('linhapesquisa')->unique('id')->values();
     }
 }

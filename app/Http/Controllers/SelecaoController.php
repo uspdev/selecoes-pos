@@ -198,6 +198,13 @@ class SelecaoController extends Controller
             return back()->withInput();
         }
 
+        if (($selecao->programa_id != $request->programa_id) && !empty($request->programa_id))
+            if ($selecao->linhaspesquisa->count() > 0) {
+                $request->session()->flash('alert-danger', 'Não se pode alterar o programa, pois há linhas de pesquisa/temas do programa antigo cadastrados para esta seleção!');
+                \UspTheme::activeUrl('selecoes');
+                return view('selecoes.edit', $this->monta_compact($selecao, 'edit'));
+            }
+
         $request->merge(['fluxo_continuo' => $request->has('fluxo_continuo')]);    // acerta o valor do campo "fluxo_continuo" (pois, se o usuário deixou false, o campo não vem no $request e, se o usuário deixou true, ele vem mas com valor null)
         $request->merge(['tem_taxa' => $request->has('tem_taxa')]);                // acerta o valor do campo "tem_taxa"       (pois, se o usuário deixou false, o campo não vem no $request e, se o usuário deixou true, ele vem mas com valor null)
         $request->merge(['boleto_valor' => ($request->input('boleto_valor') !== '' ? $request->input('boleto_valor') : null)]);
@@ -206,6 +213,7 @@ class SelecaoController extends Controller
         // transaction para não ter problema de inconsistência do DB
         $selecao = DB::transaction(function () use ($request, $selecao) {
 
+            $selecao->programa_id = $request->programa_id;
             $this->updateField($request, $selecao, 'categoria_id', 'categoria', 'a');
             $this->updateField($request, $selecao, 'ingresso_semestre', 'semestre de ingresso', 'o');
             $this->updateField($request, $selecao, 'ingresso_ano', 'ano de ingresso', 'o');
@@ -222,14 +230,6 @@ class SelecaoController extends Controller
             $this->updateField($request, $selecao, 'boleto_offset_vencimento', 'quantidade de dias úteis para pagamento do boleto', 'a');
             $this->updateField($request, $selecao, 'email_inscricaomatriculaaprovacao_texto', 'eventuais informações adicionais no e-mail de aprovação da inscrição/matrícula', 'o');
             $this->updateField($request, $selecao, 'email_inscricaomatricularejeicao_texto', 'eventuais informações adicionais no e-mail de rejeição da inscrição/matrícula', 'o');
-            if ($selecao->programa_id != $request->programa_id && !empty($request->programa_id)) {
-                if ($selecao->linhaspesquisa->count() > 0) {
-                    $request->session()->flash('alert-danger', 'Não se pode alterar o programa, pois há linhas de pesquisa/temas do programa antigo cadastrados para esta seleção!');
-                    \UspTheme::activeUrl('selecoes');
-                    return view('selecoes.edit', $this->monta_compact($selecao, 'edit'));
-                }
-                $selecao->programa_id = $request->programa_id;
-            }
             $selecao->save();
 
             $selecao->atualizarStatus();
