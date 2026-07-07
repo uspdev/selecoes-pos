@@ -179,7 +179,7 @@ class Matricula extends Model
                 $matriculas = Auth::user()->matriculas()->with('selecao')->wherePivotIn('papel', ['Autor'])->get();
         }
 
-        $matriculas = $matriculas->filter(fn($matricula) => $matricula->selecao->isMatricula());
+        $matriculas = $matriculas->filter(fn($matricula) => $matricula->selecao->fazMatriculas());
 
         $ultimasSelecoesIds = Selecao::obterUltimasSelecoesIds('Matricula');
         $matriculas->each(function ($matricula) use ($ultimasSelecoesIds) {

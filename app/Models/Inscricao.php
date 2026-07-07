@@ -179,7 +179,7 @@ class Inscricao extends Model
                 $inscricoes = Auth::user()->inscricoes()->with('selecao')->wherePivotIn('papel', ['Autor'])->get();
         }
 
-        $inscricoes = $inscricoes->filter(fn($inscricao) => !$inscricao->selecao->isMatricula());
+        $inscricoes = $inscricoes->filter(fn($inscricao) => $inscricao->selecao->fazInscricoes());
 
         $ultimasSelecoesIds = Selecao::obterUltimasSelecoesIds('Inscricao');
         $inscricoes->each(function ($inscricao) use ($ultimasSelecoesIds) {

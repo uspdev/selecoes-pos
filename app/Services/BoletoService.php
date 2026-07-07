@@ -33,7 +33,7 @@ class BoletoService
             'cpfCnpj' => $cpf,
             'nomeSacado' => $extras['nome'],
             'codigoEmail' => $extras['e_mail'],
-            'informacoesBoletoSacado' => ($objeto->selecao->categoria->nome == 'Aluno Especial' ? 'Matrícula para Aluno Especial - Disciplina ' . $disciplina_sigla : ($objeto->selecao->programa->matricula ? 'Matrícula para o Programa ' . $objeto->selecao->programa->nomeCompleto() : 'Inscrição para o Processo Seletivo ' . $objeto->selecao->nome)),
+            'informacoesBoletoSacado' => ($objeto->selecao->categoria->nome == 'Aluno Especial' ? 'Matrícula para Aluno Especial - Disciplina ' . $disciplina_sigla : ($objeto->selecao->programa->fazMatriculas() ? 'Matrícula para o Programa ' . $objeto->selecao->programa->nomeCompleto() : 'Inscrição para o Processo Seletivo ' . $objeto->selecao->nome)),
             'instrucoesObjetoCobranca' => 'Não receber após vencimento!',
         );
 

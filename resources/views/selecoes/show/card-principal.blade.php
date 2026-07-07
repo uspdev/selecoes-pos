@@ -66,7 +66,7 @@
           return item.id == programa_id;
         })[0];
         if (programa)
-          if (programa.matricula)
+          if (programa.fazMatriculas)
             updateInscricaoMatriculaLabels('Inscrição', 'Inscrições', 'Matrícula', 'Matrículas');
           else
             updateInscricaoMatriculaLabels('Matrícula', 'Matrículas', 'Inscrição', 'Inscrições');

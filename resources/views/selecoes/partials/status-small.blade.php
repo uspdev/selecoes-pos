@@ -1,5 +1,5 @@
 @php
-  $selecao_estado = str_replace('Inscrições/Matrículas', ($selecao->isMatricula() ? 'Matrículas' : 'Inscrições'), $selecao->estado);
+  $selecao_estado = str_replace('Inscrições/Matrículas', ($selecao->fazInscricoes() ? 'Inscrições' : 'Matrículas'), $selecao->estado);
 @endphp
 
 @if (in_array($selecao->estado, ['Em Elaboração', 'Aguardando Início das Solicitações de Isenção de Taxa e das Inscrições/Matrículas', 'Aguardando Início das Solicitações de Isenção de Taxa', 'Aguardando Início das Inscrições/Matrículas']))

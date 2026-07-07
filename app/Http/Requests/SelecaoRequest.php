@@ -57,10 +57,10 @@ class SelecaoRequest extends FormRequest
         if ($this->filled('categoria_id') && Categoria::find($this->categoria_id)?->nome == 'Aluno Especial') {
             $classe_nome_singular = 'matrícula';
             $classe_nome_plural = 'matrículas';
-        } elseif ($this->filled('programa_id') && Programa::find($this->programa_id)?->matricula) {
+        } elseif ($this->filled('programa_id') && Programa::find($this->programa_id)?->fazMatriculas()) {
             $classe_nome_singular = 'matrícula';
             $classe_nome_plural = 'matrículas';
-        } else {
+        } elseif ($this->filled('programa_id') && Programa::find($this->programa_id)?->fazInscricoes()) {
             $classe_nome_singular = 'inscrição';
             $classe_nome_plural = 'inscrições';
         }

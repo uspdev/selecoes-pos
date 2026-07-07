@@ -35,7 +35,7 @@ class MatriculaPolicy
             if ($user->gerenciaProgramaFuncao('Serviço de Pós-Graduação') || $user->gerenciaProgramaFuncao('Coordenadores da Pós-Graduação'))
                 return true;
             $programas = $this->obterProgramasParaMenu($user);
-            return $programas->contains(fn($programa) => $programa->matricula);
+            return $programas->contains(fn($programa) => $programa->fazMatriculas());
         } else
             return false;
     }

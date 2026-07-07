@@ -56,24 +56,26 @@
                   'tipoarquivo_classe_nome' => 'SolicitacaoIsencaoTaxa',
                   'tiposarquivo' => $tiposarquivo_solicitacaoisencaotaxa
                 ])
-                @if (!$selecao->isMatricula())
-                  @include('selecoes.show.card-tiposarquivo', [                        {{-- Tipos de Arquivo nas Inscrições --}}
+                @if ($selecao->fazInscricoes())
+                  @include('selecoes.show.card-tiposarquivo', [                      {{-- Tipos de Arquivo nas Inscrições --}}
                     'tipoarquivo_classe_nome_plural_acentuado' => 'Inscrições',
                     'tipoarquivo_classe_nome' => 'Inscricao',
                     'tiposarquivo' => $tiposarquivo_inscricao
                   ])
-                @else
-                  @include('selecoes.show.card-tiposarquivo', [                        {{-- Tipos de Arquivo nas Matrículas --}}
+                @endif
+                @if ($selecao->fazMatriculas())
+                  @include('selecoes.show.card-tiposarquivo', [                      {{-- Tipos de Arquivo nas Matrículas --}}
                     'tipoarquivo_classe_nome_plural_acentuado' => 'Matrículas',
                     'tipoarquivo_classe_nome' => 'Matricula',
                     'tiposarquivo' => $tiposarquivo_matricula
                   ])
                 @endif
                 @include('selecoes.show.card-solicitacoesisencaotaxa')               {{-- Solicitações de Isenção de Taxa --}}
-                @if (!$selecao->isMatricula())
-                  @include('selecoes.show.card-inscricoes')                            {{-- Inscrições --}}
-                @else
-                  @include('selecoes.show.card-matriculas')                            {{-- Matrículas --}}
+                @if ($selecao->fazInscricoes())
+                  @include('selecoes.show.card-inscricoes')                          {{-- Inscrições --}}
+                @endif
+                @if ($selecao->fazMatriculas())
+                  @include('selecoes.show.card-matriculas')                          {{-- Matrículas --}}
                 @endif
               @endif
             </div>

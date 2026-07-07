@@ -97,18 +97,12 @@ class Programa extends Model
         ];
     }
 
-    /**
-     * Accessor getter para inscricao
-     */
-    public function getInscricaoAttribute()
+    public function fazInscricoes()
     {
         return str_contains($this->processos, 'Inscrição');
     }
 
-    /**
-     * Accessor getter para matricula
-     */
-    public function getMatriculaAttribute()
+    public function fazMatriculas()
     {
         return str_contains($this->processos, 'Matrícula');
     }

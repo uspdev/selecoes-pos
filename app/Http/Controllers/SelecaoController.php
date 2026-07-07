@@ -137,18 +137,18 @@ class SelecaoController extends Controller
                 $selecao->template = $ultimaSelecao->template;
                 $selecao->save();    // necessário devido à linha de cima
                 if ($selecao->categoria->nome != 'Aluno Especial')
-                    $selecao->niveislinhaspesquisa()->sync($ultimaSelecao->niveislinhaspesquisa->pluck('id'));
-                if (!$selecao->isMatricula())
-                    $selecao->tiposarquivo()->sync($ultimaSelecao->tiposarquivo->where('classe_nome', 'Inscrições')->pluck('id'));
-                else
-                    $selecao->tiposarquivo()->sync($ultimaSelecao->tiposarquivo->where('classe_nome', 'Matrículas')->pluck('id'));
+                    $selecao->niveislinhaspesquisa()->attach($ultimaSelecao->niveislinhaspesquisa->pluck('id'));
+                if ($selecao->fazInscricoes())
+                    $selecao->tiposarquivo()->attach($ultimaSelecao->tiposarquivo->where('classe_nome', 'Inscrições')->pluck('id'));
+                if ($selecao->fazMatriculas())
+                    $selecao->tiposarquivo()->attach($ultimaSelecao->tiposarquivo->where('classe_nome', 'Matrículas')->pluck('id'));
             } else {
                 // cadastra automaticamente todas as instâncias de vários objetos como possíveis para este processo seletivo
                 if ($selecao->categoria->nome != 'Aluno Especial')
                     $selecao->niveislinhaspesquisa()->attach(NivelLinhaPesquisa::whereRelation('linhapesquisa', 'programa_id', $selecao->programa_id)->pluck('id'));
-                if ($selecao->isMatricula())
+                if ($selecao->fazInscricoes())
                     $selecao->tiposarquivo()->attach(TipoArquivo::where('classe_nome', 'Inscrições')->whereHas('categorias', function ($query) use ($selecao) { $query->where('nome', $selecao->categoria->nome); })->whereRelation('niveisprogramas', 'programa_id', $selecao->programa_id)->pluck('id'));
-                else
+                if ($selecao->fazMatriculas())
                     $selecao->tiposarquivo()->attach(TipoArquivo::where('classe_nome', 'Matrículas')->whereHas('categorias', function ($query) use ($selecao) { $query->where('nome', $selecao->categoria->nome); })->pluck('id'));
             }
 
@@ -158,8 +158,8 @@ class SelecaoController extends Controller
 
                 if ($ultimaSelecaoComTaxa) {
                     // herda vários dados da última seleção
-                    $selecao->motivosisencaotaxa()->sync($ultimaSelecaoComTaxa->motivosisencaotaxa->pluck('id'));
-                    $selecao->tiposarquivo()->attach($ultimaSelecaoComTaxa->tiposarquivo->where('classe_nome', 'Solicitações de Isenção de Taxa')->pluck('id'));    // trocado sync por attach porque aqui o sync removeria tipos de arquivo já inseridos nas linhas de cima
+                    $selecao->motivosisencaotaxa()->attach($ultimaSelecaoComTaxa->motivosisencaotaxa->pluck('id'));
+                    $selecao->tiposarquivo()->attach($ultimaSelecaoComTaxa->tiposarquivo->where('classe_nome', 'Solicitações de Isenção de Taxa')->pluck('id'));
                 } else {
                     // cadastra automaticamente todas as instâncias de vários objetos como possíveis para este processo seletivo
                     $selecao->motivosisencaotaxa()->attach(MotivoIsencaoTaxa::listarMotivosIsencaoTaxa()->pluck('id'));
@@ -174,7 +174,7 @@ class SelecaoController extends Controller
         $selecao = $db_transaction['selecao'];
 
         $request->session()->flash('alert-success', 'Seleção cadastrada com sucesso<br />' .
-            'Agora ' . (!$selecao->isMatricula() ? 'informe quais são as linhas de pesquisa e ' : '') . 'adicione os informativos relacionados ao processo');
+            'Agora ' . ($selecao->fazInscricoes() ? 'informe quais são as linhas de pesquisa e ' : '') . 'adicione os informativos relacionados ao processo');
         \UspTheme::activeUrl('selecoes');
         return redirect()->to(url('selecoes/edit/' . $selecao->id))->with($this->monta_compact($selecao, 'edit'));    // se fosse return view, um eventual F5 do usuário duplicaria o registro... POSTs devem ser com redirect
     }
@@ -904,7 +904,11 @@ class SelecaoController extends Controller
         $tiposarquivo_solicitacaoisencaotaxa = TipoArquivo::obterTiposArquivoPossiveis('SolicitacaoIsencaoTaxa', null, $selecao->programa_id);
         $tiposarquivo_inscricao = TipoArquivo::obterTiposArquivoPossiveis('Inscricao', ($selecao->categoria?->nome == 'Aluno Especial' ? new Collection() : Nivel::all()), $selecao->programa_id);
         $tiposarquivo_matricula = TipoArquivo::obterTiposArquivoPossiveis('Matricula', ($selecao->categoria?->nome == 'Aluno Especial' ? new Collection() : Nivel::all()), $selecao->programa_id);
-        $programas = Programa::all();
+        $programas = Programa::all()->map(function ($programa) {
+            $programa->setAttribute('fazInscricoes', $programa->fazInscricoes());
+            $programa->setAttribute('fazMatriculas', $programa->fazMatriculas());
+            return $programa;
+        });
         $max_upload_size = config('selecoes-pos.upload_max_filesize');
 
         return compact('data', 'objeto', 'classe_nome', 'classe_nome_plural', 'modo', 'niveislinhaspesquisa', 'disciplinas', 'motivosisencaotaxa', 'tiposarquivo_selecao', 'tiposarquivo_solicitacaoisencaotaxa', 'tiposarquivo_inscricao', 'tiposarquivo_matricula', 'programas', 'max_upload_size', 'rules', 'scroll');

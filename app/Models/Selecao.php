@@ -845,7 +845,7 @@ class Selecao extends Model
             $selecoes = $categoria->selecoes;                            // primeiro vamos pegar todas as seleções
             $selecoes = $selecoes->filter(fn($selecao) =>
                 in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas'])    // só aceita as seleções que estejam em período de inscrições
-                && !$selecao->isMatricula()
+                && $selecao->fazInscricoes()
             );
             foreach ($selecoes as $selecao)
                 $selecao->niveis = $selecao->niveislinhaspesquisa->sortBy('nivel_id')->pluck('nivel')->unique();
@@ -867,7 +867,7 @@ class Selecao extends Model
             $selecoes = $categoria->selecoes;                            // primeiro vamos pegar todas as seleções
             $selecoes = $selecoes->filter(fn($selecao) =>
                 in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas'])    // só aceita as seleções que estejam em período de matrículas
-                && $selecao->isMatricula()
+                && $selecao->fazMatriculas()
             );
             foreach ($selecoes as $selecao)
                 $selecao->niveis = $selecao->niveislinhaspesquisa->sortBy('nivel_id')->pluck('nivel')->unique();
@@ -950,12 +950,14 @@ class Selecao extends Model
                 AlertaCandidatosIncompletude::dispatch($this->id, 'SolicitacaoIsencaoTaxa')->delay($job_datahora);
         }
 
-        if (!$this->isMatricula()) {
+        if ($this->fazInscricoes()) {
             // (re)agenda job de alerta de inscrições não concluídas
             $job_datahora = Carbon::parse($this->inscricoesmatriculas_datahora_fim)->subHours(24);
             if ($job_datahora > now())
                 AlertaCandidatosIncompletude::dispatch($this->id, 'Inscricao')->delay($job_datahora);
-        } else {
+        }
+
+        if ($this->fazMatriculas()) {
             // (re)agenda job de alerta de matrículas não concluídas
             $job_datahora = Carbon::parse($this->inscricoesmatriculas_datahora_fim)->subHours(24);
             if ($job_datahora > now())
@@ -1037,12 +1039,14 @@ class Selecao extends Model
         return array_merge($ultimasPorPrograma->pluck('id')->toArray(), $ultimaAlunoEspecial->pluck('id')->toArray());
     }
 
-    public function isMatricula()
+    public function fazInscricoes()
     {
-        if (!$this->categoria)    // acontece quando a seleção está sendo criada, ainda não tem categoria associada
-            return false;
+        return (bool) ($this->categoria && $this->programa?->fazInscricoes());
+    }
 
-        return (($this->categoria->nome == 'Aluno Especial') || $this->programa->matricula);
+    public function fazMatriculas()
+    {
+        return (bool) ($this->categoria && (($this->categoria->nome == 'Aluno Especial') || $this->programa?->fazMatriculas()));
     }
 
     /**
