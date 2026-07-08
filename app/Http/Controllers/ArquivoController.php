@@ -282,11 +282,17 @@ class ArquivoController extends Controller
         switch ($classe_nome) {
             case 'Selecao':
                 return null;
+
             case 'SolicitacaoIsencaoTaxa':
+                $objeto->selecao->template_solicitacoesisencaotaxa = JSONForms::orderTemplate($objeto->selecao->template_solicitacoesisencaotaxa);
+                return JSONForms::generateForm($objeto->selecao, $classe_nome, $objeto);
+
             case 'Inscricao':
+                $objeto->selecao->template_inscricoes = JSONForms::orderTemplate($objeto->selecao->template_inscricoes);
+                return JSONForms::generateForm($objeto->selecao, $classe_nome, $objeto);
+
             case 'Matricula':
-                // 'SolicitacaoIsencaoTaxa', 'Inscricao' e 'Matricula' executam as linhas abaixo
-                $objeto->selecao->template = JSONForms::orderTemplate($objeto->selecao->template);
+                $objeto->selecao->template_matriculas = JSONForms::orderTemplate($objeto->selecao->template_matriculas);
                 return JSONForms::generateForm($objeto->selecao, $classe_nome, $objeto);
         }
     }
