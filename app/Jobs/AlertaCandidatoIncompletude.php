@@ -41,7 +41,7 @@ class AlertaCandidatoIncompletude implements ShouldQueue
             switch ($this->classe_nome) {
                 case 'SolicitacaoIsencaoTaxa':
                     // envia e-mail para o candidato que não enviou sua solicitação de isenção de taxa a respeito da proximidade do término do período de solicitações de isenção de taxa
-                    // envio do e-mail "20" do README.md
+                    // envio do e-mail "21" do README.md
                     $passo = 'alerta de proximidade do fim das solicitações de isenção de taxa';
                     $selecao = $objeto->selecao;
                     $extras = json_decode($objeto->extras, true);
@@ -52,7 +52,7 @@ class AlertaCandidatoIncompletude implements ShouldQueue
 
                 case 'Inscricao':
                     // envia e-mail para o candidato que não enviou sua inscrição a respeito da proximidade do término do período de inscrições
-                    // envio do e-mail "21" do README.md
+                    // envio do e-mail "22" do README.md
                     $passo = 'alerta de proximidade do fim das inscrições';
                     $selecao = $objeto->selecao;
                     $extras = json_decode($objeto->extras, true);
@@ -63,7 +63,7 @@ class AlertaCandidatoIncompletude implements ShouldQueue
 
                 case 'Matricula':
                     // envia e-mail para o candidato que não enviou sua matrícula a respeito da proximidade do término do período de matrículas
-                    // envio do e-mail "22" do README.md
+                    // envio do e-mail "23" do README.md
                     $passo = 'alerta de proximidade do fim das matrículas';
                     $selecao = $objeto->selecao;
                     $extras = json_decode($objeto->extras, true);

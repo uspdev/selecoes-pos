@@ -61,6 +61,8 @@
                   @include('common.list-table-form-integer')
                 @elseif ($col['type'] == 'radio')
                   @include('common.list-table-form-radio')
+                @elseif ($col['type'] == 'select')
+                  @include('common.list-table-form-select')
                 @endif
               @endforeach
               <div class="text-right">

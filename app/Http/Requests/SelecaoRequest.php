@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Categoria;
+use App\Models\Parametro;
 use App\Models\Programa;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -52,17 +53,28 @@ class SelecaoRequest extends FormRequest
     }
 
     public function messages() {
+        $fazInscricoes = false;
+        $fazMatriculas = false;
         $classe_nome_singular = 'inscrição/matrícula';
         $classe_nome_plural = 'inscrições/matrículas';
-        if ($this->filled('categoria_id') && Categoria::find($this->categoria_id)?->nome == 'Aluno Especial') {
-            $classe_nome_singular = 'matrícula';
-            $classe_nome_plural = 'matrículas';
-        } elseif ($this->filled('programa_id') && Programa::find($this->programa_id)?->fazMatriculas()) {
-            $classe_nome_singular = 'matrícula';
-            $classe_nome_plural = 'matrículas';
-        } elseif ($this->filled('programa_id') && Programa::find($this->programa_id)?->fazInscricoes()) {
+        if ($this->filled('categoria_id') && (Categoria::find($this->categoria_id)?->nome != 'Aluno Especial')) {
+            if ($this->filled('programa_id') && Programa::find($this->programa_id)?->fazInscricoes())
+                $fazInscricoes = true;
+            elseif ($this->filled('programa_id') && Programa::find($this->programa_id)?->fazMatriculas())
+                $fazMatriculas = true;
+        } else {
+            if (Parametro::first()->especiaisFazInscricoes())
+                $fazInscricoes = true;
+            else
+                $fazMatriculas = true;
+        }
+        if ($fazInscricoes) {
             $classe_nome_singular = 'inscrição';
             $classe_nome_plural = 'inscrições';
+        }
+        if ($fazMatriculas) {
+            $classe_nome_singular = 'matrícula';
+            $classe_nome_plural = 'matrículas';
         }
 
         return [

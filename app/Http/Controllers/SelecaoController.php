@@ -12,6 +12,7 @@ use App\Models\Matricula;
 use App\Models\MotivoIsencaoTaxa;
 use App\Models\Nivel;
 use App\Models\NivelLinhaPesquisa;
+use App\Models\Parametro;
 use App\Models\Programa;
 use App\Models\Selecao;
 use App\Models\SolicitacaoIsencaoTaxa;
@@ -125,10 +126,15 @@ class SelecaoController extends Controller
             $selecao->atualizarStatus();
             $selecao->estado = Selecao::where('id', $selecao->id)->value('estado');
 
-            if (!$selecao->fazInscricoes())
+            $classes_nome = [];
+            if (!$selecao->fazInscricoes()) {
                 $selecao->template_inscricoes = '{}';
-            if (!$selecao->fazMatriculas())
+                $classes_nome[] = 'Inscrições';
+            }
+            if (!$selecao->fazMatriculas()) {
                 $selecao->template_matriculas = '{}';
+                $classes_nome[] = 'Matrículas';
+            }
 
             // obtém a última seleção desse programa/aluno especial
             if ($selecao->categoria->nome != 'Aluno Especial')
@@ -173,6 +179,11 @@ class SelecaoController extends Controller
                     $selecao->motivosisencaotaxa()->attach(MotivoIsencaoTaxa::listarMotivosIsencaoTaxa()->pluck('id'));
                     $selecao->tiposarquivo()->attach(TipoArquivo::where('classe_nome', 'Solicitações de Isenção de Taxa')->pluck('id'));
                 }
+
+                // se os tipos de documento de boletos não foram cadastrados na seleção, força seu cadastramento
+                $tiposarquivo_boletoIds = TipoArquivo::whereIn('classe_nome', $classes_nome)->whereIn('nome', ['Boleto(s) de Pagamento', 'Boleto(s) de Pagamento - Disciplinas Removidas'])->pluck('id');
+                if ($tiposarquivo_boletoIds->isNotEmpty())
+                    $selecao->tiposarquivo()->syncWithoutDetaching($tiposarquivo_boletoIds);    // adiciona os registros ausentes sem remover os já existentes
             } else
                 $selecao->template_solicitacoesisencaotaxa = '{}';
             $selecao->save();    // necessário devido às eventuais alterações nos templates acima... se nenhum template tiver sido modificado, o Laravel ignora este comando

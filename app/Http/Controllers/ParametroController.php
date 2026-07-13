@@ -72,6 +72,7 @@ class ParametroController extends Controller
         $parametro->boleto_momento_envio = $request->boleto_momento_envio;
         $parametro->link_inscricao_termos = $request->link_inscricao_termos;
         $parametro->link_acompanhamento_especiais = $request->link_acompanhamento_especiais;
+        $parametro->processos_especiais = $request->processos_especiais;
         $parametro->max_disciplinas_aluno_especial = $request->max_disciplinas_aluno_especial;
         $parametro->email_servicoposgraduacao = $request->email_servicoposgraduacao;
         $parametro->email_secaoinformatica = $request->email_secaoinformatica;

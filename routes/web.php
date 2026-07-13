@@ -59,6 +59,10 @@ Route::put('inscricoes/edit/{inscricao}', [InscricaoController::class, 'update']
 Route::post('inscricoes/geraboletos/{inscricao}', [InscricaoController::class, 'geraBoletos'])->name('inscricoes.geraboletos');
 Route::post('inscricoes/{inscricao}/enviaboleto/{arquivo}', [InscricaoController::class, 'enviaBoleto'])->name('inscricoes.enviaboleto');
 
+// INSCRIÇÕES > DISCIPLINAS
+Route::post('inscricoes/{inscricao}/disciplinas', [InscricaoController::class, 'storeDisciplina']);
+Route::delete('inscricoes/{inscricao}/disciplinas/{disciplina}', [InscricaoController::class, 'destroyDisciplina']);
+
 // MATRÍCULAS
 Route::get('matriculas', [MatriculaController::class, 'index'])->name('matriculas.index');
 Route::get('matriculas/create', [MatriculaController::class, 'listaSelecoesParaNovaMatricula'])->name('matriculas.create');

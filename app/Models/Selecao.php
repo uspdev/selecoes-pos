@@ -1152,12 +1152,24 @@ class Selecao extends Model
 
     public function fazInscricoes()
     {
-        return (bool) ($this->categoria && $this->programa?->fazInscricoes());
+        if (!$this->categoria)
+            return false;
+
+        if ($this->categoria->nome != 'Aluno Especial')
+            return (bool) $this->programa?->fazInscricoes();
+        else
+            return (bool) Parametro::first()->especiaisFazInscricoes();
     }
 
     public function fazMatriculas()
     {
-        return (bool) ($this->categoria && (($this->categoria->nome == 'Aluno Especial') || $this->programa?->fazMatriculas()));
+        if (!$this->categoria)
+            return false;
+
+        if ($this->categoria->nome != 'Aluno Especial')
+            return (bool) $this->programa?->fazMatriculas();
+        else
+            return (bool) Parametro::first()->especiaisFazMatriculas();
     }
 
     /**

@@ -391,7 +391,7 @@ class MatriculaController extends Controller
         }
 
         // envia e-mail para o candidato com o boleto
-        // envio do e-mail "14" do README.md
+        // envio do e-mail "15" do README.md
         $passo = 'boleto - envio manual';
         $user = $matricula->pessoas('Autor');
         $arquivo->conteudo = base64_encode(Storage::get($arquivo->caminho));
@@ -431,7 +431,7 @@ class MatriculaController extends Controller
         $form = JSONForms::generateForm($objeto->selecao, $classe_nome, $objeto);
         $responsaveis = $objeto->selecao->programa?->obterResponsaveis() ?? (new Programa())->obterResponsaveis();
         $extras = json_decode($objeto->extras, true);
-        $matricula_disciplinas = ((isset($extras['disciplinas']) && is_array($extras['disciplinas'])) ? Disciplina::whereIn('id', $extras['disciplinas'])->orderBy('sigla')->get() : collect());
+        $objeto_disciplinas = ((isset($extras['disciplinas']) && is_array($extras['disciplinas'])) ? Disciplina::whereIn('id', $extras['disciplinas'])->orderBy('sigla')->get() : collect());
         $disciplinas = Disciplina::obterDisciplinasPossiveis($objeto->selecao);
         $nivel = (isset($extras['nivel']) ? Nivel::where('id', $extras['nivel'])->first()->nome : '');
         $objeto->tiposarquivo = TipoArquivo::obterTiposArquivoDaSelecao('Matricula', ($objeto->selecao->categoria?->nome == 'Aluno Especial' ? new Collection() : collect([['nome' => $nivel]])), $objeto->selecao)
@@ -444,13 +444,13 @@ class MatriculaController extends Controller
                                                                  ->where('estado', 'LIKE', 'Isenção de Taxa Aprovada%')->first();
         $disciplinas_sem_boleto = [];
         if ($matricula->selecao->categoria->nome == 'Aluno Especial')
-            foreach ($matricula_disciplinas as $disciplina)
+            foreach ($objeto_disciplinas as $disciplina)
                 if ($matricula->arquivos->filter(fn($a) => ($a->pivot->tipo == 'Boleto(s) de Pagamento') && str_contains(strtolower($a->nome_original), strtolower($disciplina->sigla)))->count() == 0)
                     $disciplinas_sem_boleto[] = $disciplina;
         $matricula->disciplinas_sem_boleto = $disciplinas_sem_boleto;
         $boleto_momento_envio = Parametro::first()->boleto_momento_envio;
         $max_upload_size = config('selecoes-pos.upload_max_filesize');
 
-        return compact('data', 'objeto', 'classe_nome', 'classe_nome_plural', 'form', 'modo', 'responsaveis', 'matricula_disciplinas', 'disciplinas', 'nivel', 'tiposarquivo_selecao', 'solicitacaoisencaotaxa_aprovada', 'boleto_momento_envio', 'max_upload_size', 'scroll');
+        return compact('data', 'objeto', 'classe_nome', 'classe_nome_plural', 'form', 'modo', 'responsaveis', 'objeto_disciplinas', 'disciplinas', 'nivel', 'tiposarquivo_selecao', 'solicitacaoisencaotaxa_aprovada', 'boleto_momento_envio', 'max_upload_size', 'scroll');
     }
 }

@@ -61,7 +61,7 @@
             </div>
             <div class="col-md-5">
               @if (($inscricao->selecao->categoria->nome == 'Aluno Especial') && ($modo == 'edit'))
-                @include('inscricoes.show.card-disciplinas')    {{-- Disciplinas --}}
+                @include('common.show.card-disciplinas')        {{-- Disciplinas --}}
               @endif
               @include('common.show.card-responsaveis', [       {{-- Responsáveis --}}
                 'selecao' => $inscricao->selecao

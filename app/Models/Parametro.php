@@ -16,6 +16,7 @@ class Parametro extends Model
         'boleto_momento_envio',
         'link_inscricao_termos',
         'link_acompanhamento_especiais',
+        'processos_especiais',
         'max_disciplinas_aluno_especial',
         'email_servicoposgraduacao',
         'email_secaoinformatica',
@@ -48,6 +49,12 @@ class Parametro extends Model
             'label' => 'Endereço no Site da Unidade para Acompanhamento do Processo pelos Candidatos a Aluno Especial',
         ],
         [
+            'name' => 'processos_especiais',
+            'label' => 'Processo(s) Utilizado(s) para Aluno Especial',
+            'type' => 'select',
+            'data' => ['Inscrição' => 'Inscrição', 'Matrícula' => 'Matrícula'],
+        ],
+        [
             'name' => 'max_disciplinas_aluno_especial',
             'label' => 'Número Máximo de Disciplinas Permitidas a Aluno Especial',
             'type' => 'integer',
@@ -70,5 +77,15 @@ class Parametro extends Model
     public static function getFields()
     {
         return self::fields;
+    }
+
+    public function especiaisFazInscricoes()
+    {
+        return str_contains($this->processos_especiais, 'Inscrição');
+    }
+
+    public function especiaisFazMatriculas()
+    {
+        return str_contains($this->processos_especiais, 'Matrícula');
     }
 }

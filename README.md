@@ -16,19 +16,19 @@ O aluno regular, ao se inscrever/matricular, deve escolher a combinação nível
 No caso de aluno especial, as seleções, solicitações de isenção de taxa e matrículas não são atreladas a um programa.
 O aluno especial, ao se matricular, deve escolher a(s) disciplina(s) na(s) qual(is) está se matriculando.
 
-A maioria dos programas faz uso do fluxo de inscrições. As matrículas são utilizadas apenas para o caso de aluno especial e, no caso de aluno regular, para programas configurados para atuar com matrículas ao invés de inscrições (por exemplo, programas que realizem os passos anteriores do processo seletivo através da FUVEST e/ou outros e, após isso, necessitem dos dados do candidato).
+Pode-se configurar cada programa e também a categoria de aluno especial para utilizar o fluxo de inscrições ou o de matrículas. Essa flexibilidade é interessante para casos como, por exemplo, aluno regular para programas que dependam da FUVEST para realizar o processo seletivo; nestes casos, o programa utiliza este sistema somente para o fluxo de matrículas.
 
 Os gerentes devem cadastrar as seleções nas quais os candidatos solicitarão isenção de taxa, se inscreverão e se matricularão.
 Cada seleção pode ter até três formulários para preenchimento pelo candidato (para a solicitação de isenção de taxa, para a inscrição e para a matrícula), gerados a partir de templates, e editáveis pelo gerente (excetos por campos utilizados pelo sistema, que não podem ser removidos, como CPF, e-mail, etc.).
 O estado da seleção é modificado quando o gerente altera a data início/fim das solicitações de isenção de taxa, das inscrições ou das matrículas, também quando as seleções são consultadas (neste momento, o sistema verifica se alguma seleção passou da data início/fim, e muda o estado de acordo), e também quando um usuário vai iniciar uma nova solicitação de isenção de taxa, inscrição ou matrícula.
 O estado da seleção também é modificado quando o gerente sobe ou remove os documentos da seleção (edital, etc.), pois não podemos iniciar um período de solicitações de isenção de taxa, inscrições ou matrículas sem que a seleção tenha esses documentos.
 Ao cadastrar uma nova seleção, o gerente deve informar a quais combinações de níveis com linhas de pesquisa/temas ela está atrelada (se a categoria da seleção for aluno regular, pois na categoria de aluno especial não temos combinações níveis com linhas de pesquisa/temas, o aluno especial se inscreve para disciplinas).
-Ao cadastrar uma nova seleção, todos os motivos de isenção de taxa são automaticamente associados à ela; cabe ao gerente verificar se é isso mesmo o desejado para a nova seleção.
+Ao cadastrar uma nova seleção com cobrança de taxa, todos os motivos de isenção de taxa são automaticamente associados à ela; cabe ao gerente verificar se é isso mesmo o desejado para a nova seleção.
 A seleção pode ser normal ou de "fluxo contínuo". No caso normal, a data de vencimento do boleto é cadastrada na própria seleção; no caso de fluxo contínuo, os períodos de solicitação de isenção de taxa e de inscrições ou matrículas coincidem, e a data de vencimento do boleto é calculada somando-se uma determinada quantidade de dias úteis (quantidade essa cadastrada na seleção) acrescidos à data de envio da inscrição ou matrícula.
 O fluxo de estados de seleções sem cobrança de taxa é:
 Em Elaboração -> Aguardando Início das Inscrições/Matrículas -> Período de Inscrições/Matrículas -> Encerrada
-O fluxo de estados de seleções normais com cobrança de taxa é: Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa -> Período de Solicitações de Isenção de Taxa -> Aguardando Início das Inscrições/Matrículas -> Período de Inscrições/Matrículas -> Encerrada
-O fluxo de estados de seleções de fluxo contínuo com cobrança de taxa é:
+O fluxo de estados de seleções com cobrança de taxa é: Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa -> Período de Solicitações de Isenção de Taxa -> Aguardando Início das Inscrições/Matrículas -> Período de Inscrições/Matrículas -> Encerrada
+O fluxo de estados de seleções com cobrança de taxa e fluxo contínuo é:
 Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa e das Inscrições/Matrículas -> Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas -> Encerrada
 
 Há cinco funções para gestores: docentes do programa, secretários(as) dos programas, coordenadores dos programas, serviço de pós-graduação e coordenadores da pós-graduação.
@@ -39,7 +39,7 @@ A função de docente corresponde ao perfil de docente. As funções de secretá
 Docentes têm acesso às inscrições e matrículas, mas somente de leitura.
 Os docentes são definidos na mesma tabela que os gerentes, mas com a função docentes dos programas. No caso de matrículas de seleções para alunos especiais, os docentes não têm acesso.
 
-A secretaria de pós-graduação gerencia as matrículas para aluno especial através de um fluxo ligeiramente diferente: há uma fase inicial adicional em que o candidato entra em contato com o docente para obter sua aprovação (a secretaria de pós-graduação chama esse passo de "inscrição"); isso é feito por e-mail, fora deste sistema. Em seguida, o candidato solicita a isenção de taxa e, por fim, realiza sua matrícula (submissão de formulário e documentos à pós-graduação através deste sistema); a secretaria de pós-graduação realiza a matrícula dele no período de matrículas do sistema (esta é a matrícula propriamente dita, no Janus). Portanto, este sistema trata a segunda e a terceira fases do processo para aluno especial. O sistema também modifica os textos de comunicações para, no caso de aluno especial, não informar "inscrição para o processo seletivo x" mas sim "matrícula para aluno especial" e, no caso de aluno regular para programa que atua com matrículas, informar "matrícula para o programa x".
+No caso de se utilizar o fluxo de matrículas para aluno especial, há uma fase inicial adicional em que o candidato entra em contato com o docente para obter sua aprovação (a secretaria de pós-graduação chama esse passo de "inscrição"); isso é feito por e-mail, fora deste sistema. Em seguida, o candidato solicita a isenção de taxa e, por fim, realiza sua matrícula (submissão de formulário e documentos à pós-graduação através deste sistema); a secretaria de pós-graduação realiza a matrícula dele no período de matrículas do sistema (esta é a matrícula propriamente dita, no Janus). Portanto, este sistema trata a segunda e a terceira fases do processo para aluno especial.
 
 As linhas de pesquisa/temas são relacionadas aos níveis da pós-graduação (mestrado, doutorado, doutorado direto).
 Se um aluno regular se inscreve ou se matricula, por exemplo, para o nível de mestrado, só lhe serão permitidas as linhas de pesquisa/temas desse programa dessa seleção que estejam relacionadas ao nível escolhido. O gerente só pode acessar as linhas de pesquisa/temas de seu programa.
@@ -71,27 +71,28 @@ A lei 14.534/2023 estabeleceu que estrangeiros devem possuir CPF para cursar pó
 7) quando um gerente aprova/rejeita uma solicitação de isenção de taxa, o sistema envia um e-mail para o candidato avisando a respeito da aprovação/rejeição;
 8) quando um candidato inicia sua inscrição ou matrícula (clicando em "Prosseguir" mas ainda não em "Enviar Inscrição" ou "Enviar "Matrícula"), o sistema lhe envia um e-mail avisando sobre a necessidade de subir os documentos obrigatórios e de enviar a inscrição ou matrícula;
 9) quando um candidato envia sua inscrição ou matrícula, o sistema lhe envia um e-mail informando do sucesso e, se o sistema estiver configurado para enviar boleto no envio da inscrição/matrícula, o sistema anexa nesse e-mail o(s) boleto(s) a ser(em) pago(s);
-10) ainda quando um candidato envia sua inscrição (não matrícula!), o sistema também envia um e-mail para a secretaria do programa avisando sobre a inscrição;
-11) ainda quando um candidato envia sua inscrição (não matrícula!), o sistema também envia um e-mail para cada coordenador do programa avisando sobre a inscrição;
-12) ainda quando um candidato envia sua matrícula (não inscrição!), o sistema também envia um e-mail para cada pessoa do serviço de pós-graduação avisando sobre a matrícula;
-13) quando um candidato reenvia sua matrícula alterando as disciplinas para as quais se matriculou, o sistema lhe envia um e-mail informando do sucesso e, se o sistema estiver configurado para enviar boleto no envio da inscrição/matrícula, o sistema anexa nesse e-mail o(s) boleto(s) da(s) nova(s) disciplina(s);
-14) quando um gerente clica em enviar um boleto de uma inscrição ou matrícula, o sistema envia um e-mail para o candidato enviando o boleto (isso é interessante para o caso de eventualmente o envio do boleto ter falhado quando o candidato enviou sua inscrição ou matrícula);
-15) quando um gerente pré-aprova uma inscrição ou matrícula, o sistema envia um e-mail para o candidato avisando a respeito da pré-aprovação;
-16) quando um gerente pré-reprova uma inscrição ou matrícula, o sistema envia um e-mail para o candidato avisando a respeito da pré-rejeição;
-17) quando um gerente aprova uma inscrição ou matrícula, o sistema envia um e-mail para o candidato avisando a respeito da aprovação e, quando o sistema está configurado para enviar boleto na aprovação da inscrição/matrícula, esse e-mail para o candidato vai com o(s) boleto(s) a ser(em) pago(s);
-18) quando um gerente rejeita uma inscrição ou matrícula, o sistema envia um e-mail para o candidato avisando a respeito da rejeição; 
-19) quando um gerente sobe um documento dos tipos "Errata" ou "Resultado" em uma seleção, o sistema envia e-mails para cada candidato avisando a respeito desses novos informativos;
-20) uma semana após um candidato ter iniciado uma solicitação de isenção de taxa mas não tê-la concluído, no caso de seleção com fluxo contínuo, o sistema lhe envia e-mail lembrando-o de concluir o processo;
-21) uma semana após um candidato ter iniciado uma inscrição mas não tê-la concluído, no caso de seleção com fluxo contínuo, o sistema lhe envia e-mail lembrando-o de concluir o processo;
-22) uma semana após um candidato ter iniciado uma matrícula mas não tê-la concluído, no caso de seleção com fluxo contínuo, o sistema lhe envia e-mail lembrando-o de concluir o processo;
-23) quando nos aproximamos do término do período de solicitações de isenção de taxa de uma seleção, o sistema envia e-mails para cada candidato que iniciou mas não enviou sua solicitação de isenção de taxa, lembrando-os de concluir os processos;
-24) quando nos aproximamos do término do período de inscrições de uma seleção, o sistema envia e-mails para cada candidato que iniciou mas não enviou sua inscrição, lembrando-os de concluir os processos.
-25) quando nos aproximamos do término do período de matrículas de uma seleção, o sistema envia e-mails para cada candidato que iniciou mas não enviou sua matrícula, lembrando-os de concluir os processos.
+10) ainda quando um candidato a aluno regular envia sua inscrição (não matrícula!), o sistema também envia um e-mail para a secretaria do programa avisando sobre a inscrição;
+11) ainda quando um candidato a aluno regular envia sua inscrição (não matrícula!), o sistema também envia um e-mail para cada coordenador do programa avisando sobre a inscrição;
+12) ainda quando um candidato a aluno especial envia sua inscrição (não matrícula!), o sistema também envia um e-mail para cada pessoa do serviço de pós-graduação avisando sobre a matrícula;
+13) ainda quando um candidato envia sua matrícula (não inscrição!), o sistema também envia um e-mail para cada pessoa do serviço de pós-graduação avisando sobre a matrícula;
+14) quando um candidato reenvia sua inscrição ou matrícula alterando as disciplinas para as quais se inscreveu ou matriculou, o sistema lhe envia um e-mail informando do sucesso e, se o sistema estiver configurado para enviar boleto no envio da inscrição/matrícula, o sistema anexa nesse e-mail o(s) boleto(s) da(s) nova(s) disciplina(s);
+15) quando um gerente clica em enviar um boleto de uma inscrição ou matrícula, o sistema envia um e-mail para o candidato enviando o boleto (isso é interessante para o caso de eventualmente o envio do boleto ter falhado quando o candidato enviou sua inscrição ou matrícula);
+16) quando um gerente pré-aprova uma inscrição ou matrícula, o sistema envia um e-mail para o candidato avisando a respeito da pré-aprovação;
+17) quando um gerente pré-reprova uma inscrição ou matrícula, o sistema envia um e-mail para o candidato avisando a respeito da pré-rejeição;
+18) quando um gerente aprova uma inscrição ou matrícula, o sistema envia um e-mail para o candidato avisando a respeito da aprovação e, quando o sistema está configurado para enviar boleto na aprovação da inscrição/matrícula, esse e-mail para o candidato vai com o(s) boleto(s) a ser(em) pago(s);
+19) quando um gerente rejeita uma inscrição ou matrícula, o sistema envia um e-mail para o candidato avisando a respeito da rejeição; 
+20) quando um gerente sobe um documento dos tipos "Errata" ou "Resultado" em uma seleção, o sistema envia e-mails para cada candidato avisando a respeito desses novos informativos;
+21) uma semana após um candidato ter iniciado uma solicitação de isenção de taxa mas não tê-la concluído, no caso de seleção com fluxo contínuo, o sistema lhe envia e-mail lembrando-o de concluir o processo;
+22) uma semana após um candidato ter iniciado uma inscrição mas não tê-la concluído, no caso de seleção com fluxo contínuo, o sistema lhe envia e-mail lembrando-o de concluir o processo;
+23) uma semana após um candidato ter iniciado uma matrícula mas não tê-la concluído, no caso de seleção com fluxo contínuo, o sistema lhe envia e-mail lembrando-o de concluir o processo;
+24) quando nos aproximamos do término do período de solicitações de isenção de taxa de uma seleção, o sistema envia e-mails para cada candidato que iniciou mas não enviou sua solicitação de isenção de taxa, lembrando-os de concluir os processos;
+25) quando nos aproximamos do término do período de inscrições de uma seleção, o sistema envia e-mails para cada candidato que iniciou mas não enviou sua inscrição, lembrando-os de concluir os processos.
+26) quando nos aproximamos do término do período de matrículas de uma seleção, o sistema envia e-mails para cada candidato que iniciou mas não enviou sua matrícula, lembrando-os de concluir os processos.
 
 Todo e qualquer e-mail enviado pelo sistema pode ser copiado (em cópia oculta) para o e-mail de envio do sistema. O endereço de envio de e-mail do sistema está definido no .env, e também está no .env essa configuração de copiar para esse remetente ou não.
 Desta forma, podemos ter um histórico de todos os e-mails enviados pelo sistema, embora na caixa de entrada ao invés de na caixa de enviados.
 
-# Fluxo de solicitação de isenção de taxa
+# Fluxo 1: solicitação de isenção de taxa
 
 1) o candidato envia a solicitação;
 2) um e-mail é enviado ao candidato reconhecendo o envio da solicitação;
@@ -100,27 +101,24 @@ Desta forma, podemos ter um histórico de todos os e-mails enviados pelo sistema
 5) um e-mail é enviado ao candidato avisando da aprovação ou rejeição da solicitação;
 6) caso a solicitação tenha sido rejeitada e posteriormente aprovada devido a recurso do candidato, um e-mail é enviado ao candidato avisando da aprovação após recurso.
 
-# Fluxo de inscrição
-# (para aluno regular)
+# Fluxo 2: inscrição
 
 1) o candidato envia a inscrição;
 2) um e-mail é enviado ao candidato reconhecendo o envio da inscrição e, caso o sistema esteja configurado para enviar boleto no envio da inscrição, ele recebe junto o(s) eventual(is) boleto(s) da taxa de inscrição a pagar;
 3) um e-mail é enviado à secretaria do programa e aos coordenadores do programa para pré-avaliar a inscrição;
 4) a secretaria do programa ou os coordenadores do programa colocam a inscrição em pré-avaliação e depois a pré-aprovam ou pré-rejeitam;
-5) em caso de pré-aprovação, um e-mail é enviado ao candidato compartilhando o endereço no site da unidade para acompanhamento do processo pelos candidatos, na seção do programa correspondente;
+5) em caso de pré-aprovação, um e-mail é enviado ao candidato compartilhando o endereço no site da unidade para acompanhamento do processo pelos candidatos, na seção do programa correspondente ou aluno especial;
 6) em caso de pré-rejeição, um e-mail é enviado ao candidato avisando-o da pré-rejeição;
 7) a secretaria do programa coloca a inscrição em avaliação e depois a aprova ou rejeita;
 8) um e-mail é enviado ao candidato avisando da aprovação ou rejeição da inscrição e, caso seja aprovação, e caso o sistema esteja configurado para enviar boleto na aprovação da inscrição, ele recebe junto o(s) eventual(is) boleto(s) da taxa de inscrição a pagar.
 
-# Fluxo de matrícula
-# (para aluno regular de programa configurado para atuar com matrícula ao invés de inscrição
-# e para aluno especial)
+# Fluxo 3: matrícula
 
 1) o candidato envia a matrícula;
 2) um e-mail é enviado ao candidato reconhecendo o envio da matrícula e, caso o sistema esteja configurado para enviar boleto no envio da matrícula, ele recebe junto o(s) eventual(is) boleto(s) da taxa de matrícula a pagar;
 3) um e-mail é enviado ao serviço de pós-graduação para pré-avaliar a matrícula;
 4) o serviço de pós-graduação coloca a matrícula em pré-avaliação e depois a pré-aprova ou pré-rejeita;
-5) em caso de pré-aprovação, um e-mail é enviado ao candidato compartilhando o endereço no site da unidade para acompanhamento do processo pelos candidatos, na seção de alunos especiais;
+5) em caso de pré-aprovação, um e-mail é enviado ao candidato compartilhando o endereço no site da unidade para acompanhamento do processo pelos candidatos, na seção do programa correspondente ou aluno especial;
 6) em caso de pré-rejeição, um e-mail é enviado ao candidato avisando-o da pré-rejeição;
 7) o serviço de pós-graduação coloca a matrícula em avaliação e depois a aprova ou rejeita;
 8) um e-mail é enviado ao candidato avisando da aprovação ou rejeição da matrícula e, caso seja aprovação, e caso o sistema esteja configurado para enviar boleto na aprovação da matrícula, ele recebe junto o(s) eventual(is) boleto(s) da taxa de matrícula a pagar.
@@ -251,7 +249,6 @@ Os dados são consumidos dinamicamente do **Replicado** e do **Cadastros Auxilia
 * **Dados gerais: (não dependem do Replicado)** Feriados, Permissões (*Permissions*), Setores Replicados, Categorias e Níveis.
 
 Para executar este seeder, utilize o comando:
-
 
         php artisan db:seed
 

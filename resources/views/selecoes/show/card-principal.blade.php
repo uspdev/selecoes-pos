@@ -54,7 +54,11 @@
         } else {
           $('#programa_id option:first').prop('selected', true);
           programa_div.hide();
-          updateInscricaoMatriculaLabels('Inscrição', 'Inscrições', 'Matrícula', 'Matrículas');
+          @if (Parametro::first()->especiaisFazInscricoes())
+            updateInscricaoMatriculaLabels('Matrícula', 'Matrículas', 'Inscrição', 'Inscrições');
+          @else
+            updateInscricaoMatriculaLabels('Inscrição', 'Inscrições', 'Matrícula', 'Matrículas');
+          @endif
         }
       });
 
@@ -66,10 +70,10 @@
           return item.id == programa_id;
         })[0];
         if (programa)
-          if (programa.fazMatriculas)
-            updateInscricaoMatriculaLabels('Inscrição', 'Inscrições', 'Matrícula', 'Matrículas');
-          else
+          if (programa.fazInscricoes)
             updateInscricaoMatriculaLabels('Matrícula', 'Matrículas', 'Inscrição', 'Inscrições');
+          else
+            updateInscricaoMatriculaLabels('Inscrição', 'Inscrições', 'Matrícula', 'Matrículas');
       });
 
       $('#programa_id').trigger('change');

@@ -83,14 +83,14 @@ class MatriculaObserver
                         $arquivos = $resultado['arquivos'];
                         if (!empty($arquivos) && !$resultado['is_primeiro_envio'])
                             // envia e-mail para o candidato com o(s) boleto(s)
-                            // envio do e-mail "13" do README.md
+                            // envio do e-mail "14" do README.md
                             $passo = 'envio disciplinas alteradas - para candidato';
                     }
                 \Mail::to($user->email)
                     ->queue(new MatriculaMail(compact('passo', 'matricula', 'user', 'arquivos', 'email_secaoinformatica')));
 
                 // envia e-mails avisando o serviço de pós-graduação sobre a realização da matrícula
-                // envio do e-mail "12" do README.md
+                // envio do e-mail "13" do README.md
                 $passo = 'envio - para gestores';
                 foreach (collect((new Programa)->obterResponsaveis())->firstWhere('funcao', 'Serviço de Pós-Graduação')['users'] as $servicoposgraduacao) {
                     $responsavel_nome = 'Prezado(a) Sr.(a) ' . Pessoa::obterNome($servicoposgraduacao->codpes);
@@ -102,7 +102,7 @@ class MatriculaObserver
                 // trata-se da pré-aprovação da matrícula
 
                 // envia e-mail avisando o candidato da pré-aprovação da matrícula
-                // envio do e-mail "15" do README.md
+                // envio do e-mail "16" do README.md
                 $passo = 'pré-aprovação';
                 $link_acompanhamento = (($matricula->selecao->categoria->nome == 'Aluno Especial') ? Parametro::first()->link_acompanhamento_especiais : $matricula->selecao->programa->link_acompanhamento);
                 \Mail::to($user->email)
@@ -113,7 +113,7 @@ class MatriculaObserver
                 // trata-se da pré-rejeição da matrícula
 
                 // envia e-mail avisando o candidato da pré-rejeição da matrícula
-                // envio do e-mail "16" do README.md
+                // envio do e-mail "17" do README.md
                 $passo = 'pré-rejeição';
                 \Mail::to($user->email)
                     ->queue(new MatriculaMail(compact('passo', 'matricula', 'user')));
@@ -137,7 +137,7 @@ class MatriculaObserver
                     }
 
                 // envia e-mail avisando o candidato da aprovação da matrícula
-                // envio do e-mail "17" do README.md
+                // envio do e-mail "18" do README.md
                 $passo = 'aprovação';
                 \Mail::to($user->email)
                     ->queue(new MatriculaMail(compact('passo', 'matricula', 'user', 'arquivos', 'email_secaoinformatica')));
@@ -147,7 +147,7 @@ class MatriculaObserver
                 // trata-se da rejeição da matrícula
 
                 // envia e-mail avisando o candidato da rejeição da matrícula
-                // envio do e-mail "18" do README.md
+                // envio do e-mail "19" do README.md
                 $passo = 'rejeição';
                 \Mail::to($user->email)
                     ->queue(new MatriculaMail(compact('passo', 'matricula', 'user')));
