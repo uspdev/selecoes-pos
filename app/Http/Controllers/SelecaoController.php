@@ -107,13 +107,17 @@ class SelecaoController extends Controller
         $requestData = $request->all();
         $requestData['solicitacoesisencaotaxa_datahora_inicio'] = (is_null($requestData['solicitacoesisencaotaxa_data_inicio']) || is_null($requestData['solicitacoesisencaotaxa_hora_inicio']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['solicitacoesisencaotaxa_data_inicio'] . ' ' . $requestData['solicitacoesisencaotaxa_hora_inicio']));
         $requestData['solicitacoesisencaotaxa_datahora_fim'] = (is_null($requestData['solicitacoesisencaotaxa_data_fim']) || is_null($requestData['solicitacoesisencaotaxa_hora_fim']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['solicitacoesisencaotaxa_data_fim'] . ' ' . $requestData['solicitacoesisencaotaxa_hora_fim']));
-        $requestData['inscricoesmatriculas_datahora_inicio'] = (is_null($requestData['inscricoesmatriculas_data_inicio']) || is_null($requestData['inscricoesmatriculas_hora_inicio']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['inscricoesmatriculas_data_inicio'] . ' ' . $requestData['inscricoesmatriculas_hora_inicio']));
-        $requestData['inscricoesmatriculas_datahora_fim'] = (is_null($requestData['inscricoesmatriculas_data_fim']) || is_null($requestData['inscricoesmatriculas_hora_fim']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['inscricoesmatriculas_data_fim'] . ' ' . $requestData['inscricoesmatriculas_hora_fim']));
+        $requestData['inscricoes_datahora_inicio'] = (is_null($requestData['inscricoes_data_inicio']) || is_null($requestData['inscricoes_hora_inicio']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['inscricoes_data_inicio'] . ' ' . $requestData['inscricoes_hora_inicio']));
+        $requestData['inscricoes_datahora_fim'] = (is_null($requestData['inscricoes_data_fim']) || is_null($requestData['inscricoes_hora_fim']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['inscricoes_data_fim'] . ' ' . $requestData['inscricoes_hora_fim']));
+        $requestData['matriculas_datahora_inicio'] = (is_null($requestData['matriculas_data_inicio']) || is_null($requestData['matriculas_hora_inicio']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['matriculas_data_inicio'] . ' ' . $requestData['matriculas_hora_inicio']));
+        $requestData['matriculas_datahora_fim'] = (is_null($requestData['matriculas_data_fim']) || is_null($requestData['matriculas_hora_fim']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['matriculas_data_fim'] . ' ' . $requestData['matriculas_hora_fim']));
         $requestData['boleto_valor'] = (is_null($requestData['boleto_valor']) ? null : str_replace(',', '.', $requestData['boleto_valor']));
         $requestData['boleto_data_vencimento'] = (is_null($requestData['boleto_data_vencimento']) ? null : Carbon::createFromFormat('d/m/Y', $requestData['boleto_data_vencimento'])->endOfDay());
         $requestData['boleto_offset_vencimento'] = (is_null($requestData['boleto_offset_vencimento']) ? null : $requestData['boleto_offset_vencimento']);
 
-        if (!$this->validateDates($requestData['solicitacoesisencaotaxa_datahora_inicio']?->toDateTime(), $requestData['solicitacoesisencaotaxa_datahora_fim']?->toDateTime(), $requestData['inscricoesmatriculas_datahora_inicio']?->toDateTime(), $requestData['inscricoesmatriculas_datahora_fim']?->toDateTime(), $requestData['boleto_data_vencimento']?->toDateTime())) {
+        $selecao_temporaria = new Selecao($requestData);
+        if (!$this->validateDates($requestData['solicitacoesisencaotaxa_datahora_inicio']?->toDateTime(), $requestData['solicitacoesisencaotaxa_datahora_fim']?->toDateTime(), $requestData['inscricoes_datahora_inicio']?->toDateTime(), $requestData['inscricoes_datahora_fim']?->toDateTime(), $requestData['matriculas_datahora_inicio']?->toDateTime(), $requestData['matriculas_datahora_fim']?->toDateTime(), $requestData['boleto_data_vencimento']?->toDateTime(),
+                                  $requestData['fluxo_continuo'], $requestData['tem_taxa'], $selecao_temporaria->fazInscricoes(), $selecao_temporaria->fazMatriculas())) {
             $request->session()->flash('alert-danger', 'Datas/horas de início e fim dos períodos e data de vencimento do boleto estão inconsistentes');
             \UspTheme::activeUrl('selecoes');
             return back()->withInput();
@@ -235,14 +239,23 @@ class SelecaoController extends Controller
             return view('selecoes.edit', $this->monta_compact($selecao, 'edit'))->withErrors($validator);    // preciso especificar 'edit'... se eu fizesse um return back(), e o usuário estivesse vindo de um update após um create, a variável $modo voltaria a ser 'create', e a página ficaria errada
         }
 
+        $request->merge(['fluxo_continuo' => $request->has('fluxo_continuo')]);    // acerta o valor do campo "fluxo_continuo" (pois, se o usuário deixou false, o campo não vem no $request e, se o usuário deixou true, ele vem mas com valor null)
+        $request->merge(['tem_taxa' => $request->has('tem_taxa')]);                // acerta o valor do campo "tem_taxa"       (pois, se o usuário deixou false, o campo não vem no $request e, se o usuário deixou true, ele vem mas com valor null)
+        $request->merge(['boleto_valor' => ($request->input('boleto_valor') !== '' ? $request->input('boleto_valor') : null)]);
+        $request->merge(['boleto_offset_vencimento' => ($request->input('boleto_offset_vencimento') !== '' ? $request->input('boleto_offset_vencimento') : null)]);
+
         $requestData = $request->all();
         $requestData['solicitacoesisencaotaxa_datahora_inicio'] = (is_null($requestData['solicitacoesisencaotaxa_data_inicio']) || is_null($requestData['solicitacoesisencaotaxa_hora_inicio']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['solicitacoesisencaotaxa_data_inicio'] . ' ' . $requestData['solicitacoesisencaotaxa_hora_inicio']));
         $requestData['solicitacoesisencaotaxa_datahora_fim'] = (is_null($requestData['solicitacoesisencaotaxa_data_fim']) || is_null($requestData['solicitacoesisencaotaxa_hora_fim']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['solicitacoesisencaotaxa_data_fim'] . ' ' . $requestData['solicitacoesisencaotaxa_hora_fim']));
-        $requestData['inscricoesmatriculas_datahora_inicio'] = (is_null($requestData['inscricoesmatriculas_data_inicio']) || is_null($requestData['inscricoesmatriculas_hora_inicio']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['inscricoesmatriculas_data_inicio'] . ' ' . $requestData['inscricoesmatriculas_hora_inicio']));
-        $requestData['inscricoesmatriculas_datahora_fim'] = (is_null($requestData['inscricoesmatriculas_data_fim']) || is_null($requestData['inscricoesmatriculas_hora_fim']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['inscricoesmatriculas_data_fim'] . ' ' . $requestData['inscricoesmatriculas_hora_fim']));
+        $requestData['inscricoes_datahora_inicio'] = (is_null($requestData['inscricoes_data_inicio']) || is_null($requestData['inscricoes_hora_inicio']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['inscricoes_data_inicio'] . ' ' . $requestData['inscricoes_hora_inicio']));
+        $requestData['inscricoes_datahora_fim'] = (is_null($requestData['inscricoes_data_fim']) || is_null($requestData['inscricoes_hora_fim']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['inscricoes_data_fim'] . ' ' . $requestData['inscricoes_hora_fim']));
+        $requestData['matriculas_datahora_inicio'] = (is_null($requestData['matriculas_data_inicio']) || is_null($requestData['matriculas_hora_inicio']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['matriculas_data_inicio'] . ' ' . $requestData['matriculas_hora_inicio']));
+        $requestData['matriculas_datahora_fim'] = (is_null($requestData['matriculas_data_fim']) || is_null($requestData['matriculas_hora_fim']) ? null : Carbon::createFromFormat('d/m/Y H:i', $requestData['matriculas_data_fim'] . ' ' . $requestData['matriculas_hora_fim']));
         $requestData['boleto_data_vencimento'] = (is_null($requestData['boleto_data_vencimento']) ? null : Carbon::createFromFormat('d/m/Y', $requestData['boleto_data_vencimento'])->endOfDay());
 
-        if (!$this->validateDates($requestData['solicitacoesisencaotaxa_datahora_inicio']?->toDateTime(), $requestData['solicitacoesisencaotaxa_datahora_fim']?->toDateTime(), $requestData['inscricoesmatriculas_datahora_inicio']?->toDateTime(), $requestData['inscricoesmatriculas_datahora_fim']?->toDateTime(), $requestData['boleto_data_vencimento']?->toDateTime())) {
+        $selecao_temporaria = new Selecao($requestData);
+        if (!$this->validateDates($requestData['solicitacoesisencaotaxa_datahora_inicio']?->toDateTime(), $requestData['solicitacoesisencaotaxa_datahora_fim']?->toDateTime(), $requestData['inscricoes_datahora_inicio']?->toDateTime(), $requestData['inscricoes_datahora_fim']?->toDateTime(), $requestData['matriculas_datahora_inicio']?->toDateTime(), $requestData['matriculas_datahora_fim']?->toDateTime(), $requestData['boleto_data_vencimento']?->toDateTime(),
+                                  $requestData['fluxo_continuo'], $requestData['tem_taxa'], $selecao_temporaria->fazInscricoes(), $selecao_temporaria->fazMatriculas())) {
             $request->session()->flash('alert-danger', 'Datas/horas de início e fim dos períodos e data de vencimento do boleto estão inconsistentes');
             \UspTheme::activeUrl('selecoes');
             return back()->withInput();
@@ -255,11 +268,6 @@ class SelecaoController extends Controller
                 return view('selecoes.edit', $this->monta_compact($selecao, 'edit'));
             }
 
-        $request->merge(['fluxo_continuo' => $request->has('fluxo_continuo')]);    // acerta o valor do campo "fluxo_continuo" (pois, se o usuário deixou false, o campo não vem no $request e, se o usuário deixou true, ele vem mas com valor null)
-        $request->merge(['tem_taxa' => $request->has('tem_taxa')]);                // acerta o valor do campo "tem_taxa"       (pois, se o usuário deixou false, o campo não vem no $request e, se o usuário deixou true, ele vem mas com valor null)
-        $request->merge(['boleto_valor' => ($request->input('boleto_valor') !== '' ? $request->input('boleto_valor') : null)]);
-        $request->merge(['boleto_offset_vencimento' => ($request->input('boleto_offset_vencimento') !== '' ? $request->input('boleto_offset_vencimento') : null)]);
-
         // transaction para não ter problema de inconsistência do DB
         $selecao = DB::transaction(function () use ($request, $selecao) {
 
@@ -270,16 +278,20 @@ class SelecaoController extends Controller
             $this->updateField($request, $selecao, 'descricao', 'descrição', 'a');
             $this->updateField($request, $selecao, 'solicitacoesisencaotaxa_datahora_inicio', 'data/hora início solicitações de isenção de taxa', 'a');
             $this->updateField($request, $selecao, 'solicitacoesisencaotaxa_datahora_fim', 'data/hora fim solicitações de isenção de taxa', 'a');
-            $this->updateField($request, $selecao, 'inscricoesmatriculas_datahora_inicio', 'data/hora início inscrições/matrículas', 'a');
-            $this->updateField($request, $selecao, 'inscricoesmatriculas_datahora_fim', 'data/hora fim inscrições/matrículas', 'a');
+            $this->updateField($request, $selecao, 'inscricoes_datahora_inicio', 'data/hora início inscrições', 'a');
+            $this->updateField($request, $selecao, 'inscricoes_datahora_fim', 'data/hora fim inscrições', 'a');
+            $this->updateField($request, $selecao, 'matriculas_datahora_inicio', 'data/hora início matrículas', 'a');
+            $this->updateField($request, $selecao, 'matriculas_datahora_fim', 'data/hora fim matrículas', 'a');
             $this->updateField($request, $selecao, 'fluxo_continuo', 'fluxo contínuo', 'o');
             $this->updateField($request, $selecao, 'tem_taxa', 'taxa de inscrição/matrícula', 'a');
             $this->updateField($request, $selecao, 'boleto_valor', 'valor do boleto', 'o');
             $this->updateField($request, $selecao, 'boleto_texto', 'eventuais informações adicionais no boleto', 'o');
             $this->updateField($request, $selecao, 'boleto_data_vencimento', 'data de vencimento do boleto', 'a');
             $this->updateField($request, $selecao, 'boleto_offset_vencimento', 'quantidade de dias úteis para pagamento do boleto', 'a');
-            $this->updateField($request, $selecao, 'email_inscricaomatriculaaprovacao_texto', 'eventuais informações adicionais no e-mail de aprovação da inscrição/matrícula', 'o');
-            $this->updateField($request, $selecao, 'email_inscricaomatricularejeicao_texto', 'eventuais informações adicionais no e-mail de rejeição da inscrição/matrícula', 'o');
+            $this->updateField($request, $selecao, 'email_inscricaoaprovacao_texto', 'eventuais informações adicionais no e-mail de aprovação da inscrição', 'o');
+            $this->updateField($request, $selecao, 'email_inscricaorejeicao_texto', 'eventuais informações adicionais no e-mail de rejeição da inscrição', 'o');
+            $this->updateField($request, $selecao, 'email_matriculaaprovacao_texto', 'eventuais informações adicionais no e-mail de aprovação da matrícula', 'o');
+            $this->updateField($request, $selecao, 'email_matricularejeicao_texto', 'eventuais informações adicionais no e-mail de rejeição da matrícula', 'o');
             $selecao->save();
 
             $selecao->atualizarStatus();
@@ -295,18 +307,44 @@ class SelecaoController extends Controller
         return view('selecoes.edit', $this->monta_compact($selecao, 'edit'));
     }
 
-    private function validateDates(?\DateTime $solicitacoesisencaotaxa_datahora_inicio, ?\DateTime $solicitacoesisencaotaxa_datahora_fim, \DateTime $inscricoesmatriculas_datahora_inicio, \DateTime $inscricoesmatriculas_datahora_fim, ?\DateTime $boleto_data_vencimento)
+    private function validateDates(?\DateTime $solicitacoesisencaotaxa_datahora_inicio, ?\DateTime $solicitacoesisencaotaxa_datahora_fim, ?\DateTime $inscricoes_datahora_inicio, ?\DateTime $inscricoes_datahora_fim, ?\DateTime $matriculas_datahora_inicio, ?\DateTime $matriculas_datahora_fim, ?\DateTime $boleto_data_vencimento,
+                                   bool $fluxo_continuo, bool $tem_taxa, bool $faz_inscricoes, bool $faz_matriculas)
     {
         $boleto_data_vencimento = $boleto_data_vencimento ?? CarbonImmutable::endOfTime();
 
-        if (!is_null($solicitacoesisencaotaxa_datahora_inicio) && !is_null($solicitacoesisencaotaxa_datahora_fim))
-            return ($solicitacoesisencaotaxa_datahora_inicio < $solicitacoesisencaotaxa_datahora_fim) &&
-                   ($solicitacoesisencaotaxa_datahora_fim < $inscricoesmatriculas_datahora_inicio) &&
-                   ($inscricoesmatriculas_datahora_inicio < $inscricoesmatriculas_datahora_fim) &&
-                   ($inscricoesmatriculas_datahora_fim < $boleto_data_vencimento);
-        else
-            return ($inscricoesmatriculas_datahora_inicio < $inscricoesmatriculas_datahora_fim) &&
-                   ($inscricoesmatriculas_datahora_fim < $boleto_data_vencimento);
+        $datas_ordenadas = [];
+        if ($fluxo_continuo) {    // neste caso, as datas dos fluxos coincidem, então basta checar as datas de um dos fluxos
+            if ($faz_inscricoes) {
+                $datas_ordenadas[] = $inscricoes_datahora_inicio;
+                $datas_ordenadas[] = $inscricoes_datahora_fim;
+            } elseif ($faz_matriculas) {
+                $datas_ordenadas[] = $matriculas_datahora_inicio;
+                $datas_ordenadas[] = $matriculas_datahora_fim;
+            }
+        } else {
+            if ($tem_taxa) {
+                $datas_ordenadas[] = $solicitacoesisencaotaxa_datahora_inicio;
+                $datas_ordenadas[] = $solicitacoesisencaotaxa_datahora_fim;
+            }
+            if ($faz_inscricoes) {
+                $datas_ordenadas[] = $inscricoes_datahora_inicio;
+                $datas_ordenadas[] = $inscricoes_datahora_fim;
+            }
+            $boleto_data_vencimento_antes_das_matriculas = ($tem_taxa && $faz_inscricoes && $faz_matriculas);
+            if ($boleto_data_vencimento_antes_das_matriculas)
+                $datas_ordenadas[] = $boleto_data_vencimento;
+            if ($faz_matriculas) {
+                $datas_ordenadas[] = $matriculas_datahora_inicio;
+                $datas_ordenadas[] = $matriculas_datahora_fim;
+            }
+            if ($tem_taxa && !$boleto_data_vencimento_antes_das_matriculas)
+                $datas_ordenadas[] = $boleto_data_vencimento;
+        }
+
+        for ($i = 0; $i < count($datas_ordenadas) - 1; $i++)
+            if ($datas_ordenadas[$i] >= $datas_ordenadas[$i + 1])
+                return false;
+        return true;
     }
 
     private function updateField(SelecaoRequest $request, Selecao $selecao, string $field, string $field_name, string $genero)

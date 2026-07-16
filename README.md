@@ -5,31 +5,39 @@ No contexto deste sistema, a matrícula é na verdade uma solicitação de matr�
 
 # Características
 
-Permite que candidatos solicitem isenção de taxa de inscrição/matrícula e realizem inscrição/matrícula.
+Permite que candidatos solicitem isenção de taxa de inscrição ou matrícula, realizem inscrição e realizem matrícula.
 Solicitações de isenção de taxa, inscrições e matrículas possuem cada qual seu fluxo de estados.
-Para que um candidato solicite isenção de taxa ou se inscreva/matricule, ele precisa estar logado, ou seja, ele deve antes realizar um cadastro local.
+Para que um candidato solicite isenção de taxa, se inscreva ou se matricule, ele precisa estar logado, ou seja, ele deve antes realizar um cadastro local.
 Os usuários locais são gravados também na tabela users, embora possuam modelo próprio no projeto.
 
 Há duas categorias de processos seletivos: para aluno regular e para aluno especial.
 No caso de aluno regular, as solicitações de isenção de taxa, inscrições e matrículas dizem respeito a um programa específico.
-O aluno regular, ao se inscrever/matricular, deve escolher a combinação nível com linha de pesquisa/tema na qual está se inscrevendo/matriculando.
-No caso de aluno especial, as seleções, solicitações de isenção de taxa e matrículas não são atreladas a um programa.
+O aluno regular, ao se inscrever ou se matricular, deve escolher a combinação nível com linha de pesquisa/tema na qual está se inscrevendo ou se matriculando.
+No caso de aluno especial, as seleções, solicitações de isenção de taxa, inscrições e matrículas não são atreladas a um programa.
 O aluno especial, ao se matricular, deve escolher a(s) disciplina(s) na(s) qual(is) está se matriculando.
 
-Pode-se configurar cada programa e também a categoria de aluno especial para utilizar o fluxo de inscrições ou o de matrículas. Essa flexibilidade é interessante para casos como, por exemplo, aluno regular para programas que dependam da FUVEST para realizar o processo seletivo; nestes casos, o programa utiliza este sistema somente para o fluxo de matrículas.
+Pode-se configurar cada programa e também a categoria de aluno especial para utilizar o fluxo de inscrições, o fluxo de matrículas ou ambos. Essa flexibilidade é interessante para casos como, por exemplo, aluno regular para programas que dependam da FUVEST para realizar o processo seletivo; nestes casos, o programa utiliza este sistema somente para o fluxo de matrículas. Além disso, no caso de aluno regular, é interessante também haver o fluxo de matrículas para que os candidatos submetam os documentos necessários para a realização da matrícula propriamente dita.
 
 Os gerentes devem cadastrar as seleções nas quais os candidatos solicitarão isenção de taxa, se inscreverão e se matricularão.
 Cada seleção pode ter até três formulários para preenchimento pelo candidato (para a solicitação de isenção de taxa, para a inscrição e para a matrícula), gerados a partir de templates, e editáveis pelo gerente (excetos por campos utilizados pelo sistema, que não podem ser removidos, como CPF, e-mail, etc.).
-O estado da seleção é modificado quando o gerente altera a data início/fim das solicitações de isenção de taxa, das inscrições ou das matrículas, também quando as seleções são consultadas (neste momento, o sistema verifica se alguma seleção passou da data início/fim, e muda o estado de acordo), e também quando um usuário vai iniciar uma nova solicitação de isenção de taxa, inscrição ou matrícula.
+O estado da seleção é modificado quando o gerente altera a data início/fim das solicitações de isenção de taxa, das inscrições ou das matrículas, também quando as seleções são consultadas (neste momento, o sistema verifica se alguma seleção passou da data início/fim, e muda o estado de acordo), e também quando um usuário inicia uma nova solicitação de isenção de taxa, inscrição ou matrícula.
 O estado da seleção também é modificado quando o gerente sobe ou remove os documentos da seleção (edital, etc.), pois não podemos iniciar um período de solicitações de isenção de taxa, inscrições ou matrículas sem que a seleção tenha esses documentos.
 Ao cadastrar uma nova seleção, o gerente deve informar a quais combinações de níveis com linhas de pesquisa/temas ela está atrelada (se a categoria da seleção for aluno regular, pois na categoria de aluno especial não temos combinações níveis com linhas de pesquisa/temas, o aluno especial se inscreve para disciplinas).
 Ao cadastrar uma nova seleção com cobrança de taxa, todos os motivos de isenção de taxa são automaticamente associados à ela; cabe ao gerente verificar se é isso mesmo o desejado para a nova seleção.
-A seleção pode ser normal ou de "fluxo contínuo". No caso normal, a data de vencimento do boleto é cadastrada na própria seleção; no caso de fluxo contínuo, os períodos de solicitação de isenção de taxa e de inscrições ou matrículas coincidem, e a data de vencimento do boleto é calculada somando-se uma determinada quantidade de dias úteis (quantidade essa cadastrada na seleção) acrescidos à data de envio da inscrição ou matrícula.
-O fluxo de estados de seleções sem cobrança de taxa é:
-Em Elaboração -> Aguardando Início das Inscrições/Matrículas -> Período de Inscrições/Matrículas -> Encerrada
-O fluxo de estados de seleções com cobrança de taxa é: Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa -> Período de Solicitações de Isenção de Taxa -> Aguardando Início das Inscrições/Matrículas -> Período de Inscrições/Matrículas -> Encerrada
-O fluxo de estados de seleções com cobrança de taxa e fluxo contínuo é:
-Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa e das Inscrições/Matrículas -> Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas -> Encerrada
+
+A seleção pode ser normal ou de "fluxo contínuo". No caso normal, a data de vencimento do boleto é cadastrada na própria seleção; no caso de fluxo contínuo, os períodos dos fluxos disponíveis para o processo coincidem, e a data de vencimento do boleto é calculada somando-se uma determinada quantidade de dias úteis (quantidade essa cadastrada na seleção) acrescidos à data de envio da inscrição ou matrícula.
+Os possíveis fluxos de estados de seleções sem cobrança de taxa são:
+1) Em Elaboração -> Aguardando Início das Inscrições -> Período de Inscrições -> Encerrada
+2) Em Elaboração -> Aguardando Início das Inscrições -> Período de Inscrições -> Aguardando Início das Matrículas -> Período de Matrículas -> Encerrada
+3) Em Elaboração -> Aguardando Início das Matrículas -> Período de Matrículas -> Encerrada
+Os possíveis fluxos de estados de seleções com cobrança de taxa são:
+1) Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa -> Período de Solicitações de Isenção de Taxa -> Aguardando Início das Inscrições -> Período de Inscrições -> Encerrada
+2) Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa -> Período de Solicitações de Isenção de Taxa -> Aguardando Início das Inscrições -> Período de Inscrições -> Aguardando Início das Matrículas -> Período de Matrículas -> Encerrada
+3) Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa -> Período de Solicitações de Isenção de Taxa -> Aguardando Início das Matrículas -> Período de Matrículas -> Encerrada
+Os possíveis fluxos de estados de seleções com cobrança de taxa e fluxo contínuo são:
+1) Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa e das Inscrições -> Período de Solicitações de Isenção de Taxa e de Inscrições -> Encerrada
+2) Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa, das Inscrições e das Matrículas -> Período de Solicitações de Isenção de Taxa, de Inscrições e de Matrículas -> Encerrada
+3) Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa e das Matrículas -> Período de Solicitações de Isenção de Taxa e de Matrículas -> Encerrada
 
 Há cinco funções para gestores: docentes do programa, secretários(as) dos programas, coordenadores dos programas, serviço de pós-graduação e coordenadores da pós-graduação.
 Gestores das três primeiras funções são atrelados aos programas. Eles podem acessar seleções, solicitações de isenção de taxa, inscrições e matrículas somente de seus programas associados.
@@ -57,6 +65,7 @@ No caso de aluno regular, é gerado um único boleto.
 No caso de aluno especial, é gerado um boleto para cada disciplina na qual ele se inscreveu, e enviado para o candidato um único e-mail com todos esses boletos anexados.
 Algumas informações necessárias para a geração de boletos se encontram na tabela "parametros", que é editável pelos admins em tela.
 Quando o sistema está configurado para gerar e enviar boleto no momento do envio da inscrição/matrícula, caso um candidato reenvie sua matrícula, e ela seja para uma seleção de categoria aluno especial, e as disciplinas para as quais ele está se matriculando tenham sido alteradas em relação ao envio anterior, o sistema irá gerar e enviar boletos para as novas disciplinas, além de marcar como boletos referentes a disciplinas removidas aqueles boletos que haviam sido gerados anteriormente e cujas disciplinas o candidato removeu nesse reenvio da matrícula.
+Quando o processo seletivo permite os fluxos tanto de inscrição quanto de matrícula, o sistema gera e envia boletos somente no fluxo de inscrição, não o fazendo no fluxo de matrícula.
 
 A lei 14.534/2023 estabeleceu que estrangeiros devem possuir CPF para cursar pós-graduação. Com base nisso, passamos a utilizar o CPF como identificador único de pessoas nas situações em que precisamos identificar a mesma pessoa tendo realizado ações em momentos diferentes. Antes nos baseávamos no usuário autor, o que poderia levar a erros caso um usuário solicitasse isenção de taxa, efetuasse inscrição ou matrícula para outro candidato.
 
@@ -361,7 +370,7 @@ Foram utilizados vários recursos do laravel que podem não ser muito trivial pa
 
 -   O sistema faz uso dos seguintes serviços externos: WSBoleto da USP, Recaptcha v2 do Google e Viacep (que é gratuito, diferente do webservice dos Correios, que exige convênio específico).
 
--   Quase a totalidade da implementação deste sistema foi inspirado no chamados; muito código foi copiado de lá, e adaptado: as solicitações de isenção de taxa e inscrições/matrículas deste sistema são de certa forma similares aos chamados do sistema de chamados, as seleções deste sistema são de certa forma similares às filas do sistema de chamados, e os programas deste sistema são de certa forma similares aos setores do sistema de chamados.
+-   Quase a totalidade da implementação deste sistema foi inspirado no chamados; muito código foi copiado de lá, e adaptado: as solicitações de isenção de taxa, inscrições e matrículas deste sistema são de certa forma similares aos chamados do sistema de chamados, as seleções deste sistema são de certa forma similares às filas do sistema de chamados, e os programas deste sistema são de certa forma similares aos setores do sistema de chamados.
 
 -   A tela de funções foi inspirada no datagrad, embora a implementação tenha sido nova.
 

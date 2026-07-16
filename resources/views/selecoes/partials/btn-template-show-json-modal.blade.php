@@ -1,5 +1,6 @@
 @php
   $classe_nome_plural = ClasseUtils::obterClasseNomePlural($classe_nome);
+  $classe_nome_plural_acentuado = ClasseUtils::obterClasseNomePluralAcentuado($classe_nome);
 @endphp
 
 <button type="button" class="btn btn-sm btn-light text-primary" onclick="json_modal_form_{{ $classe_nome_plural }}()">
@@ -11,7 +12,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalShowJson-{{ $classe_nome_plural }}">Formulário para {{ ClasseUtils::obterClasseNomePluralAcentuado($classe_nome) }}</h5>
+        <h5 class="modal-title" id="modalShowJson-{{ $classe_nome_plural }}">Formulário para {{ $classe_nome_plural_acentuado }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

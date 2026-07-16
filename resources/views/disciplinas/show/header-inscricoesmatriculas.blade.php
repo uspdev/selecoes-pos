@@ -3,7 +3,7 @@
     {{ $objeto_disciplina->sigla }} - {{ $objeto_disciplina->nome }}
   </b>
   <div class="hidden-btn d-none ml-auto">
-    @if (in_array($objeto->selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas']) && (session('perfil') == 'usuario'))
+    @if (str_starts_with($selecao->estado, 'Período de') && str_contains($selecao->estado, $classe_nome_plural_acentuado) && (session('perfil') == 'usuario'))
       @include('common.btn-delete-sm', ['action' => $classe_nome_plural . '/' . $objeto->id . '/disciplinas/' . $objeto_disciplina->id])
     @endif
   </div>

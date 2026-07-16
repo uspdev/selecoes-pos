@@ -75,7 +75,8 @@ class MatriculaObserver
                 $passo = 'envio - para candidato';
                 if ($matricula->selecao->tem_taxa &&
                     ($boleto_momento_envio == 'Envio da Inscrição/Matrícula') &&
-                    !SolicitacaoIsencaoTaxa::where('extras->cpf', $extras['cpf'] ?? null)->where('selecao_id', $matricula->selecao->id)->where('estado', 'LIKE', 'Isenção de Taxa Aprovada%')->exists())
+                    !SolicitacaoIsencaoTaxa::where('extras->cpf', $extras['cpf'] ?? null)->where('selecao_id', $matricula->selecao->id)->where('estado', 'LIKE', 'Isenção de Taxa Aprovada%')->exists() &&
+                    !$matricula->selecao->fazInscricoes())    // se houve inscrição, o(s) boleto(s) já foi(ram) gerado(s), então não o(s) gero(amos) aqui
                     if ($matricula->selecao->categoria->nome !== 'Aluno Especial')
                         $arquivos = [$this->boletoService->gerarBoleto($matricula, 'Matricula')];    // gera boleto para a matrícula
                     else {
@@ -125,7 +126,8 @@ class MatriculaObserver
                 // verifica se a seleção tem taxa e se o candidato não tem isenção de taxa aprovada
                 if ($matricula->selecao->tem_taxa &&
                     ($boleto_momento_envio == 'Aprovação da Inscrição/Matrícula') &&
-                    !SolicitacaoIsencaoTaxa::where('extras->cpf', $extras['cpf'] ?? null)->where('selecao_id', $matricula->selecao->id)->where('estado', 'LIKE', 'Isenção de Taxa Aprovada%')->exists())
+                    !SolicitacaoIsencaoTaxa::where('extras->cpf', $extras['cpf'] ?? null)->where('selecao_id', $matricula->selecao->id)->where('estado', 'LIKE', 'Isenção de Taxa Aprovada%')->exists() &&
+                    !$matricula->selecao->fazInscricoes())    // se houve inscrição, o(s) boleto(s) já foi(ram) gerado(s), então não o(s) gero(amos) aqui
                     if ($matricula->selecao->categoria->nome !== 'Aluno Especial')
                         $arquivos = [$this->boletoService->gerarBoleto($matricula, 'Matricula')];    // gera boleto para a matrícula
                     else {

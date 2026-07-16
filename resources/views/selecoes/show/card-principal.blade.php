@@ -46,52 +46,55 @@
         $(this).mask('00/00/0000');
       });
 
-      $('#categoria_id').change(function () {
-        var programa_div = $('#programa_id').closest('.form-group');
-        if ($('#categoria_id option:selected').text() !== 'Aluno Especial') {
+      $('#categoria_id, #programa_id').change(function () {
+        programa_div = $('#programa_id').closest('.form-group');
+        faz_inscricoes = false;
+        faz_matriculas = false;
+
+        if (($('#categoria_id option:selected').text() !== 'Aluno Especial') && ($('#categoria_id').val() !== '')) {
           programa_div.show();
-          updateInscricaoMatriculaLabels('Matrícula', 'Matrículas', 'Inscrição', 'Inscrições');
+          programa_id = $('#programa_id').val();
+          programa = $({!! $programas !!}).filter(function(index, item) {
+            return item.id == programa_id;
+          })[0];
+          if (programa) {
+            faz_inscricoes = programa.fazInscricoes;
+            faz_matriculas = programa.fazMatriculas;
+          }
         } else {
           $('#programa_id option:first').prop('selected', true);
           programa_div.hide();
-          @if (Parametro::first()->especiaisFazInscricoes())
-            updateInscricaoMatriculaLabels('Matrícula', 'Matrículas', 'Inscrição', 'Inscrições');
-          @else
-            updateInscricaoMatriculaLabels('Inscrição', 'Inscrições', 'Matrícula', 'Matrículas');
-          @endif
+          if ($('#categoria_id option:selected').text() === 'Aluno Especial') {
+            faz_inscricoes = {{ Parametro::first()->especiaisFazInscricoes() ? 'true' : 'false' }};
+            faz_matriculas = {{ Parametro::first()->especiaisFazMatriculas() ? 'true' : 'false' }};
+          }
         }
+
+        if (faz_inscricoes)    // quando faz ambas inscrições e matrículas, o campo "tem taxa" recai nas inscrições, então não precisamos checar por faz_inscricoes && faz_matriculas
+          updateTemTaxaLabel('Inscrição');
+        else if (faz_matriculas)
+          updateTemTaxaLabel('Matrícula');
+
+        updateCamposDataHora();
+        updateCamposEmail();
+        updateCamposBoleto();
       });
 
       $('#categoria_id').trigger('change');
 
-      $('#programa_id').change(function () {
-        var programa_id = $(this).val();
-        var programa = $({!! $programas !!}).filter(function(index, item) {
-          return item.id == programa_id;
-        })[0];
-        if (programa)
-          if (programa.fazInscricoes)
-            updateInscricaoMatriculaLabels('Matrícula', 'Matrículas', 'Inscrição', 'Inscrições');
-          else
-            updateInscricaoMatriculaLabels('Inscrição', 'Inscrições', 'Matrícula', 'Matrículas');
-      });
-
-      $('#programa_id').trigger('change');
-
       updateCampoFluxoContinuo();
-      updateCamposSolicitacoesIsencaoTaxaDataHora();
       updateCamposBoleto();
       updateQuadrosSolicitacoesIsencaoTaxa();
 
       $('#tem_taxa').on('click', function () {
         updateCampoFluxoContinuo();
-        updateCamposSolicitacoesIsencaoTaxaDataHora();
+        updateCamposDataHora();
         updateCamposBoleto();
         updateQuadrosSolicitacoesIsencaoTaxa();
       });
 
       $('#fluxo_continuo').on('click', function () {
-        updateCamposSolicitacoesIsencaoTaxaDataHora();
+        updateCamposDataHora();
         updateCamposBoleto();
       });
 
@@ -107,6 +110,25 @@
 
         if (!form_valid)
           event.preventDefault();
+        else if ($('#fluxo_continuo').prop('checked')) {
+          if (faz_inscricoes) {
+            $('#solicitacoesisencaotaxa_data_inicio').val($('#inscricoes_data_inicio').val());
+            $('#solicitacoesisencaotaxa_hora_inicio').val($('#inscricoes_hora_inicio').val());
+            $('#solicitacoesisencaotaxa_data_fim').val($('#inscricoes_data_fim').val());
+            $('#solicitacoesisencaotaxa_hora_fim').val($('#inscricoes_hora_fim').val());
+            if (faz_matriculas) {
+              $('#matriculas_data_inicio').val($('#inscricoes_data_inicio').val());
+              $('#matriculas_hora_inicio').val($('#inscricoes_hora_inicio').val());
+              $('#matriculas_data_fim').val($('#inscricoes_data_fim').val());
+              $('#matriculas_hora_fim').val($('#inscricoes_hora_fim').val());
+            }
+          } else if (faz_matriculas) {
+            $('#solicitacoesisencaotaxa_data_inicio').val($('#matriculas_data_inicio').val());
+            $('#solicitacoesisencaotaxa_hora_inicio').val($('#matriculas_hora_inicio').val());
+            $('#solicitacoesisencaotaxa_data_fim').val($('#matriculas_data_fim').val());
+            $('#solicitacoesisencaotaxa_hora_fim').val($('#matriculas_hora_fim').val());
+          }
+        }
       });
     });
 
@@ -118,23 +140,59 @@
         $('#fluxo_continuo').parents('div').eq(1).show();
     }
 
-    function updateCamposSolicitacoesIsencaoTaxaDataHora() {
-      if (!$('#tem_taxa').prop('checked') || $('#fluxo_continuo').prop('checked')) {
-        // oculta os campos de data e hora de solicitações de isenção de taxa
-        $('#solicitacoesisencaotaxa_data_inicio').val('');
-        $('#solicitacoesisencaotaxa_data_inicio').parents('div').eq(1).hide();
-        $('#solicitacoesisencaotaxa_hora_inicio').next('.flatpickr-calendar').find('input[type="number"]').val('00');
-        $('#solicitacoesisencaotaxa_hora_inicio').parents('div').eq(1).hide();
-        $('#solicitacoesisencaotaxa_data_fim').val('');
-        $('#solicitacoesisencaotaxa_data_fim').parents('div').eq(1).hide();
-        $('#solicitacoesisencaotaxa_hora_fim').next('.flatpickr-calendar').find('input[type="number"]').val('00');
-        $('#solicitacoesisencaotaxa_hora_fim').parents('div').eq(1).hide();
+    function ocultaCamposDataHora(classe_nome_plural) {
+      $('#' + classe_nome_plural + '_data_inicio').val('').parents('div').eq(1).hide();
+      $('#' + classe_nome_plural + '_hora_inicio').next('.flatpickr-calendar').find('input[type="number"]').val('00');
+      $('#' + classe_nome_plural + '_hora_inicio').parents('div').eq(1).hide();
+      $('#' + classe_nome_plural + '_data_fim').val('').parents('div').eq(1).hide();
+      $('#' + classe_nome_plural + '_hora_fim').next('.flatpickr-calendar').find('input[type="number"]').val('00');
+      $('#' + classe_nome_plural + '_hora_fim').parents('div').eq(1).hide();
+    }
+
+    function mostraCamposDataHora(classe_nome_plural) {
+      $('#' + classe_nome_plural + '_data_inicio').parents('div').eq(1).show();
+      $('#' + classe_nome_plural + '_hora_inicio').parents('div').eq(1).show();
+      $('#' + classe_nome_plural + '_data_fim').parents('div').eq(1).show();
+      $('#' + classe_nome_plural + '_hora_fim').parents('div').eq(1).show();
+    }
+
+    function atualizaCamposDataHora(classe_nome_plural, newLabel) {
+      elementosInicio = $('label[for="' + classe_nome_plural + '_data_inicio"]').children().detach();
+      elementosFim = $('label[for="' + classe_nome_plural + '_data_fim"]').children().detach();
+      $('label[for="' + classe_nome_plural + '_data_inicio"]').html('Início das ' + newLabel + '&nbsp;').append(elementosInicio);
+      $('label[for="' + classe_nome_plural + '_data_fim"]').html('Fim das ' + newLabel + '&nbsp;').append(elementosFim);
+    }
+
+    function updateCamposDataHora() {
+      if ($('#fluxo_continuo').prop('checked')) {
+        ocultaCamposDataHora('solicitacoesisencaotaxa');
+        if (faz_inscricoes && faz_matriculas) {
+          atualizaCamposDataHora('inscricoes', 'Solicitações de Isenção de Taxa, Inscrições e Matrículas');
+          ocultaCamposDataHora('matriculas');
+        } else if (faz_inscricoes) {
+          atualizaCamposDataHora('inscricoes', 'Solicitações de Isenção de Taxa e Inscrições');
+          mostraCamposDataHora('inscricoes');
+          ocultaCamposDataHora('matriculas');
+        } else if (faz_matriculas) {
+          atualizaCamposDataHora('matriculas', 'Solicitações de Isenção de Taxa e Matrículas');
+          ocultaCamposDataHora('inscricoes');
+          mostraCamposDataHora('matriculas');
+        }
       } else {
-        // exibe os campos de data e hora de solicitações de isenção de taxa
-        $('#solicitacoesisencaotaxa_data_inicio').parents('div').eq(1).show();
-        $('#solicitacoesisencaotaxa_hora_inicio').parents('div').eq(1).show();
-        $('#solicitacoesisencaotaxa_data_fim').parents('div').eq(1).show();
-        $('#solicitacoesisencaotaxa_hora_fim').parents('div').eq(1).show();
+        atualizaCamposDataHora('inscricoes', 'Inscrições');
+        atualizaCamposDataHora('matriculas', 'Matrículas');
+        if ($('#tem_taxa').prop('checked'))
+          mostraCamposDataHora('solicitacoesisencaotaxa');
+        else
+          ocultaCamposDataHora('solicitacoesisencaotaxa');
+        if (faz_inscricoes)
+          mostraCamposDataHora('inscricoes');
+        else
+          ocultaCamposDataHora('inscricoes');
+        if (faz_matriculas)
+          mostraCamposDataHora('matriculas');
+        else
+          ocultaCamposDataHora('matriculas');
       }
     }
 
@@ -163,6 +221,12 @@
         $('#boleto_valor').parents('div').eq(1).show();
         $('#boleto_texto').parents('div').eq(1).show();
       }
+
+      // reposiciona o campo de data de vencimento do boleto, conforme for o caso
+      if ((!$('#fluxo_continuo').prop('checked')) && ($('#tem_taxa').prop('checked')) && faz_inscricoes && faz_matriculas)
+        $('#boleto_data_vencimento').parents('div').eq(1).insertBefore($('#matriculas_data_inicio').parents('div').eq(1));
+      else
+        $('#boleto_data_vencimento').parents('div').eq(1).insertAfter($('#matriculas_hora_fim').parents('div').eq(1));
     }
 
     function updateQuadrosSolicitacoesIsencaoTaxa() {
@@ -179,19 +243,35 @@
       }
     }
 
-    function updateInscricaoMatriculaLabels(oldLabel, oldLabelPlural, newLabel, newLabelPlural) {
-      if (!$('#form_principal').data('labels-init')) {
-        // primeira chamada a este método
-        oldLabel = 'Inscrição/Matrícula';
-        oldLabelPlural = 'Inscrições/Matrículas';
-        $('#form_principal').data('labels-init', true);
-      }
-      $('label[for="fluxo_continuo"]').text($('label[for="fluxo_continuo"]').text().replace(oldLabelPlural.toLowerCase(), newLabelPlural.toLowerCase()));
-      $('label[for="tem_taxa"]').text($('label[for="tem_taxa"]').text().replace(oldLabel, newLabel));
-      $('label[for="inscricoesmatriculas_data_inicio"]').html($('label[for="inscricoesmatriculas_data_inicio"]').html().replace(oldLabelPlural, newLabelPlural));
-      $('label[for="inscricoesmatriculas_data_fim"]').html($('label[for="inscricoesmatriculas_data_fim"]').html().replace(oldLabelPlural, newLabelPlural));
-      $('label[for="email_inscricaomatriculaaprovacao_texto"]').text($('label[for="email_inscricaomatriculaaprovacao_texto"]').text().replace(oldLabel, newLabel));
-      $('label[for="email_inscricaomatricularejeicao_texto"]').text($('label[for="email_inscricaomatricularejeicao_texto"]').text().replace(oldLabel, newLabel));
+    function updateTemTaxaLabel(newLabel) {
+      oldLabel = '';
+      if ($('label[for="tem_taxa"]').text().includes('Inscrição'))
+          oldLabel = 'Inscrição';
+      else if ($('label[for="tem_taxa"]').text().includes('Matrícula'))
+          oldLabel = 'Matrícula';
+      if (oldLabel !== '')
+        $('label[for="tem_taxa"]').text($('label[for="tem_taxa"]').text().replace(oldLabel, newLabel));
+    }
+
+    function ocultaCamposEmail(classe_nome) {
+      $('#email_' + classe_nome + 'aprovacao_texto').val('').parents('div').eq(1).hide();
+      $('#email_' + classe_nome + 'rejeicao_texto').val('').parents('div').eq(1).hide();
+    }
+
+    function mostraCamposEmail(classe_nome) {
+      $('#email_' + classe_nome + 'aprovacao_texto').parents('div').eq(1).show();
+      $('#email_' + classe_nome + 'rejeicao_texto').parents('div').eq(1).show();
+    }
+
+    function updateCamposEmail() {
+      if (faz_inscricoes)
+        mostraCamposEmail('inscricao');
+      else
+        ocultaCamposEmail('inscricao');
+      if (faz_matriculas)
+        mostraCamposEmail('matricula');
+      else
+        ocultaCamposEmail('matricula');
     }
   </script>
 @endsection

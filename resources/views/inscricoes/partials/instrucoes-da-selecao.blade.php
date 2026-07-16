@@ -5,7 +5,7 @@
     {!! nl2br(linkify($inscricao->selecao->settings()->get('instrucoes'))) !!}
     <br />
   @endif
-  As inscrições para {{ $objetivo }} vão de {{ formatarDataHora($inscricao->selecao->inscricoesmatriculas_datahora_inicio) }} até {{ formatarDataHora($inscricao->selecao->inscricoesmatriculas_datahora_fim) }}.<br />
+  As inscrições para {{ $objetivo }} vão de {{ formatarDataHora($inscricao->selecao->inscricoes_datahora_inicio) }} até {{ formatarDataHora($inscricao->selecao->inscricoes_datahora_fim) }}.<br />
   @if ($inscricao->selecao->tem_taxa)
     Há taxa de inscrição para esta seleção.
     @if (!empty($inscricao->created_at))    {{-- se existe o created_at, é porque já passou pelo "Prosseguir", e portanto conseguimos determinar se a solicitação de isenção de taxa foi aprovada ou não --}}
