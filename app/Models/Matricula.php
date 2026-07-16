@@ -93,7 +93,7 @@ class Matricula extends Model
         if ($this->selecao->fluxo_continuo) {
             // agenda job de alerta de matrícula não concluída
             $job_datahora = now()->addDays(7);
-            if ($job_datahora < Carbon::parse($this->selecao->inscricoesmatriculas_datahora_fim)->subHours(24))
+            if ($job_datahora < Carbon::parse($this->selecao->matriculas_datahora_fim)->subHours(24))
                 AlertaCandidatoIncompletude::dispatch($this->id, 'Matricula')->delay($job_datahora);
         }
     }

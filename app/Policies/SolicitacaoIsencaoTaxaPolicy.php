@@ -62,7 +62,7 @@ class SolicitacaoIsencaoTaxaPolicy
     {
         if (!is_null($selecao)) {
             $selecao->atualizarStatus();
-            if (!in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Solicitações de Isenção de Taxa']))
+            if (!str_starts_with($selecao->estado, 'Período de Solicitações de Isenção de Taxa'))
                 return false;
         }
 
@@ -80,7 +80,7 @@ class SolicitacaoIsencaoTaxaPolicy
     {
         $selecao = $solicitacaoisencaotaxa->selecao;
         $selecao->atualizarStatus();
-        if (!in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Solicitações de Isenção de Taxa']))
+        if (!str_starts_with($selecao->estado, 'Período de Solicitações de Isenção de Taxa'))
             return false;
 
         return (Gate::allows('perfilusuario') && ($solicitacaoisencaotaxa->pessoas('Autor')->id == $user->id));    // permite que apenas o usuário autor da solicitação de isenção de taxa a edite

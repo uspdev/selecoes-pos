@@ -6,40 +6,46 @@
       cursor: not-allowed;
       pointer-events: all !important;
     }
+    .btn-enable-disable.flex-wrap > .btn {
+      margin-bottom: 4px;
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
 </style>
 @endsection
 
 @nomenclatura
 
-<div class="btn-group btn-enable-disable">
+<div class="btn-group btn-enable-disable flex-wrap">
   <button class="btn btn-sm {{ ($selecao->estado == 'Em Elaboração') ? 'btn-warning' : 'btn-secondary' }}" disabled name="estado" value="Em Elaboração">
     Em Elaboração
   </button>
-  @if ($selecao->tem_taxa)
-    @if (!$selecao->fluxo_continuo)
-      <button class="btn btn-sm {{ ($selecao->estado == 'Aguardando Início das Solicitações de Isenção de Taxa') ? 'btn-warning' : 'btn-secondary' }}" disabled name="estado" value="Aguardando Início das Solicitações de Isenção de Taxa">
-        Aguardando Início das Solicitações de Isenção de Taxa
-      </button>
-      <button class="btn btn-sm {{ ($selecao->estado == 'Período de Solicitações de Isenção de Taxa') ? 'btn-success' : 'btn-secondary' }}" disabled name="estado" value="Período de Solicitações de Isenção de Taxa">
-        Período de Solicitações de Isenção de Taxa
-      </button>
-    @else
-      <button class="btn btn-sm {{ ($selecao->estado == 'Aguardando Início das Solicitações de Isenção de Taxa e das Inscrições/Matrículas') ? 'btn-warning' : 'btn-secondary' }}" disabled name="estado" value="Aguardando Início das Solicitações de Isenção de Taxa e das Inscrições/Matrículas">
-        Aguardando Início das Solicitações de Isenção de Taxa e das {{ ucfirst($inscricao_ou_matricula_plural) }}
-      </button>
-      <button class="btn btn-sm {{ ($selecao->estado == 'Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas') ? 'btn-success' : 'btn-secondary' }}" disabled name="estado" value="Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas">
-        Período de Solicitações de Isenção de Taxa e de {{ ucfirst($inscricao_ou_matricula_plural) }}
-      </button>
-    @endif
-  @endif
-  @if (!$selecao->tem_taxa || !$selecao->fluxo_continuo)
-    <button class="btn btn-sm {{ ($selecao->estado == 'Aguardando Início das Inscrições/Matrículas') ? 'btn-warning' : 'btn-secondary' }}" disabled name="estado" value="Aguardando Início das Inscrições/Matrículas">
-      Aguardando Início das {{ ucfirst($inscricao_ou_matricula_plural) }}
+  @php
+    $estados_abreviados = [];
+    if ($selecao->fluxo_continuo) {     // se é fluxo contínuo, sei com certeza também que tem taxa
+      if ($selecao->fazInscricoes() && $selecao->fazMatriculas())
+        $estados_abreviados[] = ['nome_das' => 'das Solicitações de Isenção de Taxa, das Inscrições e das Matrículas', 'nome_de' => 'de Solicitações de Isenção de Taxa, de Inscrições e de Matrículas'];
+      elseif ($selecao->fazInscricoes())
+        $estados_abreviados[] = ['nome_das' => 'das Solicitações de Isenção de Taxa e das Inscrições', 'nome_de' => 'de Solicitações de Isenção de Taxa e de Inscrições'];
+      elseif ($selecao->fazMatriculas())
+        $estados_abreviados[] = ['nome_das' => 'das Solicitações de Isenção de Taxa e das Matrículas', 'nome_de' => 'de Solicitações de Isenção de Taxa e de Matrículas'];
+    } else {
+      if ($selecao->tem_taxa)
+        $estados_abreviados[] = ['nome_das' => 'das Solicitações de Isenção de Taxa', 'nome_de' => 'de Solicitações de Isenção de Taxa'];
+      if ($selecao->fazInscricoes())
+        $estados_abreviados[] = ['nome_das' => 'das Inscrições', 'nome_de' => 'de Inscrições'];
+      if ($selecao->fazMatriculas())
+        $estados_abreviados[] = ['nome_das' => 'das Matrículas', 'nome_de' => 'de Matrículas'];
+    }
+  @endphp
+  @foreach ($estados_abreviados as $estado_abreviado)
+    <button class="btn btn-sm {{ ($selecao->estado == ('Aguardando Início ' . $estado_abreviado['nome_das'])) ? 'btn-warning' : 'btn-secondary' }}" disabled name="estado" value="Aguardando Início {{ $estado_abreviado['nome_das'] }}">
+      Aguardando Início {{ $estado_abreviado['nome_das'] }}
     </button>
-    <button class="btn btn-sm {{ ($selecao->estado == 'Período de Inscrições/Matrículas') ? 'btn-success' : 'btn-secondary' }}" disabled name="estado" value="Período de Inscrições/Matrículas">
-      Período de {{ ucfirst($inscricao_ou_matricula_plural) }}
+    <button class="btn btn-sm {{ ($selecao->estado == ('Período ' . $estado_abreviado['nome_de'])) ? 'btn-success' : 'btn-secondary' }}" disabled name="estado" value="Período {{ $estado_abreviado['nome_de'] }}">
+      Período {{ $estado_abreviado['nome_de'] }}
     </button>
-  @endif
+  @endforeach
   <button class="btn btn-sm {{ ($selecao->estado == 'Encerrada') ? 'btn-danger' : 'btn-secondary' }}" disabled name="estado" value="Encerrada">
     Encerrada
   </button>

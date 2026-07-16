@@ -2,7 +2,8 @@
 @section('content')
 @parent
   @php
-    $condicao_iniciada = in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas', 'Encerrada']);
+    $classe_nome_plural_acentuado = ClasseUtils::obterClasseNomePluralAcentuado($classe_nome);
+    $condicao_iniciada = (str_starts_with($selecao->estado, 'Período de') && str_contains($selecao->estado, $classe_nome_plural_acentuado)) || ($selecao->estado == 'Encerrada');
   @endphp
   @include('common.modal-processando')
   <div class="row">
@@ -19,7 +20,7 @@
               @if (!is_null($selecao->categoria))
                 &nbsp;({{ $selecao->categoria->nome }})
               @endif
-              &nbsp; | &nbsp;  Formulário para {{ ClasseUtils::obterClasseNomePluralAcentuado($classe_nome) }} &nbsp; | &nbsp; &nbsp;
+              &nbsp; | &nbsp;  Formulário para {{ $classe_nome_plural_acentuado }} &nbsp; | &nbsp; &nbsp;
               @include('selecoes.partials.btn-template-novocampo-modal')
             </div>
           </div>
@@ -140,7 +141,7 @@
                         @endphp
                       @endforeach
                     @else
-                      Não existe formulário para {{ Str::lower(ClasseUtils::obterClasseNomePluralAcentuado($classe_nome)) }} para essa seleção.
+                      Não existe formulário para {{ Str::lower($classe_nome_plural_acentuado) }} para essa seleção.
                       <br />
                     @endif
                     <br />

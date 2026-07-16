@@ -46,7 +46,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-7">
-              @if (!in_array($solicitacaoisencaotaxa->selecao->estado, ['Aguardando Início das Solicitações de Isenção de Taxa e das Inscrições/Matrículas', 'Aguardando Início das Solicitações de Isenção de Taxa']))
+              @if (!str_starts_with($solicitacaoisencaotaxa->selecao->estado, 'Aguardando Início das Solicitações de Isenção de Taxa'))
                 @include('solicitacoesisencaotaxa.show.card-principal', [    {{-- Principal --}}
                   'selecao' => $solicitacaoisencaotaxa->selecao
                 ])
@@ -66,7 +66,7 @@
                   'selecao' => $solicitacaoisencaotaxa->selecao,
                   'tipoarquivo_classe_nome_plural_acentuado' => 'Solicitações de Isenção de Taxa',
                 ])
-                @if (in_array($solicitacaoisencaotaxa->selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Solicitações de Isenção de Taxa']) && (session('perfil') == 'usuario'))
+                @if (str_starts_with($solicitacaoisencaotaxa->selecao->estado, 'Período de Solicitações de Isenção de Taxa') && session('perfil') == 'usuario')
                   @include('common.show.card-envio')                         {{-- Envio --}}
                 @endif
               @endif

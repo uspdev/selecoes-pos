@@ -108,14 +108,6 @@ class SelecaoObserver
         if ($selecao->nome !== $selecao_nome_novo)
             $dados_a_atualizar['nome'] = $selecao_nome_novo;
 
-        // marca para atualizar as datas de início e fim de solicitações de isenção de taxa
-        if ($selecao->fluxo_continuo) {
-            if ($selecao->solicitacoesisencaotaxa_datahora_inicio !== $selecao->inscricoesmatriculas_datahora_inicio)
-                $dados_a_atualizar['solicitacoesisencaotaxa_datahora_inicio'] = $selecao->inscricoesmatriculas_datahora_inicio;
-            if ($selecao->solicitacoesisencaotaxa_datahora_fim !== $selecao->inscricoesmatriculas_datahora_fim)
-                $dados_a_atualizar['solicitacoesisencaotaxa_datahora_fim'] = $selecao->inscricoesmatriculas_datahora_fim;
-        }
-
         // efetua as atualizações propriamente ditas
         if (!empty($dados_a_atualizar))
             $selecao->updateQuietly($dados_a_atualizar);

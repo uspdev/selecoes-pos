@@ -46,7 +46,7 @@ class Programa extends Model
             'name' => 'processos',
             'label' => 'Processo(s) Utilizado(s)',
             'type' => 'select',
-            'data' => ['Inscrição' => 'Inscrição', 'Matrícula' => 'Matrícula'],
+            'data' => ['Inscrição' => 'Inscrição', 'Inscrição e Matrícula' => 'Inscrição e Matrícula', 'Matrícula' => 'Matrícula'],
         ],
     ];
 

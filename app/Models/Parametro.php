@@ -52,7 +52,7 @@ class Parametro extends Model
             'name' => 'processos_especiais',
             'label' => 'Processo(s) Utilizado(s) para Aluno Especial',
             'type' => 'select',
-            'data' => ['Inscrição' => 'Inscrição', 'Matrícula' => 'Matrícula'],
+            'data' => ['Inscrição' => 'Inscrição', 'Inscrição e Matrícula' => 'Inscrição e Matrícula', 'Matrícula' => 'Matrícula'],
         ],
         [
             'name' => 'max_disciplinas_aluno_especial',

@@ -2,7 +2,8 @@
 @section('content')
 @parent
   @php
-    $condicao_iniciada = in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas', 'Encerrada']);
+    $classe_nome_plural_acentuado = ClasseUtils::obterClasseNomePluralAcentuado($classe_nome);
+    $condicao_iniciada = (str_starts_with($selecao->estado, 'Período de') && str_contains($selecao->estado, $classe_nome_plural_acentuado)) || ($selecao->estado == 'Encerrada');
   @endphp
   @include('common.modal-processando')
   <div class="row">
@@ -19,7 +20,7 @@
               @if (!is_null($selecao->categoria))
                 &nbsp;({{ $selecao->categoria->nome }})
               @endif
-              &nbsp; | &nbsp;  Formulário para {{ ClasseUtils::obterClasseNomePluralAcentuado($classe_nome) }} <i class="fas fa-angle-right mx-2"></i> {{ str_replace('_', ' ', ucwords($field)) }} &nbsp; | &nbsp; &nbsp;
+              &nbsp; | &nbsp;  Formulário para {{ $classe_nome_plural_acentuado }} <i class="fas fa-angle-right mx-2"></i> {{ str_replace('_', ' ', ucwords($field)) }} &nbsp; | &nbsp; &nbsp;
               @include('selecoes.partials.btn-template-novocampolista-modal')
             </div>
           </div>
@@ -63,7 +64,7 @@
                         <button class="btn btn-primary ml-1" type="submit">Salvar</button>
                       @endif
                     @else
-                      Não existe {{ str_replace('_', ' ', $field) }} para esse formulário para {{ Str::lower(ClasseUtils::obterClasseNomePluralAcentuado($classe_nome)) }}.
+                      Não existe {{ str_replace('_', ' ', $field) }} para esse formulário para {{ Str::lower($classe_nome_plural_acentuado) }}.
                       <br />
                       <br />
                     @endif

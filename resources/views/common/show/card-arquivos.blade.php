@@ -10,6 +10,10 @@
   </style>
 @endsection
 
+@php
+  $classe_nome_plural_acentuado = ClasseUtils::obterClasseNomePluralAcentuado($classe_nome);
+@endphp
+
 {{ html()->form('post', $data->url . '/edit/' . $objeto->id)
   ->attribute('enctype', 'multipart/form-data')
   ->attribute('id', 'form_arquivos')
@@ -48,10 +52,7 @@
               @php
                 $editavel = (isset($tipoarquivo['editavel']) && $tipoarquivo['editavel']);
                 if (session('perfil') == 'usuario')
-                  if ($classe_nome == 'SolicitacaoIsencaoTaxa')
-                    $editavel &= in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Solicitações de Isenção de Taxa']);
-                  elseif (in_array($classe_nome, ['Inscricao', 'Matricula']))
-                    $editavel &= in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas']);
+                  $editavel &= (str_starts_with($selecao->estado, 'Período de') && str_contains($selecao->estado, $classe_nome_plural_acentuado));
               @endphp
               @if (Gate::allows($classe_nome_plural . '.updateArquivos', $objeto) && $editavel)
                 <label for="input_arquivo_{{ $i }}">

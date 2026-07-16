@@ -37,10 +37,10 @@
           @endforeach
         @endif
       </div>
-      @if (in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas']) && (session('perfil') == 'usuario'))
+      @if (str_starts_with($selecao->estado, 'Período de') && str_contains($selecao->estado, 'Matrículas') && (session('perfil') == 'usuario'))
         <div class="text-right">
           @if($matricula->estado !== 'Aprovada')
-          <button type="submit" class="btn btn-primary">{{ ($modo == 'edit' ) ? 'Salvar' : 'Prosseguir' }}</button>
+            <button type="submit" class="btn btn-primary">{{ ($modo == 'edit' ) ? 'Salvar' : 'Prosseguir' }}</button>
           @endif
         </div>
       @endif

@@ -1,5 +1,6 @@
 @php
   $classe_nome_plural = ClasseUtils::obterClasseNomePlural($classe_nome);
+  $classe_nome_plural_acentuado = ClasseUtils::obterClasseNomePluralAcentuado($classe_nome);
 @endphp
 
 @section('styles')
@@ -15,7 +16,7 @@
 <a name="card_formulario_{{ $classe_nome_plural }}"></a>
 <div class="card mb-3" id="card-selecao-formulario-{{ $classe_nome_plural }}">
   <div class="card-header">
-    <i class="fab fa-wpforms"></i> Formulário para {{ ClasseUtils::obterClasseNomePluralAcentuado($classe_nome) }}
+    <i class="fab fa-wpforms"></i> Formulário para {{ $classe_nome_plural_acentuado }}
     <span class="small">@include('ajuda.selecoes.formulario')</span>
     @if ($condicao_ativa)
       <a href="{{ route('selecoes.createtemplate', ['selecao' => $selecao->id, 'classe_nome' => $classe_nome]) }}" class="btn btn-light btn-sm text-primary">
@@ -23,7 +24,7 @@
       </a>
     @endif
     @can('perfiladmin')
-      @if (!in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas', 'Encerrada']))
+      @if (($selecao->estado != 'Encerrada') && !(str_starts_with($selecao->estado, 'Período de') && str_contains($selecao->estado, $classe_nome_plural_acentuado)))
         @include('selecoes.partials.btn-template-show-json-modal')
       @endif
     @endcan

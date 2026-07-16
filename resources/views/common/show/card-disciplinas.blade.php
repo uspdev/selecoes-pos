@@ -8,12 +8,16 @@
   </style>
 @endsection
 
+@php
+  $classe_nome_plural_acentuado = ClasseUtils::obterClasseNomePluralAcentuado($classe_nome);
+@endphp
+
 <a name="card_disciplinas"></a>
 <div class="card bg-light mb-3" id="card-disciplinas">
   <div class="card-header">
     Disciplinas
     <span class="badge badge-pill badge-primary">{{ is_null($objeto_disciplinas) ? 0 : count($objeto_disciplinas) }}</span>
-    @if (in_array($objeto->selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas']) && (session('perfil') == 'usuario'))
+    @if (str_starts_with($selecao->estado, 'Período de') && str_contains($selecao->estado, $classe_nome_plural_acentuado) && (session('perfil') == 'usuario'))
       @include('disciplinas.partials.modal-add', ['inclusor_url' => $classe_nome_plural, 'inclusor_objeto' => $objeto])
     @endif
   </div>

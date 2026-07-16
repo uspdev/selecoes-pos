@@ -11,6 +11,6 @@ Sua inscrição para {{ $objetivo }} foi aceita.<br />
   {!! $arquivo_erro !!}<br />
 @endforeach
 <br />
-{{ $inscricao->selecao->email_inscricaomatriculaaprovacao_texto }}
+{{ $inscricao->selecao->email_inscricaoaprovacao_texto }}
 <br />
 @include('emails.rodape')

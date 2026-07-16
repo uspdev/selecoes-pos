@@ -78,7 +78,7 @@ class MatriculaPolicy
     {
         if (!is_null($selecao)) {
             $selecao->atualizarStatus();
-            if (!in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas']))
+            if (!(str_starts_with($selecao->estado, 'Período de') && str_contains($selecao->estado, 'Matrículas')))
                 return false;
         }
 
@@ -96,7 +96,7 @@ class MatriculaPolicy
     {
         $selecao = $matricula->selecao;
         $selecao->atualizarStatus();
-        if (!in_array($selecao->estado, ['Período de Solicitações de Isenção de Taxa e de Inscrições/Matrículas', 'Período de Inscrições/Matrículas']))
+        if (!(str_starts_with($selecao->estado, 'Período de') && str_contains($selecao->estado, 'Matrículas')))
             return false;
 
         return (Gate::allows('perfilusuario') && ($matricula->pessoas('Autor')->id == $user->id));    // permite que apenas o usuário autor da matrícula a edite
