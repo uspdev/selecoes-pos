@@ -1210,7 +1210,7 @@ class Selecao extends Model
         if (!$this->categoria)
             return false;
 
-        return (bool) ($this->categoria->nome == 'Aluno Regular');
+        return (bool) $this->categoria->exigeNivel();
     }
 
     public function exigeLinhaPesquisa()

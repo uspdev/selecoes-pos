@@ -47,6 +47,11 @@ class Categoria extends Model
         return $ret;
     }
 
+    public function exigeNivel()
+    {
+        return ($this->nome == 'Aluno Regular');
+    }
+
     public function exigeLinhaPesquisa()
     {
         return ($this->nome == 'Aluno Regular');
