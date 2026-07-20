@@ -88,4 +88,9 @@ class Parametro extends Model
     {
         return str_contains($this->processos_especiais, 'Matrícula');
     }
+
+    public function permiteTaxa()
+    {
+        return true;
+    }
 }

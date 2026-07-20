@@ -1205,6 +1205,11 @@ class Selecao extends Model
             return false;
     }
 
+    public function permiteTaxa()
+    {
+        return Parametro::first()->permiteTaxa();
+    }
+
     public function exigeNivel()
     {
         if (!$this->categoria)
