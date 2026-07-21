@@ -52,6 +52,8 @@ No caso de se utilizar o fluxo de matrículas para aluno especial, há uma fase 
 As linhas de pesquisa/temas são relacionadas aos níveis da pós-graduação (mestrado, doutorado, doutorado direto).
 Se um aluno regular se inscreve ou se matricula, por exemplo, para o nível de mestrado, só lhe serão permitidas as linhas de pesquisa/temas desse programa dessa seleção que estejam relacionadas ao nível escolhido. O gerente só pode acessar as linhas de pesquisa/temas de seu programa.
 
+Existe um cadastro de orientadores para as linhas de pesquisa/temas, mas até o momento eles não estão sendo utilizados para nada nesse contexto de associados a linhas de pesquisa/temas. A idéia é que os e-mails de inscrições ou matrículas pendentes de avaliação fossem enviados para esses orientadores, para que eles avaliassem as inscrições ou matrículas, mas isso não foi posto em prática. Independente dessa associação com as linhas de pesquisa/temas, os orientadores podem estar associados diretamente aos processos seletivos para serem solicitados nos formulários de inscrição ou matrícula.
+
 Para as disciplinas, os acessos são abertos: qualquer gerente pode acessar disciplinas de quaisquer programas. Na verdade, as disciplinas nem estão atreladas a programas, embora isso talvez fosse possível, mas não se mostrou necessário, por serem de escolha exclusiva de aluno especial, que não opta por programa.
 
 Cada seleção contém informativos (edital, etc.), que são documentos que o candidato pode consultar.

@@ -91,6 +91,6 @@ class Parametro extends Model
 
     public function permiteTaxa()
     {
-        return true;
+        return true;    // vai depender do vínculo (a ser implementado no futuro, quando este selecoes-pos se tornar selecoes)
     }
 }

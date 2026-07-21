@@ -79,7 +79,7 @@ class OrientadorObserver
     /**
      * Handle the Orientador "force deleted" event.
      *
-     * @param  \App\Models\Orientador  $selorientadorecao
+     * @param  \App\Models\Orientador  $orientador
      * @return void
      */
     public function forceDeleted(Orientador $orientador)

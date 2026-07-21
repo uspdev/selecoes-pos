@@ -3,8 +3,8 @@
     {{ $orientador->nome }}
   </b>
   <div class="hidden-btn d-none ml-auto">
-    @can('linhaspesquisa.update', $linhapesquisa)
-      @include('common.btn-delete-sm', ['action' => "linhaspesquisa/{$linhapesquisa->id}/orientadores/{$orientador->id}"])
+    @can($inclusor_url . '.update', $inclusor_objeto)
+      @include('common.btn-delete-sm', ['action' => $inclusor_url . "/{$inclusor_objeto->id}/orientadores/{$orientador->id}"])
     @endcan
   </div>
 </div>

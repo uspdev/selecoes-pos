@@ -170,7 +170,7 @@ class LinhaPesquisaController extends Controller
             'id' => 'required',
         ],
         [
-            'id.required' => 'Orientador obrigatório',
+            'id.required' => 'Orientador(a) obrigatório(a)',
         ]);
 
         // transaction para não ter problema de inconsistência do DB
@@ -186,9 +186,9 @@ class LinhaPesquisaController extends Controller
         });
 
         if (!$db_transaction['existia'])
-            $request->session()->flash('alert-success', 'O orientador ' . Orientador::obterNome($db_transaction['orientador']->codpes) . ' foi adicionado à essa linha de pesquisa/tema');
+            $request->session()->flash('alert-success', 'O(A) orientador(a) ' . Orientador::obterNome($db_transaction['orientador']->codpes) . ' foi adicionado(a) à essa linha de pesquisa/tema');
         else
-            $request->session()->flash('alert-info', 'O orientador ' . Orientador::obterNome($db_transaction['orientador']->codpes) . ' já estava vinculado à essa linha de pesquisa/tema');
+            $request->session()->flash('alert-info', 'O(A) orientador(a) ' . Orientador::obterNome($db_transaction['orientador']->codpes) . ' já estava vinculado(a) à essa linha de pesquisa/tema');
         \UspTheme::activeUrl('linhaspesquisa');
         return redirect()->to(url('linhaspesquisa/edit/' . $linhapesquisa->id))->with($this->monta_compact($linhapesquisa, 'edit'));    // se fosse return view, um eventual F5 do usuário duplicaria o registro... POSTs devem ser com redirect
     }
@@ -203,7 +203,7 @@ class LinhaPesquisaController extends Controller
 
         $linhapesquisa->orientadores()->detach($orientador);
 
-        $request->session()->flash('alert-success', 'O orientador ' . Orientador::obterNome($orientador->codpes) . ' foi removido dessa linha de pesquisa/tema');
+        $request->session()->flash('alert-success', 'O(A) orientador(a) ' . Orientador::obterNome($orientador->codpes) . ' foi removido(a) dessa linha de pesquisa/tema');
         \UspTheme::activeUrl('linhaspesquisa');
         return view('linhaspesquisa.edit', $this->monta_compact($linhapesquisa, 'edit'));
     }

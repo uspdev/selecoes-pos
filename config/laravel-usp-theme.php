@@ -66,7 +66,7 @@ $admin = [
         'can' => 'motivosisencaotaxa.viewAny',
     ],
     [
-        'text' => '<i class="fa fa-file"></i> Orientadores',
+        'text' => '<i class="fa fa-file"></i> Orientadores(as)',
         'url' => 'orientadores',
         'can' => 'orientadores.viewAny',
     ],

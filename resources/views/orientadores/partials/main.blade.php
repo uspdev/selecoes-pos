@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-md-12 form-inline">
-    <span class="h4 mt-2">Orientadores</span>
+    <span class="h4 mt-2">Orientadores(as)</span>
     @can('orientadores.create')
       &nbsp; &nbsp;
       <button type="button" class="btn btn-sm btn-success" onclick="add_form()">
-        <i class="fas fa-plus"></i> Novo
+        <i class="fas fa-plus"></i> Novo(a)
       </button>
       @endcan
   </div>
@@ -25,6 +25,7 @@
           @can('orientadores.delete')
             @include('orientadores.partials.btn-delete')
           @endcan
+          @include('orientadores.partials.detalhes')
         </div>
       </td>
     </tr>

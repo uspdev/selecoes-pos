@@ -3,7 +3,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Adicionar/Editar Orientadores</h5>
+        <h5 class="modal-title" id="modalLabel">Adicionar/Editar Orientadores(as)</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -20,7 +20,7 @@
             <div class="form-group row">
               <div class="col-sm-12 d-flex align-items-center" style="gap: 10px;">
                 <input class="form-control" style="width: auto; margin: 0;" name="externo" id="externo" type="checkbox" onclick="toggle_externo()">
-                <label style="margin: 0;" for="externo">Externo à unidade</label>
+                <label style="margin: 0;" for="externo">Externo(a) à unidade</label>
               </div>
             </div>
             <div id="grupo_interno">
@@ -125,7 +125,7 @@
           $('#modalForm').find('form').attr('action', 'orientadores/' + id);
 
           // Ajustando o title
-          $('#modalLabel').html('Editar Orientador');
+          $('#modalLabel').html('Editar Orientador(a)');
 
           $("#modalForm").modal();
           console.log('inputs', inputs);
@@ -145,7 +145,7 @@
         // Ajustando action
         $('#modalForm').find('form').attr('action', 'orientadores');
 
-        $('#modalLabel').html('Adicionar Orientador');
+        $('#modalLabel').html('Adicionar Orientador(a)');
         $('#modalForm :input').filter("input[name='_method']").val('POST');
 
         $("#modalForm").modal();

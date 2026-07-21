@@ -26,7 +26,7 @@ class Orientador extends Model
     protected const fields = [
         [
             'name' => 'codpes',
-            'label' => 'Orientador',
+            'label' => 'Orientador(a)',
         ],
     ];
 
@@ -88,5 +88,13 @@ class Orientador extends Model
     public function linhaspesquisa()
     {
         return $this->belongsToMany('App\Models\LinhaPesquisa', 'linhapesquisa_orientador', 'orientador_id', 'linhapesquisa_id')->withTimestamps();
+    }
+
+    /**
+     * relacionamento com seleções
+     */
+    public function selecoes()
+    {
+        return $this->belongsToMany('App\Models\Selecao', 'selecao_orientador', 'orientador_id', 'selecao_id')->withTimestamps();
     }
 }

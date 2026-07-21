@@ -29,12 +29,12 @@ class OrientadorRequest extends FormRequest
     ];
 
     public const messages = [
-        'codpes.required_without' => 'O orientador é obrigatório!',
-        'externo_nome.required_if' => 'O nome do orientador é obrigatório!',
-        'externo_nome.max' => 'O nome do orientador não pode exceder 100 caracteres!',
-        'externo_codpes.required_if' => 'O número USP do orientador é obrigatório!',
-        'externo_codpes.integer' => 'O número USP do orientador deve ser um número inteiro!',
-        'externo_email.required_if' => 'O e-mail do orientador é obrigatório!',
-        'externo_email.email' => 'O e-mail do orientador é inválido!',
+        'codpes.required_without' => 'O(A) orientador(a) é obrigatório(a)!',
+        'externo_nome.required_if' => 'O nome do(a) orientador(a) é obrigatório!',
+        'externo_nome.max' => 'O nome do(a) orientador(a) não pode exceder 100 caracteres!',
+        'externo_codpes.required_if' => 'O número USP do(a) orientador(a) é obrigatório!',
+        'externo_codpes.integer' => 'O número USP do(a) orientador(a) deve ser um número inteiro!',
+        'externo_email.required_if' => 'O e-mail do(a) orientador(a) é obrigatório!',
+        'externo_email.email' => 'O e-mail do(a) orientador(a) é inválido!',
     ];
 }

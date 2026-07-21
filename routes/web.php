@@ -112,6 +112,10 @@ Route::delete('selecoes/{selecao}/disciplinas/{disciplina}', [SelecaoController:
 Route::post('selecoes/{selecao}/motivosisencaotaxa', [SelecaoController::class, 'storeMotivoIsencaoTaxa']);
 Route::delete('selecoes/{selecao}/motivosisencaotaxa/{motivoisencaotaxa}', [SelecaoController::class, 'destroyMotivoIsencaoTaxa']);
 
+// SELEÇÕES > ORIENTADORES
+Route::post('selecoes/{selecao}/orientadores', [SelecaoController::class, 'storeOrientador']);
+Route::delete('selecoes/{selecao}/orientadores/{orientador}', [SelecaoController::class, 'destroyOrientador']);
+
 // SELEÇÕES > TIPOS DE ARQUIVO
 Route::post('selecoes/{selecao}/tiposarquivosolicitacaoisencaotaxa', [SelecaoController::class, 'storeTipoArquivoSolicitacaoIsencaoTaxa']);
 Route::delete('selecoes/{selecao}/tiposarquivosolicitacaoisencaotaxa/{tipoarquivo}', [SelecaoController::class, 'destroyTipoArquivoSolicitacaoIsencaoTaxa']);

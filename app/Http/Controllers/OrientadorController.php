@@ -123,10 +123,14 @@ class OrientadorController extends Controller
         Gate::authorize('orientadores.delete');
 
         $orientador = Orientador::find((int) $id);
-        $orientador->linhaspesquisa()->detach();
-        $orientador->delete();
+        if ($orientador->selecoes()->exists())
+            $request->session()->flash('alert-danger', 'Há seleções associadas a este(a) orientador(a)!');
+        else {
+            $orientador->linhaspesquisa()->detach();
+            $orientador->delete();
+            $request->session()->flash('alert-success', 'Dados removidos com sucesso!');
+        }
 
-        $request->session()->flash('alert-success', 'Dados removidos com sucesso!');
         \UspTheme::activeUrl('orientador');
         return view('orientadores.tree', $this->monta_compact_index());
     }
@@ -136,7 +140,7 @@ class OrientadorController extends Controller
         $orientadores = Orientador::all();
         $fields = Orientador::getFields();
         $modal['url'] = 'orientadores';
-        $modal['title'] = 'Editar Orientador';
+        $modal['title'] = 'Editar Orientador(a)';
         $rules = OrientadorRequest::rules;
 
         return compact('orientadores', 'fields', 'modal', 'rules');

@@ -1234,6 +1234,11 @@ class Selecao extends Model
         return (bool) $this->categoria->exigeDisciplinas();
     }
 
+    public function exigeOrientador()
+    {
+        return false;    // vai depender do vínculo (a ser implementado no futuro, quando este selecoes-pos se tornar selecoes)
+    }
+
     /**
      * Seleção possui Solicitações de Isenção de Taxa
      */
@@ -1312,6 +1317,14 @@ class Selecao extends Model
     public function niveislinhaspesquisa()
     {
         return $this->belongsToMany('App\Models\NivelLinhaPesquisa', 'selecao_nivellinhapesquisa', 'selecao_id', 'nivellinhapesquisa_id')->withTimestamps();
+    }
+
+    /**
+     * relacionamento com orientadores
+     */
+    public function orientadores()
+    {
+        return $this->belongsToMany('App\Models\Orientador', 'selecao_orientador', 'selecao_id', 'orientador_id')->withTimestamps();
     }
 
     /**

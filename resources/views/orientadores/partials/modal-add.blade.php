@@ -7,7 +7,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Adicionar Orientador</h5>
+        <h5 class="modal-title">Adicionar Orientador(a)</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -19,7 +19,7 @@
             @method('post')
             {{ html()->hidden('id') }}
             <div class="form-group row">
-              <div class="col-form-label col-sm-3">Orientador</div>
+              <div class="col-form-label col-sm-3">Orientador(a)</div>
               <div class="col-sm-8">
                 <select class="form-control" name="id" id="id_campo1">
                   @foreach ($orientadores as $orientador)

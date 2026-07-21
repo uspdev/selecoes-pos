@@ -12,20 +12,22 @@
 <div class="card bg-light mb-3" id="card-orientadores">
   <div class="card-header">
     Orientadores(as)
-    <span class="badge badge-pill badge-primary">{{ is_null($linhapesquisa->orientadores) ? 0 : $linhapesquisa->orientadores->count() }}</span>
-    @can('linhaspesquisa.update', $linhapesquisa)
-      @include('orientadores.partials.modal-add', ['inclusor_url' => 'linhaspesquisa', 'inclusor_objeto' => $linhapesquisa])
+    <span class="badge badge-pill badge-primary">{{ is_null($selecao->orientadores) ? 0 : $selecao->orientadores->count() }}</span>
+    @can('selecoes.update', $selecao)
+      @if ($condicao_ativa)
+        @include('orientadores.partials.modal-add', ['inclusor_url' => 'selecoes', 'inclusor_objeto' => $selecao])
+      @endif
     @endcan
   </div>
   <div class="card-body">
     <div class="accordion" id="accordionOrientadores">
-      @if (!is_null($linhapesquisa->orientadores))
-        @foreach ($linhapesquisa->orientadores as $orientador)
+      @if (!is_null($selecao->orientadores))
+        @foreach ($selecao->orientadores as $orientador)
           <div class="card orientador-item">
             <div class="card-header" style="font-size:15px">
               @include('orientadores.show.header', [
-                'inclusor_url' => 'linhaspesquisa',
-                'inclusor_objeto' => $linhapesquisa
+                'inclusor_url' => 'selecoes',
+                'inclusor_objeto' => $selecao
               ])
             </div>
           </div>

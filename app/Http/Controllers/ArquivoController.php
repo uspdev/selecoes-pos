@@ -10,6 +10,7 @@ use App\Models\Matricula;
 use App\Models\MotivoIsencaoTaxa;
 use App\Models\Nivel;
 use App\Models\NivelLinhaPesquisa;
+use App\Models\Orientador;
 use App\Models\Parametro;
 use App\Models\Programa;
 use App\Models\Selecao;
@@ -303,6 +304,7 @@ class ArquivoController extends Controller
         $selecao = ($classe_nome == 'Selecao' ? $objeto : $objeto->selecao);
         $disciplinas = Disciplina::all();
         $motivosisencaotaxa = MotivoIsencaoTaxa::listarMotivosIsencaoTaxa();
+        $orientadores = Orientador::listarOrientadores();
         $responsaveis = $selecao->programa?->obterResponsaveis() ?? (new Programa())->obterResponsaveis();
         $extras = json_decode($objeto->extras, true);
         if ($selecao->exigeNivel() && $selecao->exigeLinhaPesquisa()) {
@@ -343,6 +345,6 @@ class ArquivoController extends Controller
         $boleto_momento_envio = Parametro::first()->boleto_momento_envio;
         $max_upload_size = config('selecoes-pos.upload_max_filesize');
 
-        return compact('data', 'objeto', 'classe_nome', 'classe_nome_plural', 'form', 'modo', 'disciplinas', 'motivosisencaotaxa', 'responsaveis', 'niveislinhaspesquisa', 'objeto_disciplinas', 'nivel', 'solicitacaoisencaotaxa_aprovada', 'tiposarquivo_selecao', 'tiposarquivo_solicitacaoisencaotaxa', 'tiposarquivo_inscricao', 'tiposarquivo_matricula', 'boleto_momento_envio', 'max_upload_size', 'scroll');
+        return compact('data', 'objeto', 'classe_nome', 'classe_nome_plural', 'form', 'modo', 'disciplinas', 'motivosisencaotaxa', 'orientadores', 'responsaveis', 'niveislinhaspesquisa', 'objeto_disciplinas', 'nivel', 'solicitacaoisencaotaxa_aprovada', 'tiposarquivo_selecao', 'tiposarquivo_solicitacaoisencaotaxa', 'tiposarquivo_inscricao', 'tiposarquivo_matricula', 'boleto_momento_envio', 'max_upload_size', 'scroll');
     }
 }
