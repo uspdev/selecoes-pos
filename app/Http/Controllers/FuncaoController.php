@@ -63,22 +63,22 @@ class FuncaoController extends Controller
         $programas_docentes = Programa::with(['users' => function ($query) {
             $query->where('funcao', 'Docentes do Programa')
                   ->orderBy('user_programa.programa_id')
-                  ->orderBy('user_programa.user_id');
+                  ->orderBy('users.name');
         }])->get();
         $programas_secretarios = Programa::with(['users' => function ($query) {
             $query->where('funcao', 'Secretários(as) do Programa')
                   ->orderBy('user_programa.programa_id')
-                  ->orderBy('user_programa.user_id');
+                  ->orderBy('users.name');
         }])->get();
         $programas_coordenadores = Programa::with(['users' => function ($query) {
             $query->where('funcao', 'Coordenadores do Programa')
                   ->orderBy('user_programa.programa_id')
-                  ->orderBy('user_programa.user_id');
+                  ->orderBy('users.name');
         }])->get();
         $posgraduacao_servico_users = DB::table('user_programa')    // não dá pra partir de User:: nem Programa::, pelo fato de programa_id ser null na tabela relacional
             ->join('users', 'user_programa.user_id', '=', 'users.id')
             ->where('user_programa.funcao', 'Serviço de Pós-Graduação')
-            ->orderBy('user_programa.user_id')
+            ->orderBy('users.name')
             ->select('users.name', 'users.codpes')
             ->get()
             ->map(function ($user) {
@@ -90,7 +90,7 @@ class FuncaoController extends Controller
         $posgraduacao_coordenadores_users = DB::table('user_programa')    // não dá pra partir de User:: nem Programa::, pelo fato de programa_id ser null na tabela relacional
             ->join('users', 'user_programa.user_id', '=', 'users.id')
             ->where('user_programa.funcao', 'Coordenadores da Pós-Graduação')
-            ->orderBy('user_programa.user_id')
+            ->orderBy('users.name')
             ->select('users.name', 'users.codpes')
             ->get()
             ->map(function ($user) {
