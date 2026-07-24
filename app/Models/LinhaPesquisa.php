@@ -79,14 +79,6 @@ class LinhaPesquisa extends Model
     }
 
     /**
-     * relacionamento com orientadores
-     */
-    public function orientadores()
-    {
-        return $this->belongsToMany('App\Models\Orientador', 'linhapesquisa_orientador', 'linhapesquisa_id', 'orientador_id')->withTimestamps();
-    }
-
-    /**
      * Relacionamento: linha de pesquisa/tema pertence a programa
      */
     public function programa()

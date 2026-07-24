@@ -93,7 +93,6 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('matriculas.geraBoletos', 'App\Policies\MatriculaPolicy@geraBoletos');
         Gate::define('matriculas.enviaBoleto', 'App\Policies\MatriculaPolicy@enviaBoleto');
         Gate::resource('motivosisencaotaxa', 'App\Policies\MotivoIsencaoTaxaPolicy');
-        Gate::resource('orientadores', 'App\Policies\OrientadorPolicy');
         Gate::resource('parametros', 'App\Policies\ParametroPolicy');
         Gate::resource('programas', 'App\Policies\ProgramaPolicy');
         Gate::resource('selecoes', 'App\Policies\SelecaoPolicy');

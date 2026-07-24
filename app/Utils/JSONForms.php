@@ -39,7 +39,7 @@ class JSONForms
 
         // no template de solicitações de isenção de taxa, não é gravado o campo de motivos de isenção de taxa, por ele ser preenchido dinamicamente abaixo
         // no template de inscrições, não é gravado o campo de linhas de pesquisa, por ele ser preenchido dinamicamente abaixo
-        // no template de ???, não é gravado o campo de orientador, por ele ser preenchido dinamicamente abaixo
+        // no template de inscrições, não é gravado o campo de orientador, por ele ser preenchido dinamicamente abaixo
 
         $form = [];
         foreach ($template as $key => $json) {
@@ -162,7 +162,7 @@ class JSONForms
                                         '</select>' . PHP_EOL .
                                         '</div>' . PHP_EOL;
                     }
-                    if (($key == 'nome') && ($classe_nome == 'Inscricao') && $selecao->exigeOrientador()) {
+                    if (($key == 'nome') && ($classe_nome == 'Inscricao') && $selecao->exigePrograma() && $selecao->exigeOrientador()) {
                         $html_string_orientador .=
                                         '<div class="col-sm-3">' . PHP_EOL .
                                         '<label class="col-form-label va-middle" for="extras[orientador]">Orientador(a)&nbsp;<small class="text-required">(*)</small></span></label>' . PHP_EOL .
@@ -170,7 +170,7 @@ class JSONForms
                                         '<div class="col-sm-9">' . PHP_EOL .
                                         '<select class="form-control w-100" name="extras[orientador]" id="extras[orientador]" required>' . PHP_EOL .
                                             '<option value="" disabled selected>Selecione...</option>' . PHP_EOL;
-                        foreach ($selecao->orientadores as $orientador)
+                        foreach ($selecao->programa->obterPessoasFuncao('Docentes do Programa') as $orientador)
                             $html_string_orientador .=
                                             '<option value="' . $orientador->id . '"' . ((isset($data->orientador) && ($orientador->id == $data->orientador)) ? ' selected' : '') . '>' . $orientador->nome . '</option>' . PHP_EOL;
                         $html_string_orientador .=

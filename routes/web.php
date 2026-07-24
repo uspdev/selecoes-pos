@@ -14,7 +14,6 @@ use App\Http\Controllers\LinhaPesquisaController;
 use App\Http\Controllers\LocalUserController;
 use App\Http\Controllers\MatriculaController;
 use App\Http\Controllers\MotivoIsencaoTaxaController;
-use App\Http\Controllers\OrientadorController;
 use App\Http\Controllers\ParametroController;
 use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\ResponsavelController;
@@ -112,10 +111,6 @@ Route::delete('selecoes/{selecao}/disciplinas/{disciplina}', [SelecaoController:
 Route::post('selecoes/{selecao}/motivosisencaotaxa', [SelecaoController::class, 'storeMotivoIsencaoTaxa']);
 Route::delete('selecoes/{selecao}/motivosisencaotaxa/{motivoisencaotaxa}', [SelecaoController::class, 'destroyMotivoIsencaoTaxa']);
 
-// SELEÇÕES > ORIENTADORES
-Route::post('selecoes/{selecao}/orientadores', [SelecaoController::class, 'storeOrientador']);
-Route::delete('selecoes/{selecao}/orientadores/{orientador}', [SelecaoController::class, 'destroyOrientador']);
-
 // SELEÇÕES > TIPOS DE ARQUIVO
 Route::post('selecoes/{selecao}/tiposarquivosolicitacaoisencaotaxa', [SelecaoController::class, 'storeTipoArquivoSolicitacaoIsencaoTaxa']);
 Route::delete('selecoes/{selecao}/tiposarquivosolicitacaoisencaotaxa/{tipoarquivo}', [SelecaoController::class, 'destroyTipoArquivoSolicitacaoIsencaoTaxa']);
@@ -147,18 +142,11 @@ Route::put('linhaspesquisa/edit/{linhapesquisa}', [LinhaPesquisaController::clas
 Route::post('linhaspesquisa/{linhapesquisa}/niveis', [LinhaPesquisaController::class, 'storeNivel']);
 Route::delete('linhaspesquisa/{linhapesquisa}/niveis/{nivel}', [LinhaPesquisaController::class, 'destroyNivel']);
 
-// LINHAS DE PESQUISA/TEMAS > ORIENTADORES
-Route::post('linhaspesquisa/{linhapesquisa}/orientadores', [LinhaPesquisaController::class, 'storeOrientador']);
-Route::delete('linhaspesquisa/{linhapesquisa}/orientadores/{orientador}', [LinhaPesquisaController::class, 'destroyOrientador']);
-
 // DISCIPLINAS
 Route::resource('disciplinas', DisciplinaController::class);
 
 // MOTIVOS DE ISENÇÃO DE TAXA
 Route::resource('motivosisencaotaxa', MotivoIsencaoTaxaController::class);
-
-// ORIENTADORES
-Route::resource('orientadores', OrientadorController::class);
 
 // TIPOS DE ARQUIVO
 Route::resource('tiposarquivo', TipoArquivoController::class);

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LinhaPesquisaRequest;
 use App\Models\LinhaPesquisa;
 use App\Models\Nivel;
-use App\Models\Orientador;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -157,57 +156,6 @@ class LinhaPesquisaController extends Controller
         return view('linhaspesquisa.tree', $this->monta_compact_index());
     }
 
-    /**
-     * Adicionar orientadores relacionados à linha de pesquisa/tema
-     * autorizado a qualquer um que tenha acesso à linha de pesquisa/tema
-     * request->codpes = required, int
-     */
-    public function storeOrientador(Request $request, LinhaPesquisa $linhapesquisa)
-    {
-        Gate::authorize('linhaspesquisa.update', $linhapesquisa);
-
-        $request->validate([
-            'id' => 'required',
-        ],
-        [
-            'id.required' => 'Orientador(a) obrigatório(a)',
-        ]);
-
-        // transaction para não ter problema de inconsistência do DB
-        $db_transaction = DB::transaction(function () use ($request, $linhapesquisa) {
-
-            $orientador = Orientador::where('id', $request->id)->first();
-
-            $existia = $linhapesquisa->orientadores()->detach($orientador);
-
-            $linhapesquisa->orientadores()->attach($orientador);
-
-            return ['orientador' => $orientador, 'existia' => $existia];
-        });
-
-        if (!$db_transaction['existia'])
-            $request->session()->flash('alert-success', 'O(A) orientador(a) ' . Orientador::obterNome($db_transaction['orientador']->codpes) . ' foi adicionado(a) à essa linha de pesquisa/tema');
-        else
-            $request->session()->flash('alert-info', 'O(A) orientador(a) ' . Orientador::obterNome($db_transaction['orientador']->codpes) . ' já estava vinculado(a) à essa linha de pesquisa/tema');
-        \UspTheme::activeUrl('linhaspesquisa');
-        return redirect()->to(url('linhaspesquisa/edit/' . $linhapesquisa->id))->with($this->monta_compact($linhapesquisa, 'edit'));    // se fosse return view, um eventual F5 do usuário duplicaria o registro... POSTs devem ser com redirect
-    }
-
-    /**
-     * Remove orientadores relacionados à linha de pesquisa/tema
-     * $user = required
-     */
-    public function destroyOrientador(Request $request, LinhaPesquisa $linhapesquisa, Orientador $orientador)
-    {
-        Gate::authorize('linhaspesquisa.update', $linhapesquisa);
-
-        $linhapesquisa->orientadores()->detach($orientador);
-
-        $request->session()->flash('alert-success', 'O(A) orientador(a) ' . Orientador::obterNome($orientador->codpes) . ' foi removido(a) dessa linha de pesquisa/tema');
-        \UspTheme::activeUrl('linhaspesquisa');
-        return view('linhaspesquisa.edit', $this->monta_compact($linhapesquisa, 'edit'));
-    }
-
     private function monta_compact_index()
     {
         $linhaspesquisa = LinhaPesquisa::listarLinhasPesquisa();
@@ -224,14 +172,9 @@ class LinhaPesquisaController extends Controller
     private function monta_compact(LinhaPesquisa $linhapesquisa, string $modo)
     {
         $data = (object) self::$data;
-        if (!is_null($linhapesquisa) && !is_null($linhapesquisa->orientadores))
-            foreach ($linhapesquisa->orientadores as $orientador)
-                $orientador->nome = Orientador::obterNome($orientador->codpes);
         $objeto = $linhapesquisa;
-        $fields_orientador = Orientador::getFields();
-        $orientadores = Orientador::listarOrientadores();
         $rules = LinhaPesquisaRequest::rules;
 
-        return compact('data', 'objeto', 'fields_orientador', 'orientadores', 'rules', 'modo');
+        return compact('data', 'objeto', 'rules', 'modo');
     }
 }

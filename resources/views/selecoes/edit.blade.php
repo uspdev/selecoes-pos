@@ -67,9 +67,6 @@
                 @if ($selecao->tem_taxa)
                   @include('selecoes.show.card-motivosisencaotaxa')                  {{-- Motivos de Isenção de Taxa --}}
                 @endif
-                @if ($selecao->exigeOrientador())
-                  @include('selecoes.show.card-orientadores')                        {{-- Orientadores --}}
-                @endif
                 @include('common.show.card-arquivos', [                              {{-- Arquivos --}}
                   'tipoarquivo_classe_nome_plural_acentuado' => 'Seleções',
                 ])

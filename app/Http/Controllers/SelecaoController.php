@@ -12,7 +12,6 @@ use App\Models\Matricula;
 use App\Models\MotivoIsencaoTaxa;
 use App\Models\Nivel;
 use App\Models\NivelLinhaPesquisa;
-use App\Models\Orientador;
 use App\Models\Parametro;
 use App\Models\Programa;
 use App\Models\Selecao;
@@ -665,57 +664,6 @@ class SelecaoController extends Controller
     }
 
     /**
-     * Adicionar orientadores relacionados à seleção
-     * autorizado a qualquer um que tenha acesso à seleção
-     * request->codpes = required, int
-     */
-    public function storeOrientador(Request $request, Selecao $selecao)
-    {
-        Gate::authorize('selecoes.update', $selecao);
-
-        $request->validate([
-            'id' => 'required',
-        ],
-        [
-            'id.required' => 'Orientador(a) obrigatório(a)',
-        ]);
-
-        // transaction para não ter problema de inconsistência do DB
-        $db_transaction = DB::transaction(function () use ($request, $selecao) {
-
-            $orientador = Orientador::where('id', $request->id)->first();
-
-            $existia = $selecao->orientadores()->detach($orientador);
-
-            $selecao->orientadores()->attach($orientador);
-
-            return ['orientador' => $orientador, 'existia' => $existia];
-        });
-
-        if (!$db_transaction['existia'])
-            $request->session()->flash('alert-success', 'O(A) orientador(a) ' . $db_transaction['orientador']->nome . ' foi adicionado(a) à essa seleção');
-        else
-            $request->session()->flash('alert-info', 'O(A) orientador(a) ' . $db_transaction['orientador']->nome . ' já estava vinculado(a) à essa seleção');
-        \UspTheme::activeUrl('selecoes');
-        return redirect()->to(url('selecoes/edit/' . $selecao->id))->with($this->monta_compact($selecao, 'edit', 'orientadores'));    // se fosse return view, um eventual F5 do usuário duplicaria o registro... POSTs devem ser com redirect
-    }
-
-    /**
-     * Remove orientadores relacionados à seleção
-     * $user = required
-     */
-    public function destroyOrientador(Request $request, Selecao $selecao, Orientador $orientador)
-    {
-        Gate::authorize('selecoes.update', $selecao);
-
-        $selecao->orientadores()->detach($orientador);
-
-        $request->session()->flash('alert-success', 'O(A) orientador(a) ' . $orientador->nome . ' foi removido(a) dessa seleção');
-        \UspTheme::activeUrl('selecoes');
-        return redirect()->to(url('selecoes/edit/' . $selecao->id))->with($this->monta_compact($selecao, 'edit', 'orientadores'));
-    }
-
-    /**
      * Adicionar tipos de arquivo para solicitações de isenção de taxa da seleção
      * autorizado a qualquer um que tenha acesso à seleção
      * request->codpes = required, int
@@ -953,7 +901,7 @@ class SelecaoController extends Controller
             if ($selecao->exigeDisciplinas())
                 $i['disciplinas'] = Disciplina::whereIn('id', $extras['disciplinas'] ?? [])->pluck('sigla')->implode(', ');
             if ($selecao->exigeOrientador())
-                $i['orientador'] = isset($extras['orientador']) ? Orientador::where('id', $extras['orientador'])->first()->nome : '';
+                $i['orientador'] = isset($extras['orientador']) ? User::where('id', $extras['orientador'])->first()->name : '';
             $autor = $inscricao->pessoas('Autor');
             $i['autor'] = $autor ? $autor->name : '';
             foreach ($keys as $field)
@@ -1039,7 +987,6 @@ class SelecaoController extends Controller
         $disciplinas = Disciplina::obterDisciplinasPossiveis();
         $objeto->disciplinas = $objeto->disciplinas->sortBy('sigla');
         $motivosisencaotaxa = MotivoIsencaoTaxa::listarMotivosIsencaoTaxa();
-        $orientadores = Orientador::listarOrientadores();
         if ($selecao->exigeNivel())
             $niveis_selecao = (!empty($nivel) ? collect([['nome' => $nivel]]) : Nivel::all());
         else
@@ -1067,6 +1014,6 @@ class SelecaoController extends Controller
         });
         $max_upload_size = config('selecoes-pos.upload_max_filesize');
 
-        return compact('data', 'objeto', 'classe_nome', 'classe_nome_plural', 'modo', 'niveislinhaspesquisa', 'disciplinas', 'motivosisencaotaxa', 'orientadores', 'tiposarquivo_selecao', 'tiposarquivo_solicitacaoisencaotaxa', 'tiposarquivo_inscricao', 'tiposarquivo_matricula', 'programas', 'categorias', 'max_upload_size', 'rules', 'scroll');
+        return compact('data', 'objeto', 'classe_nome', 'classe_nome_plural', 'modo', 'niveislinhaspesquisa', 'disciplinas', 'motivosisencaotaxa', 'tiposarquivo_selecao', 'tiposarquivo_solicitacaoisencaotaxa', 'tiposarquivo_inscricao', 'tiposarquivo_matricula', 'programas', 'categorias', 'max_upload_size', 'rules', 'scroll');
     }
 }

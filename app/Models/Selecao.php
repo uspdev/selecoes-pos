@@ -1333,14 +1333,6 @@ class Selecao extends Model
     }
 
     /**
-     * relacionamento com orientadores
-     */
-    public function orientadores()
-    {
-        return $this->belongsToMany('App\Models\Orientador', 'selecao_orientador', 'selecao_id', 'orientador_id')->withTimestamps();
-    }
-
-    /**
      * Accessor getter para linhaspesquisa
      */
     public function getLinhaspesquisaAttribute()

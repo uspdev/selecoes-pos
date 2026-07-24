@@ -11,7 +11,6 @@ use App\Models\Matricula;
 use App\Models\MotivoIsencaoTaxa;
 use App\Models\Nivel;
 use App\Models\NivelLinhaPesquisa;
-use App\Models\Orientador;
 use App\Models\Parametro;
 use App\Models\Programa;
 use App\Models\Selecao;
@@ -315,7 +314,6 @@ class ArquivoController extends Controller
         $disciplinas = Disciplina::obterDisciplinasPossiveis();
         $objeto_disciplinas = ((isset($extras['disciplinas']) && is_array($extras['disciplinas'])) ? Disciplina::whereIn('id', $extras['disciplinas'])->get() : collect());
         $motivosisencaotaxa = MotivoIsencaoTaxa::listarMotivosIsencaoTaxa();
-        $orientadores = Orientador::listarOrientadores();
         $solicitacaoisencaotaxa_aprovada = (in_array($classe_nome, ['Inscricao', 'Matricula'])) ? SolicitacaoIsencaoTaxa::where('extras->cpf', $extras['cpf'] ?? null)
                                                                                                                         ->where('selecao_id', $objeto->selecao->id)
                                                                                                                         ->where('estado', 'LIKE', 'Isenção de Taxa Aprovada%')->first() : null;
@@ -357,6 +355,6 @@ class ArquivoController extends Controller
         $boleto_momento_envio = Parametro::first()->boleto_momento_envio;
         $max_upload_size = config('selecoes-pos.upload_max_filesize');
 
-        return compact('data', 'objeto', 'classe_nome', 'classe_nome_plural', 'form', 'modo', 'niveislinhaspesquisa', 'disciplinas', 'motivosisencaotaxa', 'orientadores', 'responsaveis', 'objeto_disciplinas', 'nivel', 'solicitacaoisencaotaxa_aprovada', 'tiposarquivo_selecao', 'tiposarquivo_solicitacaoisencaotaxa', 'tiposarquivo_inscricao', 'tiposarquivo_matricula', 'programas', 'categorias', 'boleto_momento_envio', 'max_upload_size', 'scroll');
+        return compact('data', 'objeto', 'classe_nome', 'classe_nome_plural', 'form', 'modo', 'niveislinhaspesquisa', 'disciplinas', 'motivosisencaotaxa', 'responsaveis', 'objeto_disciplinas', 'nivel', 'solicitacaoisencaotaxa_aprovada', 'tiposarquivo_selecao', 'tiposarquivo_solicitacaoisencaotaxa', 'tiposarquivo_inscricao', 'tiposarquivo_matricula', 'programas', 'categorias', 'boleto_momento_envio', 'max_upload_size', 'scroll');
     }
 }

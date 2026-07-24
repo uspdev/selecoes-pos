@@ -35,11 +35,6 @@
             <div class="col-md-7">
               @include('linhaspesquisa.show.card-principal')              {{-- Principal --}}
             </div>
-            <div class="col-md-5">
-              @if ($modo == 'edit')
-                @include('linhaspesquisa.show.card-orientadores')         {{-- Orientadores --}}
-              @endif
-            </div>
           </div>
         </div>
       </div>
