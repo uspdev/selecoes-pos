@@ -216,32 +216,36 @@ class TipoArquivo extends Model
 
             case 'Inscricao':
                 // todos os tipos de arquivo para inscrições nesta seleção
-                return $selecao->tiposarquivo()->where('classe_nome', 'Inscrições')->where(function ($query) use ($niveis, $programa_id, $exigeCategoria) {
+                return $selecao->tiposarquivo()->where('classe_nome', 'Inscrições')->where(function ($query) use ($niveis, $programa_id, $exigeCategoria, $selecao) {
                     if ($niveis->isEmpty()) {
                         if ($exigeCategoria)
                             $query->whereHas('categorias', function ($query) { $query->where('nome', 'Aluno Especial'); });
                     } else {
                         // se houver combinação de nível com programa, se restringe a ela
-                        $query->whereHas('niveisprogramas', function ($query) use ($niveis, $programa_id) {
+                        $query->whereHas('niveisprogramas', function ($query) use ($niveis, $programa_id, $selecao) {
                             $query->whereIn('nivel_id', function ($query) use ($niveis) {
                                 $query->select('id')->from('niveis')->whereIn('nome', $niveis->pluck('nome'));
-                            })->where('programa_id', $programa_id);
+                            })->when($selecao->exigePrograma(), function ($query, $programa_id) {
+                                $query->where('programa_id', $programa_id);
+                            });
                         });
                     }
                 })->get();
 
             case 'Matricula':
                 // todos os tipos de arquivo para matrículas nesta seleção
-                return $selecao->tiposarquivo()->where('classe_nome', 'Matrículas')->where(function ($query) use ($niveis, $programa_id, $exigeCategoria) {
+                return $selecao->tiposarquivo()->where('classe_nome', 'Matrículas')->where(function ($query) use ($niveis, $programa_id, $exigeCategoria, $selecao) {
                     if ($niveis->isEmpty()) {
                         if ($exigeCategoria)
                             $query->whereHas('categorias', function ($query) { $query->where('nome', 'Aluno Especial'); });
                     } else {
                         // se houver combinação de nível com programa, se restringe a ela
-                        $query->whereHas('niveisprogramas', function ($query) use ($niveis, $programa_id) {
+                        $query->whereHas('niveisprogramas', function ($query) use ($niveis, $programa_id, $selecao) {
                             $query->whereIn('nivel_id', function ($query) use ($niveis) {
                                 $query->select('id')->from('niveis')->whereIn('nome', $niveis->pluck('nome'));
-                            })->where('programa_id', $programa_id);
+                            })->when($selecao->exigePrograma(), function ($query, $programa_id) {
+                                $query->where('programa_id', $programa_id);
+                            });
                         });
                     }
                 })->get();

@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Mail\SelecaoMail;
 use App\Models\Parametro;
 use App\Models\Selecao;
+use Illuminate\Support\Str;
 
 class SelecaoObserver
 {
@@ -99,12 +100,10 @@ class SelecaoObserver
         $dados_a_atualizar = [];
 
         // marca para atualizar o nome
-        $selecao_nome_novo = (($selecao->categoria?->nome === 'Aluno Especial') ? 'Aluno Especial' : $selecao->programa?->sigla . ' para ingresso');
-        if ($selecao->categoria?->nome === 'Aluno Especial')
-            $selecao_nome_novo .= ' ';
-        else
+        $selecao_nome_novo = (($selecao->categoria?->nome === 'Aluno Especial') ? 'Aluno Especial ' : $selecao->programa?->sigla . ' para ingresso ');
+        if ($selecao->exigePrograma())
             $selecao_nome_novo .= (($selecao->ingresso_semestre == 0) ? ' em ' : ' no ');
-        $selecao_nome_novo .= (($selecao->ingresso_semestre == 0) ? $selecao->ingresso_ano : $selecao->ingresso_semestre . 'º semestre de ' . $selecao->ingresso_ano);
+        $selecao_nome_novo .= Str::squish(' ' . (($selecao->ingresso_semestre == 0) ? $selecao->ingresso_ano : $selecao->ingresso_semestre . 'º semestre de ' . $selecao->ingresso_ano));
         if ($selecao->nome !== $selecao_nome_novo)
             $dados_a_atualizar['nome'] = $selecao_nome_novo;
 

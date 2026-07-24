@@ -22,7 +22,7 @@
   @canany(['perfiladmin', 'perfilgerente', 'perfildocente'])
   @else
     <br />
-    A matrícula somente poderá ser realizada pelos candidatos aprovados{{ $matricula->selecao->categoria ? ($matricula->selecao->categoria->nome != 'Aluno Especial' ? ' no processo seletivo' : ' pelo(a)(s) ministrante(s) da(s) disciplina(s)') : '' }}.
+    A matrícula somente poderá ser realizada pelos candidatos aprovados{{ $matricula->selecao->exigeCategoria() ? ($matricula->selecao->categoria->nome != 'Aluno Especial' ? ' no processo seletivo' : ' pelo(a)(s) ministrante(s) da(s) disciplina(s)') : '' }}.
     <br />
     Após informar seus dados, clique em "Prosseguir", envie todos os documentos exigidos e clique no botão "Enviar Matrícula".
     Sem isso, ela não será avaliada!<br />

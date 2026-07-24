@@ -47,6 +47,11 @@ class Categoria extends Model
         return $ret;
     }
 
+    public function exigePrograma()
+    {
+        return ($this->nome == 'Aluno Regular') && Parametro::first()->exigePrograma();
+    }
+
     public function exigeNivel()
     {
         return ($this->nome == 'Aluno Regular');

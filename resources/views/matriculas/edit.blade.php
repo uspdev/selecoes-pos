@@ -38,7 +38,7 @@
             @else
               Nova Matrícula
             @endif
-            para {{ $matricula->selecao->nome }}{{ $matricula->selecao->categoria ? ' (' . $matricula->selecao->categoria->nome . ')' : '' }}
+            para {{ $matricula->selecao->nome }}{{ $matricula->selecao->exigeCategoria() ? ' (' . $matricula->selecao->categoria->nome . ')' : '' }}
             @if ($matricula->selecao->exigeNivel())
               - {{ $nivel }}
             @endif

@@ -98,6 +98,11 @@ class Parametro extends Model
         return true;    // vai depender do vínculo (a ser implementado no futuro, quando este selecoes-pos se tornar selecoes)
     }
 
+    public function exigePrograma()
+    {
+        return true;    // vai depender do vínculo (a ser implementado no futuro, quando este selecoes-pos se tornar selecoes)
+    }
+
     public function permiteInscricao()
     {
         return true;    // vai depender do vínculo (a ser implementado no futuro, quando este selecoes-pos se tornar selecoes)

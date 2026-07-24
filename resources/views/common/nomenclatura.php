@@ -4,12 +4,12 @@
     $objetivo = '';
 
     if ($selecao->categoria?->nome == 'Aluno Regular') {
-        if ($selecao->programa->fazInscricoes()) {
+        if ($selecao->fazInscricoes()) {
             $inscricao_ou_matricula = 'inscrição';
             $objetivo = 'o processo seletivo ' . $selecao->nome;
-        } elseif ($selecao->programa->fazMatriculas()) {
+        } elseif ($selecao->fazMatriculas()) {
             $inscricao_ou_matricula = 'matrícula';
-            $objetivo = 'o programa ' . $selecao->programa->nomeCompleto();
+            $objetivo = 'o programa ' . $selecao->programa?->nomeCompleto();
         }
     } elseif ($selecao->categoria?->nome == 'Aluno Especial') {
         if (Parametro::first()->especiaisFazInscricoes())

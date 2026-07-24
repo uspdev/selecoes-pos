@@ -50,14 +50,27 @@
       if (!exige_categoria)
         $('#categoria_id').closest('.form-group').hide();
 
+      exige_programa = {{ Parametro::first()->exigePrograma() ? 'true' : 'false' }};
+      if (!exige_programa)
+        $('#programa_id').closest('.form-group').hide();
+
+      faz_inscricoes = false;
+      faz_matriculas = false;
+
       permite_taxa = {{ Parametro::first()->permiteTaxa() ? 'true' : 'false' }};
+
       $('#categoria_id, #programa_id').change(function () {
         if (!permite_taxa)
           $('#tem_taxa').closest('.form-group').hide();
 
-        faz_inscricoes = false;
-        faz_matriculas = false;
-        if (($('#categoria_id option:selected').text() !== 'Aluno Especial') && (($('#categoria_id').val() !== '') || !exige_categoria)) {
+        categoria_id = $('#categoria_id').val();
+        categoria = $({!! $categorias !!}).filter(function(index, item) {
+          return item.id == categoria_id;
+        })[0];
+        if (categoria)
+          exige_programa = categoria.exigePrograma;
+
+        if (exige_programa && (($('#categoria_id').val() !== '') || !exige_categoria)) {
           $('#programa_id').closest('.form-group').show();
           programa_id = $('#programa_id').val();
           programa = $({!! $programas !!}).filter(function(index, item) {

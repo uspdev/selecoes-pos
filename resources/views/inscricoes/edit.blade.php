@@ -38,7 +38,7 @@
             @else
               Nova Inscrição
             @endif
-            para {{ $inscricao->selecao->nome }}{{ $inscricao->selecao->categoria ? ' (' . $inscricao->selecao->categoria->nome . ')' : '' }}
+            para {{ $inscricao->selecao->nome }}{{ $inscricao->selecao->exigeCategoria() ? ' (' . $inscricao->selecao->categoria->nome . ')' : '' }}
             @if ($inscricao->selecao->exigeNivel())
               - {{ $nivel }}
             @endif

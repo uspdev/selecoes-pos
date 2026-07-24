@@ -858,7 +858,7 @@ class Selecao extends Model
         $ret = [];
         foreach ($selecoes as $selecao)
             if (Gate::allows('selecoes.view'))
-                $ret[$selecao->id] = $selecao->nome . ($selecao->categoria ? ' (' . $selecao->categoria->nome . ')' : '');
+                $ret[$selecao->id] = $selecao->nome . ($selecao->exigeCategoria() ? ' (' . $selecao->categoria->nome . ')' : '');
         return $ret;
     }
 
@@ -1179,9 +1179,22 @@ class Selecao extends Model
         return array_merge($ultimasPorPrograma->pluck('id')->toArray(), $ultimaAlunoEspecial->pluck('id')->toArray());
     }
 
+    public function exigeCategoria()
+    {
+        return Parametro::first()->exigeCategoria();
+    }
+
+    public function exigePrograma()
+    {
+        if (!$this->exigeCategoria())
+            return false;
+
+        return $this->categoria->exigePrograma();
+    }
+
     public function fazInscricoes()
     {
-        if (!$this->categoria)
+        if (!$this->exigeCategoria())
             return $this->programa?->fazInscricoes();    // vai depender do vínculo (a ser implementado no futuro, quando este selecoes-pos se tornar selecoes)
 
         if ($this->categoria->nome == 'Aluno Regular')
@@ -1194,7 +1207,7 @@ class Selecao extends Model
 
     public function fazMatriculas()
     {
-        if (!$this->categoria)
+        if (!$this->exigeCategoria())
             return $this->programa?->fazMatriculas();    // vai depender do vínculo (a ser implementado no futuro, quando este selecoes-pos se tornar selecoes)
 
         if ($this->categoria->nome == 'Aluno Regular')
@@ -1212,26 +1225,26 @@ class Selecao extends Model
 
     public function exigeNivel()
     {
-        if (!$this->categoria)
+        if (!$this->exigeCategoria())
             return false;
 
-        return (bool) $this->categoria->exigeNivel();
+        return (bool) $this->categoria?->exigeNivel();
     }
 
     public function exigeLinhaPesquisa()
     {
-        if (!$this->categoria)
+        if (!$this->exigeCategoria())
             return false;
 
-        return (bool) $this->categoria->exigeLinhaPesquisa();
+        return (bool) $this->categoria?->exigeLinhaPesquisa();
     }
 
     public function exigeDisciplinas()
     {
-        if (!$this->categoria)
+        if (!$this->exigeCategoria())
             return false;
 
-        return (bool) $this->categoria->exigeDisciplinas();
+        return (bool) $this->categoria?->exigeDisciplinas();
     }
 
     public function exigeOrientador()

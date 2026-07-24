@@ -17,7 +17,7 @@
             <div class="card-title form-inline my-0">
               Seleções <i class="fas fa-angle-right mx-2"></i>
               <a href="selecoes/edit/{{ $selecao->id }}">Seleção nº {{ $selecao->id }}</a>
-              @if ($selecao->categoria)
+              @if ($selecao->exigeCategoria())
                 &nbsp;({{ $selecao->categoria->nome }})
               @endif
               &nbsp; | &nbsp;  Formulário para {{ $classe_nome_plural_acentuado }} &nbsp; | &nbsp; &nbsp;

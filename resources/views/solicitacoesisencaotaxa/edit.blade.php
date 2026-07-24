@@ -37,7 +37,7 @@
             @else
               Nova Solicitação de Isenção de Taxa
             @endif
-            para {{ $solicitacaoisencaotaxa->selecao->nome }}{{ $solicitacaoisencaotaxa->selecao->categoria ? ' (' . $solicitacaoisencaotaxa->selecao->categoria->nome . ')' : '' }}<br />
+            para {{ $solicitacaoisencaotaxa->selecao->nome }}{{ $solicitacaoisencaotaxa->selecao->exigeCategoria() ? ' (' . $solicitacaoisencaotaxa->selecao->categoria->nome . ')' : '' }}<br />
             <span class="text-muted">{{ $solicitacaoisencaotaxa->selecao->descricao }}</span>
           </div>
         </div>

@@ -144,7 +144,7 @@ class SelecaoController extends Controller
             // obtém a última seleção desse programa/aluno especial
             $ultimaSelecao = null;
             $queryUltimaSelecao = null;
-            if ($selecao->categoria?->nome == 'Aluno Regular')
+            if ($selecao->exigePrograma())
                 $queryUltimaSelecao = Selecao::where('programa_id', $selecao->programa_id)->where('id', '!=', $selecao->id);
             elseif ($selecao->categoria?->nome == 'Aluno Especial')
                 $queryUltimaSelecao = Selecao::whereRelation('categoria', 'nome', 'Aluno Especial')->where('id', '!=', $selecao->id);
@@ -165,20 +165,28 @@ class SelecaoController extends Controller
                 }
             } else {
                 // cadastra automaticamente todas as instâncias de vários objetos como possíveis para este processo seletivo
-                if ($selecao->exigeNivel() && $selecao->exigeLinhaPesquisa())
+                if ($selecao->exigePrograma() && $selecao->exigeNivel() && $selecao->exigeLinhaPesquisa())
                     $selecao->niveislinhaspesquisa()->attach(NivelLinhaPesquisa::whereRelation('linhapesquisa', 'programa_id', $selecao->programa_id)->pluck('id'));
                 if ($selecao->fazInscricoes()) {
-                    $selecao->tiposarquivo()->attach(TipoArquivo::where('classe_nome', 'Inscrições')->when($selecao->categoria, function ($query) use ($selecao) {
+                    $selecao->tiposarquivo()->attach(TipoArquivo::where('classe_nome', 'Inscrições')->when($selecao->exigeCategoria(), function ($query) use ($selecao) {
                         $query->whereHas('categorias', function ($query) use ($selecao) { $query->where('nome', $selecao->categoria->nome); });
                     })->when($selecao->exigeNivel(), function ($query) use ($selecao) {
-                        $query->whereRelation('niveisprogramas', 'programa_id', $selecao->programa_id);
+                        $query->whereHas('niveisprogramas', function ($query) use ($selecao) {
+                            $query->when($selecao->exigePrograma(), function ($query) use ($selecao) {
+                                $query->where('programa_id', $selecao->programa_id);
+                            });
+                        });
                     })->pluck('id'));
                 }
                 if ($selecao->fazMatriculas())
-                    $selecao->tiposarquivo()->attach(TipoArquivo::where('classe_nome', 'Matrículas')->when($selecao->categoria, function ($query) use ($selecao) {
+                    $selecao->tiposarquivo()->attach(TipoArquivo::where('classe_nome', 'Matrículas')->when($selecao->exigeCategoria(), function ($query) use ($selecao) {
                         $query->whereHas('categorias', function ($query) use ($selecao) { $query->where('nome', $selecao->categoria->nome); });
                     })->when($selecao->exigeNivel(), function ($query) use ($selecao) {
-                        $query->whereRelation('niveisprogramas', 'programa_id', $selecao->programa_id);
+                        $query->whereHas('niveisprogramas', function ($query) use ($selecao) {
+                            $query->when($selecao->exigePrograma(), function ($query) use ($selecao) {
+                                $query->where('programa_id', $selecao->programa_id);
+                            });
+                        });
                     })->pluck('id'));
             }
 
@@ -274,7 +282,7 @@ class SelecaoController extends Controller
             return back()->withInput();
         }
 
-        if (($selecao->programa_id != $request->programa_id) && !empty($request->programa_id))
+        if ($selecao->exigePrograma() && ($selecao->programa_id != $request->programa_id) && !empty($request->programa_id))
             if ($selecao->linhaspesquisa->count() > 0) {
                 $request->session()->flash('alert-danger', 'Não se pode alterar o programa, pois há linhas de pesquisa/temas do programa antigo cadastrados para esta seleção!');
                 \UspTheme::activeUrl('selecoes');
@@ -887,7 +895,7 @@ class SelecaoController extends Controller
 
             $extras = json_decode($solicitacaoisencaotaxa->extras, true) ?? [];
             $i['numero_solicitacao'] = $solicitacaoisencaotaxa->id;
-            if ($selecao->categoria?->nome == 'Aluno Regular')
+            if ($selecao->exigePrograma())
                 $i['programa'] = $solicitacaoisencaotaxa->selecao->programa->nomeCompleto();
             $i['selecao'] = $solicitacaoisencaotaxa->selecao->nome;
             $i['estado'] = $solicitacaoisencaotaxa->estado;
@@ -934,7 +942,7 @@ class SelecaoController extends Controller
 
             $extras = json_decode($inscricao->extras, true) ?? [];
             $i['numero_inscricao'] = $inscricao->id;
-            if ($selecao->categoria?->nome == 'Aluno Regular')
+            if ($selecao->exigePrograma())
                 $i['programa'] = $inscricao->selecao->programa->nomeCompleto();
             $i['selecao'] = $inscricao->selecao->nome;
             $i['estado'] = $inscricao->estado;
@@ -987,7 +995,7 @@ class SelecaoController extends Controller
 
             $extras = json_decode($matricula->extras, true) ?? [];
             $i['numero_matricula'] = $matricula->id;
-            if ($selecao->categoria?->nome == 'Aluno Regular')
+            if ($selecao->exigePrograma())
                 $i['programa'] = $matricula->selecao->programa->nomeCompleto();
             $i['selecao'] = $matricula->selecao->nome;
             $i['estado'] = $matricula->estado;
@@ -1052,6 +1060,7 @@ class SelecaoController extends Controller
             return $programa;
         });
         $categorias = Categoria::all()->map(function ($categoria) {
+            $categoria->setAttribute('exigePrograma', $categoria->exigePrograma());
             $categoria->setAttribute('exigeLinhaPesquisa', $categoria->exigeLinhaPesquisa());
             $categoria->setAttribute('exigeDisciplinas', $categoria->exigeDisciplinas());
             return $categoria;

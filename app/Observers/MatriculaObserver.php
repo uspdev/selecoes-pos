@@ -105,7 +105,7 @@ class MatriculaObserver
                 // envia e-mail avisando o candidato da pré-aprovação da matrícula
                 // envio do e-mail "16" do README.md
                 $passo = 'pré-aprovação';
-                $link_acompanhamento = (($matricula->selecao->categoria?->nome == 'Aluno Especial') ? Parametro::first()->link_acompanhamento_especiais : $matricula->selecao->programa->link_acompanhamento);
+                $link_acompanhamento = (($matricula->selecao->categoria?->nome == 'Aluno Especial') ? Parametro::first()->link_acompanhamento_especiais : $matricula->selecao->programa?->link_acompanhamento);
                 \Mail::to($user->email)
                     ->queue(new MatriculaMail(compact('passo', 'matricula', 'user', 'link_acompanhamento')));
 

@@ -204,7 +204,9 @@ class Inscricao extends Model
         $tiposarquivo_requeridos = TipoArquivo::obterTiposArquivoObrigatorios($this, 'Inscrições');
         if (!is_null($nivel_id))
             $tiposarquivo_requeridos = $tiposarquivo_requeridos->filter(function ($tipoarquivo) use ($nivel_id) {
-                return $tipoarquivo->niveisprogramas()->where('nivel_id', $nivel_id)->where('programa_id', $this->selecao->programa_id)->exists();
+                return $tipoarquivo->niveisprogramas()->where('nivel_id', $nivel_id)->when($this->selecao->exigePrograma(), function ($query) {
+                    $query->where('programa_id', $this->selecao->programa_id);
+                })->exists();
             });
 
         // obtém os tipos de arquivo da inscrição

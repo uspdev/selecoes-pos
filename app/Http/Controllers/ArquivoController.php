@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Arquivo;
+use App\Models\Categoria;
 use App\Models\Disciplina;
 use App\Models\Inscricao;
 use App\Models\LinhaPesquisa;
@@ -302,9 +303,6 @@ class ArquivoController extends Controller
     {
         $data = (object) ('App\\Http\\Controllers\\' . $classe_nome . 'Controller')::$data;
         $selecao = ($classe_nome == 'Selecao' ? $objeto : $objeto->selecao);
-        $disciplinas = Disciplina::all();
-        $motivosisencaotaxa = MotivoIsencaoTaxa::listarMotivosIsencaoTaxa();
-        $orientadores = Orientador::listarOrientadores();
         $responsaveis = $selecao->programa?->obterResponsaveis() ?? (new Programa())->obterResponsaveis();
         $extras = json_decode($objeto->extras, true);
         if ($selecao->exigeNivel() && $selecao->exigeLinhaPesquisa()) {
@@ -314,7 +312,10 @@ class ArquivoController extends Controller
             $objeto->niveislinhaspesquisa = collect();
             $niveislinhaspesquisa = collect();
         }
+        $disciplinas = Disciplina::obterDisciplinasPossiveis();
         $objeto_disciplinas = ((isset($extras['disciplinas']) && is_array($extras['disciplinas'])) ? Disciplina::whereIn('id', $extras['disciplinas'])->get() : collect());
+        $motivosisencaotaxa = MotivoIsencaoTaxa::listarMotivosIsencaoTaxa();
+        $orientadores = Orientador::listarOrientadores();
         $solicitacaoisencaotaxa_aprovada = (in_array($classe_nome, ['Inscricao', 'Matricula'])) ? SolicitacaoIsencaoTaxa::where('extras->cpf', $extras['cpf'] ?? null)
                                                                                                                         ->where('selecao_id', $objeto->selecao->id)
                                                                                                                         ->where('estado', 'LIKE', 'Isenção de Taxa Aprovada%')->first() : null;
@@ -342,9 +343,20 @@ class ArquivoController extends Controller
         $tiposarquivo_solicitacaoisencaotaxa = TipoArquivo::obterTiposArquivoPossiveis('SolicitacaoIsencaoTaxa', null, $selecao->programa_id);
         $tiposarquivo_inscricao = TipoArquivo::obterTiposArquivoPossiveis('Inscricao', ($selecao->exigeNivel() ? Nivel::all() : collect()), $selecao->programa_id);
         $tiposarquivo_matricula = TipoArquivo::obterTiposArquivoPossiveis('Matricula', ($selecao->exigeNivel() ? Nivel::all() : collect()), $selecao->programa_id);
+        $programas = Programa::all()->map(function ($programa) {
+            $programa->setAttribute('fazInscricoes', $programa->fazInscricoes());
+            $programa->setAttribute('fazMatriculas', $programa->fazMatriculas());
+            return $programa;
+        });
+        $categorias = Categoria::all()->map(function ($categoria) {
+            $categoria->setAttribute('exigePrograma', $categoria->exigePrograma());
+            $categoria->setAttribute('exigeLinhaPesquisa', $categoria->exigeLinhaPesquisa());
+            $categoria->setAttribute('exigeDisciplinas', $categoria->exigeDisciplinas());
+            return $categoria;
+        });
         $boleto_momento_envio = Parametro::first()->boleto_momento_envio;
         $max_upload_size = config('selecoes-pos.upload_max_filesize');
 
-        return compact('data', 'objeto', 'classe_nome', 'classe_nome_plural', 'form', 'modo', 'disciplinas', 'motivosisencaotaxa', 'orientadores', 'responsaveis', 'niveislinhaspesquisa', 'objeto_disciplinas', 'nivel', 'solicitacaoisencaotaxa_aprovada', 'tiposarquivo_selecao', 'tiposarquivo_solicitacaoisencaotaxa', 'tiposarquivo_inscricao', 'tiposarquivo_matricula', 'boleto_momento_envio', 'max_upload_size', 'scroll');
+        return compact('data', 'objeto', 'classe_nome', 'classe_nome_plural', 'form', 'modo', 'niveislinhaspesquisa', 'disciplinas', 'motivosisencaotaxa', 'orientadores', 'responsaveis', 'objeto_disciplinas', 'nivel', 'solicitacaoisencaotaxa_aprovada', 'tiposarquivo_selecao', 'tiposarquivo_solicitacaoisencaotaxa', 'tiposarquivo_inscricao', 'tiposarquivo_matricula', 'programas', 'categorias', 'boleto_momento_envio', 'max_upload_size', 'scroll');
     }
 }

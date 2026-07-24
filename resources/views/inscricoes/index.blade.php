@@ -11,20 +11,22 @@
         {{-- vai mostrar no mobile --}}
         <i class="fas fa-filter"></i>
       </div>
-      <div class="h4 mt-1 ml-2">
-        <span class="badge badge-pill badge-primary datatable-counter">-</span>
-      </div>
-      @include('partials.datatable-filter-box', ['otable' => 'oTable'])
-      @canany(['perfiladmin', 'perfilgerente', 'perfildocente'])
-        <div class="d-flex align-items-center ml-2" style="gap: 10px;">
-          <input type="checkbox" name="somente_da_ultima_selecao" id="somente_da_ultima_selecao" checked="checked" style="width: auto; margin: 0;">
-          <label for="somente_da_ultima_selecao" style="margin: 0;">
-            Somente da Última Seleção
-            @if (auth()->user()?->can('perfiladmin') || in_array(auth()->user()?->funcao_maxima, ['Serviço de Pós-Graduação', 'Coordenadores da Pós-Graduação']))
-              de cada Programa e de Aluno Especial
-            @endif
-          </label>
+      @if (isset($objetos) && ($objetos->count() > 0))
+        <div class="h4 mt-1 ml-2">
+          <span class="badge badge-pill badge-primary datatable-counter">-</span>
         </div>
+        @include('partials.datatable-filter-box', ['otable' => 'oTable'])
+        @canany(['perfiladmin', 'perfilgerente', 'perfildocente'])
+          <div class="d-flex align-items-center ml-2" style="gap: 10px;">
+            <input type="checkbox" name="somente_da_ultima_selecao" id="somente_da_ultima_selecao" checked="checked" style="width: auto; margin: 0;">
+            <label for="somente_da_ultima_selecao" style="margin: 0;">
+              Somente da Última Seleção
+              @if (auth()->user()?->can('perfiladmin') || in_array(auth()->user()?->funcao_maxima, ['Serviço de Pós-Graduação', 'Coordenadores da Pós-Graduação']))
+                de cada Programa e de Aluno Especial
+              @endif
+            </label>
+          </div>
+        @endcanany
       @endif
     </div>
   </div>
@@ -65,7 +67,7 @@
               @include('inscricoes.partials.status-muted')
             </td>
             <td>
-              {{ $inscricao->selecao->nome }}{{ $inscricao->selecao->categoria ? ' (' . $inscricao->selecao->categoria->nome . ')' : '' }}
+              {{ $inscricao->selecao->nome }}{{ $inscricao->selecao->exigeCategoria() ? ' (' . $inscricao->selecao->categoria->nome . ')' : '' }}
             </td>
             <td>
               @php
@@ -117,49 +119,52 @@
   <script type="text/javascript">
     $(document).ready(function() {
 
-      oTable = $('.tabela-inscricoes').DataTable({
-        dom:
-          't{{ $paginar ? 'p' : '' }}',
-          'paging': {{ $paginar ? 'true' : 'false' }},
-          'sort': true,
-          'order': [
-            [6, 'desc']    // ordenado por data de atualização descrescente
-          ],
-          'fixedHeader': true,
-          columnDefs: [{
-            targets: 1,
-            orderable: false
-          }],
-          language: {
-            url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json'
-          }
-      });
+      if ($('.tabela-inscricoes').length > 0) {
+        oTable = $('.tabela-inscricoes').DataTable({
+          dom:
+            't{{ $paginar ? 'p' : '' }}',
+            'paging': {{ $paginar ? 'true' : 'false' }},
+            'sort': true,
+            'order': [
+              [6, 'desc']    // ordenado por data de atualização descrescente
+            ],
+            'fixedHeader': true,
+            columnDefs: [{
+              targets: 1,
+              orderable: false
+            }],
+            language: {
+              url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json'
+            }
+        });
 
-      $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        if (!$('#somente_da_ultima_selecao').is(':checked'))
-            return true;
-        return ($(oTable.row(dataIndex).node()).attr('data-is-latest-selecoes') === '1');
-      });
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+          if (!$('#somente_da_ultima_selecao').is(':checked'))
+              return true;
+          return ($(oTable.row(dataIndex).node()).attr('data-is-latest-selecoes') === '1');
+        });
 
-      $('#somente_da_ultima_selecao').on('change', function() {
-          oTable.draw();
-          $('.datatable-counter').html(oTable.page.info().recordsDisplay);
-      });
+        $('#somente_da_ultima_selecao').on('change', function() {
+            oTable.draw();
+            $('.datatable-counter').html(oTable.page.info().recordsDisplay);
+        });
 
-      // recuperando o storage local
-      var datatableFilter = localStorage.getItem('datatableFilter');
-      $('#dt-search').val(datatableFilter);
+        // recuperando o storage local
+        var datatableFilter = localStorage.getItem('datatableFilter');
+        $('#dt-search').val(datatableFilter);
 
-      // vamos aplicar o filtro
-      oTable.search($('#dt-search').val()).draw();
+        // vamos aplicar o filtro
+        oTable.search($('#dt-search').val()).draw();
 
-      // vamos renderizar o contador de linhas
-      $('.datatable-counter').html(oTable.page.info().recordsDisplay);
+        // vamos renderizar o contador de linhas
+        $('.datatable-counter').html(oTable.page.info().recordsDisplay);
 
-      // vamos guardar no storage à medida que digita
-      $('#dt-search').keyup(function() {
-        localStorage.setItem('datatableFilter', $(this).val())
-      });
+        // vamos guardar no storage à medida que digita
+        $('#dt-search').keyup(function() {
+          localStorage.setItem('datatableFilter', $(this).val())
+        });
+      } else
+        $('.datatable-counter').html('0');
     });
   </script>
 @endsection
