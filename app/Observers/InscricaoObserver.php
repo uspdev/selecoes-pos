@@ -91,16 +91,16 @@ class InscricaoObserver
 
                 if ($inscricao->selecao->categoria?->nome == 'Aluno Regular') {
                     if ($inscricao->selecao->exigePrograma()) {
-                        // envia e-mail avisando a secretaria do programa da seleção da inscrição sobre a realização da inscrição
+                        // envia e-mail avisando os secretários(as) do programa da seleção da inscrição sobre a realização da inscrição
                         // envio do e-mail "10" do README.md
                         $passo = 'envio - para gestores';
                         $responsavel_nome = 'Prezados(as) Srs(as). da Secretaria do Programa ' . $inscricao->selecao->programa->nomeCompleto();
                         \Mail::to($inscricao->selecao->programa->email_secretaria)
                             ->queue(new InscricaoMail(compact('passo', 'inscricao', 'user', 'responsavel_nome')));
 
-                        // envia e-mails avisando os coordenadores do programa da seleção da inscrição sobre a realização da inscrição
+                        // envia e-mails avisando os(as) coordenadores(as) do programa da seleção da inscrição sobre a realização da inscrição
                         // envio do e-mail "11" do README.md
-                        foreach (collect($inscricao->selecao->programa->obterResponsaveis())->firstWhere('funcao', 'Coordenadores do Programa')['users'] as $coordenador) {
+                        foreach (collect($inscricao->selecao->programa->obterResponsaveis())->firstWhere('funcao', 'Coordenadores(as) do Programa')['users'] as $coordenador) {
                             $responsavel_nome = 'Prezado(a) Sr(a). ' . Pessoa::obterNome($coordenador->codpes);
                             \Mail::to($coordenador->email)
                                 ->queue(new InscricaoMail(compact('passo', 'inscricao', 'user', 'responsavel_nome')));

@@ -237,7 +237,7 @@ class User extends Authenticatable
                  ->whereNull('programa_id')
                  ->where(function ($query) {
                      $query->where('funcao', 'Serviço de Pós-Graduação')
-                         ->orWhere('funcao', 'Coordenadores da Pós-Graduação');
+                         ->orWhere('funcao', 'Coordenadores(as) da Pós-Graduação');
                  })->exists()))
             return Programa::all();
         else
@@ -268,13 +268,13 @@ class User extends Authenticatable
         return DB::table('user_programa')    // não dá pra partir de $this->, pelo fato de programa_id ser null na tabela relacional
                    ->where('user_id', $this->id)
                    ->whereNull('programa_id')
-                   ->whereIn('funcao', ['Serviço de Pós-Graduação', 'Coordenadores da Pós-Graduação'])
+                   ->whereIn('funcao', ['Serviço de Pós-Graduação', 'Coordenadores(as) da Pós-Graduação'])
                    ->exists();
     }
 
     public function gerenciaProgramaFuncao(string $funcao, ?int $programa_id = null)
     {
-        if (in_array($funcao, ['Serviço de Pós-Graduação', 'Coordenadores da Pós-Graduação']))
+        if (in_array($funcao, ['Serviço de Pós-Graduação', 'Coordenadores(as) da Pós-Graduação']))
             return DB::table('user_programa')    // não dá pra partir de $this->, pelo fato de programa_id ser null na tabela relacional
                        ->where('user_id', $this->id)
                        ->whereNull('programa_id')
@@ -294,7 +294,7 @@ class User extends Authenticatable
         if (empty($funcoesUsuario))
             return null;
 
-        $funcoesOrdenadas = ['Coordenadores da Pós-Graduação', 'Serviço de Pós-Graduação', 'Coordenadores do Programa', 'Secretários(as) do Programa', 'Docentes do Programa'];
+        $funcoesOrdenadas = ['Coordenadores(as) da Pós-Graduação', 'Serviço de Pós-Graduação', 'Coordenadores(as) do Programa', 'Secretários(as) do Programa', 'Docentes do Programa'];
         foreach ($funcoesOrdenadas as $funcao)
             if (in_array($funcao, $funcoesUsuario))
                 return $funcao;    // retorna a primeira função do usuário que aparece na lista de funções ordenadas, ou seja, a função mais alta

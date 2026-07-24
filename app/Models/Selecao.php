@@ -933,7 +933,7 @@ class Selecao extends Model
                                 $query->select(\DB::raw(1))
                                     ->from('user_programa')
                                     ->where('user_id', \Auth::id())
-                                    ->whereIn('funcao', ['Serviço de Pós-Graduação', 'Coordenadores da Pós-Graduação']);    // ou que o usuário seja do Serviço de Pós-Graduação ou Coordenadores da Pós-Graduação
+                                    ->whereIn('funcao', ['Serviço de Pós-Graduação', 'Coordenadores(as) da Pós-Graduação']);    // ou que o usuário seja do Serviço de Pós-Graduação ou Coordenadores(as) da Pós-Graduação
                             });
                         });
                     })

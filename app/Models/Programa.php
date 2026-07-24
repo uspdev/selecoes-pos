@@ -102,16 +102,16 @@ class Programa extends Model
                 'users' => $this->users()->wherePivot('funcao', 'Secretários(as) do Programa')->orderBy('name')->get(),
             ],
             [
-                'funcao' => 'Coordenadores do Programa',
-                'users' => $this->users()->wherePivot('funcao', 'Coordenadores do Programa')->orderBy('name')->get(),
+                'funcao' => 'Coordenadores(as) do Programa',
+                'users' => $this->users()->wherePivot('funcao', 'Coordenadores(as) do Programa')->orderBy('name')->get(),
             ],
             [
                 'funcao' => 'Serviço de Pós-Graduação',
                 'users' => DB::table('user_programa')->join('users', 'user_programa.user_id', '=', 'users.id')->where('user_programa.funcao', 'Serviço de Pós-Graduação')->orderBy('users.name')->get(),    // não dá pra partir de Programa::, pelo fato de programa_id ser null na tabela relacional
             ],
             [
-                'funcao' => 'Coordenadores da Pós-Graduação',
-                'users' => DB::table('user_programa')->join('users', 'user_programa.user_id', '=', 'users.id')->where('user_programa.funcao', 'Coordenadores da Pós-Graduação')->orderBy('users.name')->get(),    // não dá pra partir de Programa::, pelo fato de programa_id ser null na tabela relacional
+                'funcao' => 'Coordenadores(as) da Pós-Graduação',
+                'users' => DB::table('user_programa')->join('users', 'user_programa.user_id', '=', 'users.id')->where('user_programa.funcao', 'Coordenadores(as) da Pós-Graduação')->orderBy('users.name')->get(),    // não dá pra partir de Programa::, pelo fato de programa_id ser null na tabela relacional
             ],
         ];
     }

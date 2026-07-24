@@ -128,7 +128,7 @@
         <div class="col-md-12">
           <div class="card-container">
             <div class="card card-funcoes">
-              <div class="card-header">Coordenadores do Programa</div>
+              <div class="card-header">Coordenadores(as) do Programa</div>
               <div class="card-body">
                 @php
                   $programa_anterior = '';
@@ -139,7 +139,7 @@
                     @csrf
                     @method('put')
                     {{ html()->hidden('id') }}
-                    {{ html()->hidden('funcao', 'Coordenadores do Programa') }}
+                    {{ html()->hidden('funcao', 'Coordenadores(as) do Programa') }}
                     {{ html()->hidden('programa', $programa_coordenador->nome) }}
                     <div class="card my-2">
                       @if ($programa_coordenador->nome != $programa_anterior)
@@ -209,8 +209,8 @@
                 @csrf
                 @method('put')
                 {{ html()->hidden('id') }}
-                {{ html()->hidden('funcao', 'Coordenadores da Pós-Graduação') }}
-                <div class="card-header">Coordenadores da Pós-Graduação @include('programas.partials.btn-adicionar-codpes')</div>
+                {{ html()->hidden('funcao', 'Coordenadores(as) da Pós-Graduação') }}
+                <div class="card-header">Coordenadores(as) da Pós-Graduação @include('programas.partials.btn-adicionar-codpes')</div>
                 <div class="card-body">
                   <div class="card my-2">
                     <div class="card-body py-1" style="font-size: 14px;">

@@ -39,11 +39,11 @@ Os possíveis fluxos de estados de seleções com cobrança de taxa e fluxo cont
 2) Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa, das Inscrições e das Matrículas -> Período de Solicitações de Isenção de Taxa, de Inscrições e de Matrículas -> Encerrada
 3) Em Elaboração -> Aguardando Início das Solicitações de Isenção de Taxa e das Matrículas -> Período de Solicitações de Isenção de Taxa e de Matrículas -> Encerrada
 
-Há cinco funções para gestores: docentes do programa, secretários(as) dos programas, coordenadores dos programas, serviço de pós-graduação e coordenadores da pós-graduação.
+Há cinco funções para gestores: docentes do programa, secretários(as) dos programas, coordenadores(as) dos programas, serviço de pós-graduação e coordenadores(as) da pós-graduação.
 Gestores das três primeiras funções são atrelados aos programas. Eles podem acessar seleções, solicitações de isenção de taxa, inscrições e matrículas somente de seus programas associados.
 Gestores das duas últimas funções podem acessar todas as seleções, solicitações de isenção de taxa, inscrições e matrículas.
 
-A função de docente corresponde ao perfil de docente. As funções de secretários(as) dos programas, coordenadores dos programas, serviço de pós-graduação e coordenadores da pós-graduação correspondem ao perfil de gerente. O conjunto de docentes, gerentes e admins forma o grupo de gestores.
+A função de docente corresponde ao perfil de docente. As funções de secretários(as) dos programas, coordenadores(as) dos programas, serviço de pós-graduação e coordenadores(as) da pós-graduação correspondem ao perfil de gerente. O conjunto de docentes, gerentes e admins forma o grupo de gestores.
 Docentes têm acesso às inscrições e matrículas, mas somente de leitura.
 Os docentes são definidos na mesma tabela que os gerentes, mas com a função docentes dos programas. No caso de matrículas de seleções para alunos especiais, os docentes não têm acesso.
 
@@ -117,8 +117,8 @@ Praticamente para tudo que o sistema deve realizar, ele se baseia em qual é o f
 
 1) o candidato envia a inscrição;
 2) um e-mail é enviado ao candidato reconhecendo o envio da inscrição e, caso o sistema esteja configurado para enviar boleto no envio da inscrição, ele recebe junto o(s) eventual(is) boleto(s) da taxa de inscrição a pagar;
-3) um e-mail é enviado à secretaria do programa e aos coordenadores do programa para pré-avaliar a inscrição;
-4) a secretaria do programa ou os coordenadores do programa colocam a inscrição em pré-avaliação e depois a pré-aprovam ou pré-rejeitam;
+3) um e-mail é enviado à secretaria do programa e aos coordenadores(as) do programa para pré-avaliar a inscrição;
+4) a secretaria do programa ou os coordenadores(as) do programa colocam a inscrição em pré-avaliação e depois a pré-aprovam ou pré-rejeitam;
 5) em caso de pré-aprovação, um e-mail é enviado ao candidato compartilhando o endereço no site da unidade para acompanhamento do processo pelos candidatos, na seção do programa correspondente ou aluno especial;
 6) em caso de pré-rejeição, um e-mail é enviado ao candidato avisando-o da pré-rejeição;
 7) a secretaria do programa coloca a inscrição em avaliação e depois a aprova ou rejeita;

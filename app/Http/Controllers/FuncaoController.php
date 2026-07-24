@@ -71,7 +71,7 @@ class FuncaoController extends Controller
                   ->orderBy('users.name');
         }])->get();
         $programas_coordenadores = Programa::with(['users' => function ($query) {
-            $query->where('funcao', 'Coordenadores do Programa')
+            $query->where('funcao', 'Coordenadores(as) do Programa')
                   ->orderBy('user_programa.programa_id')
                   ->orderBy('users.name');
         }])->get();
@@ -89,7 +89,7 @@ class FuncaoController extends Controller
             })->values()->toArray();
         $posgraduacao_coordenadores_users = DB::table('user_programa')    // não dá pra partir de User:: nem Programa::, pelo fato de programa_id ser null na tabela relacional
             ->join('users', 'user_programa.user_id', '=', 'users.id')
-            ->where('user_programa.funcao', 'Coordenadores da Pós-Graduação')
+            ->where('user_programa.funcao', 'Coordenadores(as) da Pós-Graduação')
             ->orderBy('users.name')
             ->select('users.name', 'users.codpes')
             ->get()

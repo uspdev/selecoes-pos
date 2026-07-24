@@ -45,7 +45,7 @@
         </div>
         <div class="responsaveis-lista">
           @php
-            $funcao = 'Coordenadores do Programa';
+            $funcao = 'Coordenadores(as) do Programa';
             $programa_coordenadores = array_filter($responsaveis, function ($record) use ($funcao) {
               return ($record['funcao'] == $funcao);
             });
@@ -90,7 +90,7 @@
       </div>
       <div class="responsaveis-lista">
         @php
-          $funcao = 'Coordenadores da Pós-Graduação';
+          $funcao = 'Coordenadores(as) da Pós-Graduação';
           $posgraduacao_coordenadores = array_filter($responsaveis, function ($record) use ($funcao) {
             return ($record['funcao'] == $funcao);
           });
