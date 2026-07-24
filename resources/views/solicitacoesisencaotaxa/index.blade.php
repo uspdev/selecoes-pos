@@ -21,7 +21,7 @@
             <input type="checkbox" name="somente_da_ultima_selecao" id="somente_da_ultima_selecao" checked="checked" style="width: auto; margin: 0;">
             <label for="somente_da_ultima_selecao" style="margin: 0;">
               Somente da Última Seleção
-              @if (auth()->user()?->can('perfiladmin') || in_array(auth()->user()?->funcao_maxima, ['Serviço de Pós-Graduação', 'Coordenadores da Pós-Graduação']))
+              @if (auth()->user()?->can('perfiladmin') || in_array(auth()->user()?->funcao_maxima, ['Serviço de Pós-Graduação', 'Coordenadores(as) da Pós-Graduação']))
                 de cada Programa e de Aluno Especial
               @endif
             </label>
